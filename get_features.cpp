@@ -1,5 +1,6 @@
 // https://docs.opencv.org/3.0-beta/doc/tutorials/features2d/feature_flann_matcher/feature_flann_matcher.html#feature-flann-matcher
 // https://docs.opencv.org/3.0-beta/doc/user_guide/ug_features2d.html
+// g++ -Wall get_features.cpp -lopencv_core -lopencv_features2d -lopencv_xfeatures2d -lopencv_highgui -lopencv_imgcodecs -lopencv_flann -o get_features
 
 #include <stdio.h>
 #include <iostream>
