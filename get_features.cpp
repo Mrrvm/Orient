@@ -1,6 +1,6 @@
 // https://docs.opencv.org/3.0-beta/doc/tutorials/features2d/feature_flann_matcher/feature_flann_matcher.html#feature-flann-matcher
 // https://docs.opencv.org/3.0-beta/doc/user_guide/ug_features2d.html
-// g++ -Wall get_features.cpp -lopencv_core -lopencv_features2d -lopencv_xfeatures2d -lopencv_highgui -lopencv_imgcodecs -lopencv_flann -o get_features
+// g++ -Wall get_features.cpp -lopencv_calib3d -lopencv_core -lopencv_features2d -lopencv_xfeatures2d -lopencv_highgui -lopencv_imgcodecs -lopencv_flann -o get_features
 
 #include <stdio.h>
 #include <iostream>
@@ -10,6 +10,7 @@
 #include "opencv2/highgui.hpp"
 #include "opencv2/xfeatures2d.hpp"
 #include "opencv2/xfeatures2d/nonfree.hpp"  
+#include "opencv2/calib3d/calib3d.hpp"
 
 using namespace std;
 using namespace cv;
@@ -20,10 +21,10 @@ int main( int argc, char** argv ) {
   Mat img_1 = imread(argv[1], IMREAD_GRAYSCALE);
   Mat img_2 = imread(argv[2], IMREAD_GRAYSCALE);
   Mat descriptors_1, descriptors_2;
-  Mat img_matches;
-  int minHessian = 1000;
-  double max_dist = 0, min_dist = 100, dist = 0;
   std::vector<KeyPoint> keypoints_1, keypoints_2;
+  int minHessian = 1000;
+  Mat img_matches;
+  double max_dist = 0, min_dist = 100, dist = 0;
   std::vector<DMatch> matches, good_matches;
   Ptr<SURF> extractor = SURF::create();
 
@@ -31,6 +32,20 @@ int main( int argc, char** argv ) {
   Ptr<SURF> detector = SURF::create(minHessian);
   detector->detect(img_1, keypoints_1);
   detector->detect(img_2, keypoints_2);
+
+  /*
+  // Draw keypoints
+  Mat img_keypoints_1; 
+  Mat img_keypoints_2;
+  drawKeypoints(img_1, keypoints_1, img_keypoints_1, Scalar::all(-1), DrawMatchesFlags::DEFAULT);
+  drawKeypoints(img_2, keypoints_2, img_keypoints_2, Scalar::all(-1), DrawMatchesFlags::DEFAULT);
+
+  // Show keypoints
+  imshow("Keypoints 1", img_keypoints_1 );
+  imshow("Keypoints 2", img_keypoints_2 );
+
+  waitKey(0);
+*/
 
   // Calculate descriptors (feature vectors)
   extractor->compute(img_1, keypoints_1, descriptors_1);
@@ -55,7 +70,7 @@ int main( int argc, char** argv ) {
   //-- small)
   for(int i = 0; i < descriptors_1.rows; i++ ) { 
     if(matches[i].distance <= max(2*min_dist, 0.02))
-      good_matches.push_back( matches[i]);
+      good_matches.push_back(matches[i]);
   }
 
   // Draw only "good" matches
@@ -72,19 +87,20 @@ int main( int argc, char** argv ) {
 
   waitKey(0);
 
-/*
-  // Draw keypoints
-  Mat img_keypoints_1; 
-  Mat img_keypoints_2;
-  drawKeypoints(img_1, keypoints_1, img_keypoints_1, Scalar::all(-1), DrawMatchesFlags::DEFAULT);
-  drawKeypoints(img_2, keypoints_2, img_keypoints_2, Scalar::all(-1), DrawMatchesFlags::DEFAULT);
+  std::vector<cv::Point2f> object_points, scene_points;
+  for(u_int i = 0; i < good_matches.size(); i++ ) {
+      // Get the keypoints from the good matches
+      object_points.push_back(keypoints_1[good_matches[i].queryIdx].pt);
+      scene_points.push_back(keypoints_2[good_matches[i].trainIdx].pt);
+  }
 
-  // Show keypoints
-  imshow("Keypoints 1", img_keypoints_1 );
-  imshow("Keypoints 2", img_keypoints_2 );
+  Mat H = findHomography(object_points, scene_points, CV_RANSAC); 
+  cout << "The Homography is "<< endl << " "  << H << endl << endl;
 
-  waitKey(0);
-*/
+  // compare this rotation to the sensor one
+
+  // counter act
+
   return 0;
 }
 

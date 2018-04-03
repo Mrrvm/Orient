@@ -11,7 +11,7 @@ using namespace cv;
 
 #define HEIGHT 480
 #define WIDTH 752
-#define BITSPIXEL 8
+#define BITSPIXEL 32
 
 void spawn_error(int cameraHandle, std::string where) {
 	char *ppcErr;
@@ -25,9 +25,8 @@ int main( int argc, char** argv ) {
 
 	char *ppcImgActive = NULL, *ppcImgPrevious = NULL;
 	int pidActive = 0, pidPrevious = 0;
-	Mat matPrevious(HEIGHT, WIDTH, CV_8UC1);
-	Mat matActive(HEIGHT, WIDTH, CV_8UC1);
-
+	Mat matPrevious(HEIGHT, WIDTH, CV_8UC4);
+	Mat matActive(HEIGHT, WIDTH, CV_8UC4);
 	// Setting 0 allows the first available camera to be initialized or selected
 	// Otherwise it represents the camera ID you want to initialize
 	HIDS cameraHandle= (HIDS)0;
@@ -79,8 +78,65 @@ int main( int argc, char** argv ) {
 
 
 	// Convert the image in memory to an OpenCV Mat variable
-	memcpy(matPrevious.ptr(), ppcImgPrevious, HEIGHT*WIDTH);
-	memcpy(matActive.ptr(), ppcImgActive, HEIGHT*WIDTH);
+	//int col = 0, inc1 = 0, inc2 = 0, row = 0;
+/*
+	while(row < 480) {
+
+		while(col < 752*4*(row+1)) {
+			if(col < 752*3*(row+1)) {
+				matPrevious.ptr(row)[inc1] = 255;//ppcImgPrevious[col];
+				col++;
+				matPrevious.ptr(row)[inc1+752] = 255;//ppcImgPrevious[col];
+				col++;
+				matPrevious.ptr(row)[inc1+752*2] = 255;//ppcImgPrevious[col];
+				col++;	
+				inc1++;
+			}
+			else {
+				matPrevious.ptr(row)[inc2+752*3] = 0;//ppcImgPrevious[col];
+				col++;
+				inc2++;
+			}
+		}
+
+		inc1 = 0; inc2 = 0;
+		row++;
+	}
+*/
+
+	int j = 0, i = 0, m = 0;
+	while(j < 480) {
+		while(i<752*4)
+		{
+			if(i%4 != 3) {
+				matPrevious.ptr(j)[i] = ppcImgPrevious[j*752*4+m];
+				++m;
+			}
+			else {
+				matPrevious.ptr(j)[i] = ppcImgPrevious[j*752*4+i+752*3];
+
+			}
+			++i;
+		}
+		i=0;
+		j++;
+		m=0;
+	}
+
+	for (int l = 0; l < 752*3; ++l) {
+		printf("%d ", ppcImgPrevious[l]);
+		
+	}
+	printf("\n\n\n\n\n");
+	for (int l = 752*3; l < 752*4; ++l) {
+		printf("%d ", ppcImgPrevious[l]);
+		
+	}
+	printf("\n\n\n\n\n");
+	for (int l = 0; l < 752*4; ++l) {
+		printf("%d ", matPrevious.ptr(0)[l]);
+
+	}
 
 	// Visualise the data
 	namedWindow("Image", 1);
