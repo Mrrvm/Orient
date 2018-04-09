@@ -10,7 +10,7 @@ int main(int argc, char *argv[])
 {
 	//auto sampling=std::chrono::milliseconds(10000);
 	std::ofstream my_file;
-	my_file.open("example.txt");
+	my_file.open("LPMS_DATA.txt");
 	ImuData d;
 
 	// Gets a LpmsSensorManager instance
@@ -22,10 +22,10 @@ int main(int argc, char *argv[])
 	//UART BAUDRATE
 	int a=100;
 	lpms->getConfigurationPrm(41, &a);
-	std::cout << "a: " << a << std::endl;
+	std::cout << "a_before: " << a << std::endl;
 	lpms->setConfigurationPrm(41, 3);
 	lpms->getConfigurationPrm(41, &a);
-	std::cout << "a: " << a << std::endl;
+	std::cout << "a_after: " << a << std::endl;
 
 	auto beginning = std::chrono::high_resolution_clock::now();
 
