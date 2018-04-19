@@ -23,42 +23,6 @@ void GetCalibration(Mat& intrinsics, Mat& distCoeffs) {
     }
 }
 
-Mat simpleProcrustes(vector<Point2f> object_points, vector<Point2f> scene_points) {
-    
-    // Pass to Mat format
-    Mat pA = Mat(object_points).reshape(1);
-    Mat pB = Mat(scene_points).reshape(1); 
-
-    // Turn into homogenous coordinates
-    
-    Mat ones = Mat(pA.rows, 1, pA.type(), 1);
-    hconcat(pA, ones, pA);
-    hconcat(pB, ones, pB);
-    cout << pA << endl; 
-    cout << pB << endl; 
-    
-    // Recenter the points based on their mean 
-    Scalar mu_A = mean(pA);  
-    Mat pA0 = pA - Mat(pA.size(), pA.type(), mu_A);
-    Scalar mu_B = mean(pB);
-    Mat pB0 = pB - Mat(pB.size(), pB.type(), mu_B);
-
-    // Normalize them 
-    float norm_pA = norm(pA0);
-    pA0 /= norm_pA;
-    float norm_pB = norm(pB0);
-    pB0 /= norm_pB;
-
-    // Compute SVD
-    Mat A = pA0.reshape(1).t() * pB0.reshape(1);
-    Mat U, s, Vt;
-    SVDecomp(A, s, U, Vt);
-    Mat rotation = Vt.t() * U.t();
-
-    return rotation;
-}
-
-
 int main(int argc, char *argv[]){
 
   // Get intrinsic parameters
@@ -138,10 +102,14 @@ int main(int argc, char *argv[]){
   }
   /*******************************/
 
-  // Calculate rotation matrix using Procrustes
+  // Calculate homography and decompose
   /*******************************/
-  Mat rotation = simpleProcrustes(object_points, scene_points);
-  cout << "Rotation\n" << rotation << endl;
+  std::vector<cv::Mat> r, t, n;
+  Mat H = findHomography(object_points, scene_points, CV_RANSAC);
+  decomposeHomographyMat(H, intrinsics, r, t, n);
+  for (auto& vec : r) {
+    cout << vec << endl;
+  }
   /*******************************/
 
 }
