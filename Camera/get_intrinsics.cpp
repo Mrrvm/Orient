@@ -9,7 +9,7 @@
 #define N_SAMPLES 65
 #define N_HCORNERS 7
 #define N_VCORNERS 5
-#define SAMPLES_DIR "../images/IDS_chess/*.png"   
+#define SAMPLES_DIR "chess_board/*.png"   
 
 int main() {
 
