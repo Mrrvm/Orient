@@ -1,13 +1,7 @@
 // Compile with g++ -Wall get_image.cpp -lopencv_core -lopencv_highgui -lopencv_imgproc -lopencv_imgcodecs -lueye_api -o get_image
 
-#include <opencv2/core/core.hpp>
-#include <opencv2/imgcodecs.hpp>
-#include <opencv2/imgproc.hpp>
-#include <opencv2/highgui/highgui.hpp>
+#include "defs.h"
 #include <ueye.h>
-#include <iostream>
-
-using namespace cv;
 
 #define HEIGHT 480
 #define WIDTH 752
@@ -78,43 +72,17 @@ int main( int argc, char** argv ) {
 
 
 	// Convert the image in memory to an OpenCV Mat variable
-	//int col = 0, inc1 = 0, inc2 = 0, row = 0;
-/*
-	while(row < 480) {
-
-		while(col < 752*4*(row+1)) {
-			if(col < 752*3*(row+1)) {
-				matPrevious.ptr(row)[inc1] = 255;//ppcImgPrevious[col];
-				col++;
-				matPrevious.ptr(row)[inc1+752] = 255;//ppcImgPrevious[col];
-				col++;
-				matPrevious.ptr(row)[inc1+752*2] = 255;//ppcImgPrevious[col];
-				col++;	
-				inc1++;
-			}
-			else {
-				matPrevious.ptr(row)[inc2+752*3] = 0;//ppcImgPrevious[col];
-				col++;
-				inc2++;
-			}
-		}
-
-		inc1 = 0; inc2 = 0;
-		row++;
-	}
-*/
-
 	int j = 0, i = 0, m = 0;
 	while(j < 480) {
 		while(i<752*4)
 		{
 			if(i%4 != 3) {
 				matPrevious.ptr(j)[i] = ppcImgPrevious[j*752*4+m];
+				matActive.ptr(j)[i] = ppcImgActive[j*752*4+m];
 				++m;
 			}
 			else {
-				matPrevious.ptr(j)[i] = ppcImgPrevious[j*752*4+i+752*3];
-
+				matActive.ptr(j)[i] = ppcImgActive[j*752*4+i+752*3];
 			}
 			++i;
 		}
@@ -123,20 +91,6 @@ int main( int argc, char** argv ) {
 		m=0;
 	}
 
-	for (int l = 0; l < 752*3; ++l) {
-		printf("%d ", ppcImgPrevious[l]);
-		
-	}
-	printf("\n\n\n\n\n");
-	for (int l = 752*3; l < 752*4; ++l) {
-		printf("%d ", ppcImgPrevious[l]);
-		
-	}
-	printf("\n\n\n\n\n");
-	for (int l = 0; l < 752*4; ++l) {
-		printf("%d ", matPrevious.ptr(0)[l]);
-
-	}
 
 	// Visualise the data
 	namedWindow("Image", 1);
