@@ -9,6 +9,7 @@
 #include "opencv2/xfeatures2d/nonfree.hpp"  
 #include "opencv2/calib3d/calib3d.hpp"
 #include <opencv2/imgproc/imgproc.hpp>
+#include "opencv2/video/tracking.hpp"
 
 using namespace std;
 using namespace cv;

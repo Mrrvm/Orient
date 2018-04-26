@@ -79,7 +79,7 @@ int main(int argc, char *argv[]){
       good_matches.push_back(matches[i]);
   }
   // Visualise the "good" matches
-  /*
+  
   Mat img_matches;
   drawMatches(img_1, keypoints_1, img_2, keypoints_2,
               good_matches, img_matches, Scalar::all(-1), Scalar::all(-1),
@@ -89,7 +89,7 @@ int main(int argc, char *argv[]){
     printf( "-- Good Match [%d] Keypoint 1: %d  -- Keypoint 2: %d  \n", i, good_matches[i].queryIdx, good_matches[i].trainIdx ); 
   }
   waitKey(0);
-  */
+  
 
   /*******************************/
 
@@ -108,8 +108,15 @@ int main(int argc, char *argv[]){
   Mat H = findHomography(object_points, scene_points, CV_RANSAC);
   decomposeHomographyMat(H, intrinsics, r, t, n);
   for (auto& vec : r) {
-    cout << vec << endl;
+    cout << vec << endl; 
   }
+  for (auto& vec : t) {
+    cout << vec << endl; 
+  }
+  for (auto& vec : n) {
+    cout << vec << endl; 
+  }
+  cout << keypoints_1[good_matches[0].queryIdx].pt << " " << keypoints_2[good_matches[0].trainIdx].pt;
   /*******************************/
 
 }

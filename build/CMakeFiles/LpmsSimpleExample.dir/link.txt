@@ -1,0 +1,1 @@
+/usr/bin/c++    -std=c++11 -lopencv_video -lopencv_calib3d -lopencv_core -lopencv_features2d -lopencv_xfeatures2d -lopencv_highgui -lopencv_imgcodecs -lopencv_flann -lopencv_imgproc -lueye_api -std=gnu++11 -g   CMakeFiles/LpmsSimpleExample.dir/main.o  -o LpmsSimpleExample -rdynamic -lLpSensor -lpthread -ldl -lrt 

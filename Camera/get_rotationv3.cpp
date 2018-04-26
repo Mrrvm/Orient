@@ -115,7 +115,6 @@ int main(int argc, char *argv[]){
       good_matches.push_back(matches[i]);
   }
   // Visualise the "good" matches
-  
   Mat img_matches;
   drawMatches(img_1, keypoints_1, img_2, keypoints_2,
               good_matches, img_matches, Scalar::all(-1), Scalar::all(-1),
@@ -125,16 +124,21 @@ int main(int argc, char *argv[]){
     printf( "-- Good Match [%d] Keypoint 1: %d  -- Keypoint 2: %d  \n", i, good_matches[i].queryIdx, good_matches[i].trainIdx ); 
   }
   waitKey(0);
-  
-
   /*******************************/
 
   // Get keypoints from the "good" matches
   /*******************************/
   std::vector<Point2f> object_points, scene_points;
+  float l1, l2, x, y;
   for(u_int i = 0; i < good_matches.size(); i++ ) {
+      x = keypoints_1[good_matches[i].queryIdx].pt.x;
+      y = keypoints_1[good_matches[i].queryIdx].pt.y;
+      l1 = 1/(sqrt((x*x)+(y*y)));
+      x = keypoints_2[good_matches[i].trainIdx].pt.x;
+      y = keypoints_2[good_matches[i].trainIdx].pt.y;
+      l2 = 1/(sqrt((x*x)+(y*y)));
       object_points.push_back(keypoints_1[good_matches[i].queryIdx].pt);
-      scene_points.push_back(keypoints_2[good_matches[i].trainIdx].pt);
+      scene_points.push_back((l2/l1)*keypoints_2[good_matches[i].trainIdx].pt);
   }
   /*******************************/
 

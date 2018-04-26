@@ -1,0 +1,46 @@
+#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/imarcher/Dropbox/Workspace/ISR/Visual-Odometry/Camera/defs.hpp
+stdio.h
+-
+iostream
+-
+opencv2/opencv.hpp
+/home/imarcher/Dropbox/Workspace/ISR/Visual-Odometry/Camera/opencv2/opencv.hpp
+opencv2/core.hpp
+/home/imarcher/Dropbox/Workspace/ISR/Visual-Odometry/Camera/opencv2/core.hpp
+opencv2/features2d.hpp
+/home/imarcher/Dropbox/Workspace/ISR/Visual-Odometry/Camera/opencv2/features2d.hpp
+opencv2/imgcodecs.hpp
+/home/imarcher/Dropbox/Workspace/ISR/Visual-Odometry/Camera/opencv2/imgcodecs.hpp
+opencv2/highgui.hpp
+/home/imarcher/Dropbox/Workspace/ISR/Visual-Odometry/Camera/opencv2/highgui.hpp
+opencv2/xfeatures2d.hpp
+/home/imarcher/Dropbox/Workspace/ISR/Visual-Odometry/Camera/opencv2/xfeatures2d.hpp
+opencv2/xfeatures2d/nonfree.hpp
+/home/imarcher/Dropbox/Workspace/ISR/Visual-Odometry/Camera/opencv2/xfeatures2d/nonfree.hpp
+opencv2/calib3d/calib3d.hpp
+/home/imarcher/Dropbox/Workspace/ISR/Visual-Odometry/Camera/opencv2/calib3d/calib3d.hpp
+opencv2/imgproc/imgproc.hpp
+-
+opencv2/video/tracking.hpp
+/home/imarcher/Dropbox/Workspace/ISR/Visual-Odometry/Camera/opencv2/video/tracking.hpp
+
+/home/imarcher/Dropbox/Workspace/ISR/Visual-Odometry/main.cpp
+ueye.h
+-
+thread
+-
+LpmsSensorI.h
+/home/imarcher/Dropbox/Workspace/ISR/Visual-Odometry/LpmsSensorI.h
+LpmsSensorManagerI.h
+/home/imarcher/Dropbox/Workspace/ISR/Visual-Odometry/LpmsSensorManagerI.h
+Camera/defs.hpp
+/home/imarcher/Dropbox/Workspace/ISR/Visual-Odometry/Camera/defs.hpp
+
