@@ -4,11 +4,12 @@ OPENCV = -lopencv_video -lopencv_calib3d -lopencv_core -lopencv_features2d -lope
 get_intrinsics: get_intrinsics.cpp
 	g++ get_intrinsics.cpp $(OPENCV) -o get_intrinsics
 
-get_rotationv2: get_rotationv2.cpp
-	g++ get_rotationv2.cpp $(OPENCV) -o get_rotationv2
+get_image: get_image.cpp
+	g++ get_image.cpp $(OPENCV) -o get_image
 
-get_rotationv3: get_rotationv3.cpp
-	g++ get_rotationv3.cpp $(OPENCV) -o get_rotationv3
+get_rotationH: get_rotationH.cpp
+	g++ get_rotationH.cpp $(OPENCV) -o get_rotationH
 
-get_rotation: get_rotation.cpp
-	g++ get_rotation.cpp $(OPENCV) -o get_rotation
+get_rotationSVD: get_rotationSVD.cpp
+	g++ get_rotationSVD.cpp $(OPENCV) -o get_rotationSVD
+

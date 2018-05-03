@@ -7,10 +7,12 @@
 #define HEIGHT 480
 #define WIDTH 752
 #define BITSPIXEL 32
-#define MIN_HESSIAN 800
+#define MIN_HESSIAN 400
 
 vector<KeyPoint> prev_keypoints;
 Mat prev_descriptors;
+Mat intrinsics = Mat(3, 3, CV_32FC1);
+Mat distCoeffs;
 
 void spawn_error(int cameraHandle, std::string where) {
 	char *ppcErr;
@@ -52,9 +54,7 @@ Mat get_image() {
 			}
 			++i;
 		}
-		i=0;
-		j++;
-		m=0;
+		i=0;j++;m=0;
 	}
 
 	// Free memory
@@ -81,20 +81,12 @@ void GetCalibration(Mat& intrinsics, Mat& distCoeffs) {
     return;
 }
 
-Mat simpleProcrustes(vector<Point2f> object_points, vector<Point2f> scene_points) {
+Mat simpleProcrustes(vector<Point3f> object_points, vector<Point3f> scene_points) {
     
     // Pass to Mat format
-    Mat pA = Mat(object_points).reshape(1);
-    Mat pB = Mat(scene_points).reshape(1); 
-
-    // Turn into homogenous coordinates
-    
-    Mat ones = Mat(pA.rows, 1, pA.type(), 1);
-    hconcat(pA, ones, pA);
-    hconcat(pB, ones, pB);
-    cout << pA << endl; 
-    cout << pB << endl; 
-    
+    Mat pA = Mat(object_points);
+    Mat pB = Mat(scene_points); 
+   
     // Recenter the points based on their mean 
     Scalar mu_A = mean(pA);  
     Mat pA0 = pA - Mat(pA.size(), pA.type(), mu_A);
@@ -122,17 +114,16 @@ void get_kpts(Mat& descriptors, vector<KeyPoint>& kpts) {
 	Mat im_undis;
     im = get_image(); 
 
-  	Mat intrinsics = Mat(3, 3, CV_32FC1);
-  	Mat distCoeffs;
   	GetCalibration(intrinsics, distCoeffs);
-
   	cvtColor(im, im, COLOR_BGR2GRAY);
     undistort(im, im_undis, intrinsics, distCoeffs);
+
 
   	Ptr<SURF> detector = SURF::create(MIN_HESSIAN);
   	Ptr<SURF> extractor = SURF::create();
 	detector->detect(im_undis, kpts);
 	extractor->compute(im_undis, kpts, descriptors);
+
 	return;
 }
 
@@ -141,35 +132,48 @@ void camera_rotation(Mat& rotation) {
 	Mat descriptors;
   	vector<KeyPoint> keypoints;
   	get_kpts(descriptors, keypoints);
-
   	FlannBasedMatcher matcher;
   	vector<DMatch> matches, good_matches;
   	double max_dist = 0, min_dist = 100, dist = 0;
   	matcher.match(prev_descriptors, descriptors, matches);
-	for(int i = 0; i < descriptors.rows; i++) { 
-		dist = matches[i].distance;
-		if(dist < min_dist) min_dist = dist;
-		if(dist > max_dist) max_dist = dist;
-	}
-	for(int i = 0; i < descriptors.rows; i++ ) { 
-		if(matches[i].distance <= max(2*min_dist, 0.02))
-		  good_matches.push_back(matches[i]);
-	}
-  	std::vector<Point2f> object_points, scene_points;
-  	float l1, l2, x, y;
-	for(u_int i = 0; i < good_matches.size(); i++ ) {
-		x = prev_keypoints[good_matches[i].queryIdx].pt.x;
-		y = prev_keypoints[good_matches[i].queryIdx].pt.y;
-		l1 = 1/(sqrt((x*x)+(y*y)));
-		x = keypoints[good_matches[i].trainIdx].pt.x;
-		y = keypoints[good_matches[i].trainIdx].pt.y;
-		l2 = 1/(sqrt((x*x)+(y*y)));
-		object_points.push_back(prev_keypoints[good_matches[i].queryIdx].pt);
-		scene_points.push_back((l2/l1)*keypoints[good_matches[i].trainIdx].pt);
-	}
-  	rotation = simpleProcrustes(object_points, scene_points);
-  	prev_descriptors = descriptors;
-  	prev_keypoints = keypoints;
+  	if(matches.size() > 5) {
+		for(int i = 0; i < descriptors.rows; i++) { 
+			dist = matches[i].distance;
+			if(dist < min_dist) min_dist = dist;
+			if(dist > max_dist) max_dist = dist;
+		}
+		for(int i = 0; i < descriptors.rows; i++ ) { 
+			if(matches[i].distance <= max(2*min_dist, 0.02))
+			  good_matches.push_back(matches[i]);
+		}
+		if(good_matches.size() > 5) {
+		  	std::vector<Point3f> object_points, scene_points;
+		  	  float x, y, fx, fy, cx, cy, l, u, v;
+			  fx = (float)intrinsics.at<double>(0,0); 
+			  fy = (float)intrinsics.at<double>(1,1);
+			  cx = (float)intrinsics.at<double>(0,2);
+			  cy = (float)intrinsics.at<double>(1,2);
+			for(u_int i = 0; i < good_matches.size(); i++ ) {
+				x = prev_keypoints[good_matches[i].queryIdx].pt.x;
+				y = prev_keypoints[good_matches[i].queryIdx].pt.y;
+		      	u = (x-cx)/fx; v = (y-cy)/fy;
+		      	l = 1/(sqrt((u*u)+(v*v)+1));
+		      	object_points.push_back(Point3f(u/l, v/l, 1/l));
+				x = keypoints[good_matches[i].trainIdx].pt.x;
+				y = keypoints[good_matches[i].trainIdx].pt.y;
+		        u = (x-cx)/fx; v = (y-cy)/fy;
+		        l = 1/(sqrt((u*u)+(v*v)+1));
+		        scene_points.push_back(Point3f(u/l, v/l, 1/l));
+			}
+		  	rotation = simpleProcrustes(object_points, scene_points);
+		  	prev_keypoints.clear();
+		  	prev_descriptors.release();
+		  	prev_descriptors = descriptors;
+		  	prev_keypoints = keypoints;
+		}
+  		return;
+  	}
+  	cout << "Not enough keypoints" << endl;
   	return;
 }
 
@@ -179,14 +183,18 @@ int main(int argc, char *argv[]) {
 	ImuData sdata, prev_sdata;
 	Mat rotation;
 	// Initialize
-  	//get_kpts(prev_descriptors, prev_keypoints);
-	LpmsSensorManagerI* manager = LpmsSensorManagerFactory();
-	LpmsSensorI* lpms = manager->addSensor(DEVICE_LPMS_U, "A1019SCB");
-	lpms->setConfigurationPrm(41, 3);
-
+  	get_kpts(prev_descriptors, prev_keypoints);
+	//LpmsSensorManagerI* manager = LpmsSensorManagerFactory();
+	//LpmsSensorI* lpms = manager->addSensor(DEVICE_LPMS_U, "A1019SCB");
+	//lpms->setConfigurationPrm(41, 3);
+	cout << "Initialized" << endl;
 
 	while(1) {
 		getchar();
+		camera_rotation(rotation);
+		cout << "Camera rotation" << endl;
+		cout << rotation << endl;
+/*
 		if (lpms->getConnectionStatus() == SENSOR_CONNECTION_CONNECTED &&
 				lpms->hasImuData()) {		
 			    thread t1(camera_rotation, ref(rotation));
@@ -203,10 +211,10 @@ int main(int argc, char *argv[]) {
 		}
 		else {
 			cout << "Sensor connection refused." << endl;
-		}
+		}*/
 	}
 
-	manager->removeSensor(lpms);
-	delete manager;
+	//manager->removeSensor(lpms);
+	//delete manager;
 	return 0;
 }

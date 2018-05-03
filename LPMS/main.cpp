@@ -41,7 +41,7 @@ int main(int argc, char *argv[])
 			// Reads quaternion data
 			d = lpms->getCurrentData();
 
-			printf("%f %f %f\n%f %f %f\n%f %f %f\n", 
+			printf("[%f %f %f;\n%f %f %f;\n%f %f %f]\n", 
 				d.rotationM[0], d.rotationM[1],d.rotationM[2],
 				d.rotationM[3],d.rotationM[4], d.rotationM[5], 
 				d.rotationM[6], d.rotationM[7], d.rotationM[8]);

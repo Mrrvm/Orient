@@ -8,7 +8,7 @@
 #include <fstream>
 #include "defs.hpp"
 
-#define MIN_HESSIAN 800
+#define MIN_HESSIAN 600
 
 void GetCalibration(Mat& intrinsics, Mat& distCoeffs) {
     FileStorage fs("intrinsics.xml", FileStorage::READ);
@@ -23,20 +23,12 @@ void GetCalibration(Mat& intrinsics, Mat& distCoeffs) {
     }
 }
 
-Mat simpleProcrustes(vector<Point2f> object_points, vector<Point2f> scene_points) {
+Mat simpleProcrustes(vector<Point3f> object_points, vector<Point3f> scene_points) {
     
     // Pass to Mat format
-    Mat pA = Mat(object_points).reshape(1);
-    Mat pB = Mat(scene_points).reshape(1); 
-
-    // Turn into homogenous coordinates
-    
-    Mat ones = Mat(pA.rows, 1, pA.type(), 1);
-    hconcat(pA, ones, pA);
-    hconcat(pB, ones, pB);
-    cout << pA << endl; 
-    cout << pB << endl; 
-    
+    Mat pA = Mat(object_points);
+    Mat pB = Mat(scene_points); 
+   
     // Recenter the points based on their mean 
     Scalar mu_A = mean(pA);  
     Mat pA0 = pA - Mat(pA.size(), pA.type(), mu_A);
@@ -128,17 +120,24 @@ int main(int argc, char *argv[]){
 
   // Get keypoints from the "good" matches
   /*******************************/
-  std::vector<Point2f> object_points, scene_points;
-  float l1, l2, x, y;
+  std::vector<Point3f> object_points, scene_points;
+  float x, y, fx, fy, cx, cy, l, u, v;
+  fx = (float)intrinsics.at<double>(0,0); 
+  fy = (float)intrinsics.at<double>(1,1);
+  cx = (float)intrinsics.at<double>(0,2);
+  cy = (float)intrinsics.at<double>(1,2);
   for(u_int i = 0; i < good_matches.size(); i++ ) {
+      // This points belong to the image plane
       x = keypoints_1[good_matches[i].queryIdx].pt.x;
       y = keypoints_1[good_matches[i].queryIdx].pt.y;
-      l1 = 1/(sqrt((x*x)+(y*y)));
+      u = (x-cx)/fx; v = (y-cy)/fy;
+      l = 1/(sqrt((u*u)+(v*v)+1));
+      object_points.push_back(Point3f(u/l, v/l, 1/l));
       x = keypoints_2[good_matches[i].trainIdx].pt.x;
       y = keypoints_2[good_matches[i].trainIdx].pt.y;
-      l2 = 1/(sqrt((x*x)+(y*y)));
-      object_points.push_back(keypoints_1[good_matches[i].queryIdx].pt);
-      scene_points.push_back((l2/l1)*keypoints_2[good_matches[i].trainIdx].pt);
+      u = (x-cx)/fx; v = (y-cy)/fy;
+      l = 1/(sqrt((u*u)+(v*v)+1));
+      scene_points.push_back(Point3f(u/l, v/l, 1/l));
   }
   /*******************************/
 
