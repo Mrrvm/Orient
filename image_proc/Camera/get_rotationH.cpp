@@ -8,7 +8,7 @@
 #include <fstream>
 #include "defs.hpp"
 
-#define MIN_HESSIAN 800
+#define MIN_HESSIAN 900
 
 void GetCalibration(Mat& intrinsics, Mat& distCoeffs) {
     FileStorage fs("intrinsics.xml", FileStorage::READ);
@@ -116,7 +116,6 @@ int main(int argc, char *argv[]){
   for (auto& vec : n) {
     cout << vec << endl; 
   }
-  cout << keypoints_1[good_matches[0].queryIdx].pt << " " << keypoints_2[good_matches[0].trainIdx].pt;
   /*******************************/
 
 }

@@ -8,7 +8,7 @@
 #include <fstream>
 #include "defs.hpp"
 
-#define MIN_HESSIAN 400
+#define MIN_HESSIAN 300
 
 void GetCalibration(Mat& intrinsics, Mat& distCoeffs) {
     FileStorage fs("intrinsics.xml", FileStorage::READ);
@@ -67,34 +67,69 @@ int main(int argc, char *argv[]){
   if(argc == 3) {
     img_1 = imread(argv[1], IMREAD_GRAYSCALE);
     img_2 = imread(argv[2], IMREAD_GRAYSCALE);
-    //undistort(imread(argv[1], IMREAD_GRAYSCALE), img_1, intrinsics, distCoeffs);
-    //undistort(imread(argv[2], IMREAD_GRAYSCALE), img_2, intrinsics, distCoeffs); 
+    undistort(imread(argv[1], IMREAD_GRAYSCALE), img_1, intrinsics, distCoeffs);
+    undistort(imread(argv[2], IMREAD_GRAYSCALE), img_2, intrinsics, distCoeffs); 
   }
   else {
     cout << "Usage: ./get_rotation image1 image2" << endl;
   }
   /*******************************/
 
-  // Detect keypoints using SURF
-  /*******************************/
   Ptr<SURF> detector = SURF::create(MIN_HESSIAN);
   Ptr<SURF> extractor = SURF::create();
   Mat descriptors_1, descriptors_2;
   vector<KeyPoint> keypoints_1, keypoints_2;
+  FlannBasedMatcher matcher;
+  vector<DMatch> matches, good_matches;
+  int n_good_matches, last_n_good_matches = 0, true_hessian = 0;
+  double max_dist = 0, min_dist = 100, dist = 0;
 
+  // Detect keypoints using SURF
+  /*******************************/
+  for(int j=100; j<1000; j+=100) {
+
+    detector = SURF::create(j);
+    detector->detect(img_1, keypoints_1);
+    detector->detect(img_2, keypoints_2);
+    extractor->compute(img_1, keypoints_1, descriptors_1);
+    extractor->compute(img_2, keypoints_2, descriptors_2);
+
+    /*******************************/
+    // Get matches using FLANN
+    /*******************************/
+    max_dist = 0, min_dist = 100, dist = 0;
+    matcher.match(descriptors_1, descriptors_2, matches);
+    // Calculation of max and min distances between keypoints
+    for(int i = 0; i < descriptors_1.rows; i++) { 
+      dist = matches[i].distance;
+      if(dist < min_dist) min_dist = dist;
+      if(dist > max_dist) max_dist = dist;
+    }
+    // Draw only "good" matches (i.e. whose distance is less than 2*min_dist,
+    // or a small arbitary value ( 0.02 ) in the event that min_dist is very
+    // small)
+    for(int i = 0; i < descriptors_1.rows; i++ ) { 
+      if(matches[i].distance <= max(2*min_dist, 0.02))
+        n_good_matches++;
+    }
+    if(n_good_matches > last_n_good_matches) {
+      true_hessian = j;
+    }
+    last_n_good_matches = n_good_matches;
+  }
+
+  cout << "Hessian is " << true_hessian << endl;
+
+  detector = SURF::create(true_hessian);
   detector->detect(img_1, keypoints_1);
   detector->detect(img_2, keypoints_2);
   extractor->compute(img_1, keypoints_1, descriptors_1);
   extractor->compute(img_2, keypoints_2, descriptors_2);
 
   /*******************************/
-
   // Get matches using FLANN
   /*******************************/
-  FlannBasedMatcher matcher;
-  vector<DMatch> matches, good_matches;
-  double max_dist = 0, min_dist = 100, dist = 0;
-
+  max_dist = 0, min_dist = 100, dist = 0;
   matcher.match(descriptors_1, descriptors_2, matches);
   // Calculation of max and min distances between keypoints
   for(int i = 0; i < descriptors_1.rows; i++) { 
@@ -107,7 +142,7 @@ int main(int argc, char *argv[]){
   // small)
   for(int i = 0; i < descriptors_1.rows; i++ ) { 
     if(matches[i].distance <= max(2*min_dist, 0.02))
-      good_matches.push_back(matches[i]);
+      good_matches.push_back(matches[i]);;
   }
   // Visualise the "good" matches
   Mat img_matches;
