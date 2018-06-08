@@ -35,19 +35,48 @@ Mat simpleProcrustes(vector<Point3f> object_points, vector<Point3f> scene_points
     Scalar mu_B = mean(pB);
     Mat pB0 = pB - Mat(pB.size(), pB.type(), mu_B);
 
+    cout << pA0 << endl << endl;
+    cout << pB0 << endl << endl;
+
     // Normalize them 
     float norm_pA = norm(pA0);
     pA0 /= norm_pA;
     float norm_pB = norm(pB0);
     pB0 /= norm_pB;
-
+    
+    cout << pA0 << endl << endl;
+    cout << pB0 << endl << endl;
+    
     // Compute SVD
     Mat A = pA0.reshape(1).t() * pB0.reshape(1);
+    cout << A << endl << endl;
     Mat U, s, Vt;
     SVDecomp(A, s, U, Vt);
-    Mat rotation = Vt.t() * U.t();
+
+    Mat rotation = U * Vt;
 
     return rotation;
+}
+
+void convertToEuleraxis(Mat rotation) {
+  float r11 = rotation.at<float>(0,0);
+  float r12 = rotation.at<float>(0,1);
+  float r13 = rotation.at<float>(0,2);
+  float r21 = rotation.at<float>(1,0);
+  float r22 = rotation.at<float>(1,1);
+  float r23 = rotation.at<float>(1,2);
+  float r31 = rotation.at<float>(2,0);
+  float r32 = rotation.at<float>(2,1);
+  float r33 = rotation.at<float>(2,2);
+
+  float teta = acos((r11+r22+r33-1)/2);
+  float e1 = (r32-r23)/(2*sin(teta));
+  float e2 = (r13-r31)/(2*sin(teta));
+  float e3 = (r21-r12)/(2*sin(teta));
+
+  cout << "Axis: [" << e1 << " " << e2 << " " << e3 << " ]" << endl;
+  cout << "Angle: " << teta << endl;
+
 }
 
 
@@ -160,28 +189,38 @@ int main(int argc, char *argv[]){
   /*******************************/
   if(good_matches.size() > 5) {
       std::vector<Point3f> object_points, scene_points;
-        float x, y, fx, fy, cx, cy, l, u, v;
+      float x, y, fx, fy, cx, cy, l, u, v;
       fx = (float)intrinsics.at<double>(0,0); 
       fy = (float)intrinsics.at<double>(1,1);
       cx = (float)intrinsics.at<double>(0,2);
       cy = (float)intrinsics.at<double>(1,2);
-      for(u_int i = 0; i < good_matches.size(); i++ ) {
+      
+      for(u_int i = 0; i < good_matches.size(); i++) 
+        cout << keypoints_1[good_matches[i].queryIdx].pt << endl << endl;
+      cout << endl;
+      for(u_int i = 0; i < good_matches.size(); i++) 
+        cout << keypoints_2[good_matches[i].trainIdx].pt << endl << endl;
+      
+      for(u_int i = 0; i < good_matches.size(); i++) {
         x = keypoints_1[good_matches[i].queryIdx].pt.x;
         y = keypoints_1[good_matches[i].queryIdx].pt.y;
-            u = (x-cx)/fx; v = (y-cy)/fy;
-            l = 1/(sqrt((u*u)+(v*v)+1));
-            object_points.push_back(Point3f(u/l, v/l, 1/l));
+        u = (x-cx)/fx; v = (y-cy)/fy;
+        l = 1/(sqrt((u*u)+(v*v)+1));
+        object_points.push_back(Point3f(u/l, v/l, 1/l));
         x = keypoints_2[good_matches[i].trainIdx].pt.x;
         y = keypoints_2[good_matches[i].trainIdx].pt.y;
-            u = (x-cx)/fx; v = (y-cy)/fy;
-            l = 1/(sqrt((u*u)+(v*v)+1));
-            scene_points.push_back(Point3f(u/l, v/l, 1/l));
+        u = (x-cx)/fx; v = (y-cy)/fy;
+        l = 1/(sqrt((u*u)+(v*v)+1));
+        scene_points.push_back(Point3f(u/l, v/l, 1/l));
       }
-      // Calculate rotation matrix using Procrustes
+      cout << object_points << endl << endl;
+      cout << scene_points << endl << endl;
       /*******************************/
+      // Calculate rotation matrix using Procrustes
       /*******************************/
       Mat rotation = simpleProcrustes(object_points, scene_points);
       cout << "Rotation\n" << rotation << endl;
+      convertToEuleraxis(rotation);
       keypoints_1.clear();
       descriptors_1.release();
       descriptors_1 = descriptors_2;
