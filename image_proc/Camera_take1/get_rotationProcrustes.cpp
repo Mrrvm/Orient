@@ -29,27 +29,8 @@ Mat simpleProcrustes(vector<Point3f> object_points, vector<Point3f> scene_points
     Mat pA = Mat(object_points);
     Mat pB = Mat(scene_points); 
    
-    // Recenter the points based on their mean 
-    Scalar mu_A = mean(pA);  
-    Mat pA0 = pA - Mat(pA.size(), pA.type(), mu_A);
-    Scalar mu_B = mean(pB);
-    Mat pB0 = pB - Mat(pB.size(), pB.type(), mu_B);
-
-    cout << pA0 << endl << endl;
-    cout << pB0 << endl << endl;
-
-    // Normalize them 
-    float norm_pA = norm(pA0);
-    pA0 /= norm_pA;
-    float norm_pB = norm(pB0);
-    pB0 /= norm_pB;
-    
-    cout << pA0 << endl << endl;
-    cout << pB0 << endl << endl;
-    
     // Compute SVD
-    Mat A = pA0.reshape(1).t() * pB0.reshape(1);
-    cout << A << endl << endl;
+    Mat A = pA.reshape(1).t() * pB.reshape(1);
     Mat U, s, Vt;
     SVDecomp(A, s, U, Vt);
 
