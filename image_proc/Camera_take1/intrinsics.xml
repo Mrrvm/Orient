@@ -5,8 +5,9 @@
   <cols>3</cols>
   <dt>d</dt>
   <data>
-    4.8939745725606139e+02 0. 3.2355482287961303e+02 0.
-    4.8958489657798725e+02 2.1296657963861227e+02 0. 0. 1.</data></intrinsics>
+    1.1613e+03 0. 973.2780 
+    0. 1.1626e+03 793.4082
+    0. 0. 1.</data></intrinsics>
 <distCoeffs type_id="opencv-matrix">
   <rows>1</rows>
   <cols>5</cols>

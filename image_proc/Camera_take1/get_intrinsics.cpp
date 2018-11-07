@@ -8,8 +8,8 @@
 
 #define N_SAMPLES 65
 #define N_HCORNERS 7
-#define N_VCORNERS 5
-#define SAMPLES_DIR "chess_board/*.png"   
+#define N_VCORNERS 7
+#define SAMPLES_DIR "chess_board2/*.bmp"   
 
 int main() {
 
@@ -43,7 +43,7 @@ int main() {
       bool found = findChessboardCorners(image, board_sz, corners, CV_CALIB_CB_ADAPTIVE_THRESH | CV_CALIB_CB_FILTER_QUADS);
       if(found) {
           // Refine the corners
-          cornerSubPix(gray_image, corners, Size(11, 11), Size(-1, -1), TermCriteria(CV_TERMCRIT_EPS | CV_TERMCRIT_ITER, 30, 0.1));
+          cornerSubPix(gray_image, corners, Size(11, 11), Size(-1, -1), TermCriteria(CV_TERMCRIT_EPS | CV_TERMCRIT_ITER, 23, 0.1));
           
           /* Draw the corners for verification
           drawChessboardCorners(gray_image, board_sz, corners, found);
