@@ -1,10 +1,10 @@
 // Compile with g++ -Wall get_image.cpp -lopencv_core -lopencv_highgui -lopencv_imgproc -lopencv_imgcodecs -lueye_api -o get_image
 
-#include "defs.h"
+#include "defs.hpp"
 #include <ueye.h>
 
-#define HEIGHT 480
-#define WIDTH 752
+#define HEIGHT 1542
+#define WIDTH 2056
 #define BITSPIXEL 32
 
 void spawn_error(int cameraHandle, std::string where) {
@@ -73,16 +73,16 @@ int main( int argc, char** argv ) {
 
 	// Convert the image in memory to an OpenCV Mat variable
 	int j = 0, i = 0, m = 0;
-	while(j < 480) {
-		while(i<752*4)
+	while(j < HEIGHT) {
+		while(i<WIDTH*4)
 		{
 			if(i%4 != 3) {
-				matPrevious.ptr(j)[i] = ppcImgPrevious[j*752*4+m];
-				matActive.ptr(j)[i] = ppcImgActive[j*752*4+m];
+				matPrevious.ptr(j)[i] = ppcImgPrevious[j*WIDTH*4+m];
+				matActive.ptr(j)[i] = ppcImgActive[j*WIDTH*4+m];
 				++m;
 			}
 			else {
-				matActive.ptr(j)[i] = ppcImgActive[j*752*4+i+752*3];
+				matActive.ptr(j)[i] = ppcImgActive[j*WIDTH*4+i+WIDTH*3];
 			}
 			++i;
 		}
