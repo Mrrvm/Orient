@@ -60,6 +60,7 @@ int main( int argc, char** argv ) {
 	ostringstream imagePath;
 	while(counter < N_IMAGES) {
 
+		getchar();
 		// Allocate memory for image
 		if(is_AllocImageMem(cameraHandle, WIDTH, HEIGHT, BITSPIXEL, &img, &pid) != IS_SUCCESS) 
 			spawn_error(cameraHandle, "is_AllocImageMem");
@@ -112,7 +113,6 @@ int main( int argc, char** argv ) {
 		if(is_FreeImageMem(cameraHandle, img, pid) != IS_SUCCESS)
 			spawn_error(cameraHandle, "is_FreeImageMem");
 
-		getchar();
 	}
 	
 
