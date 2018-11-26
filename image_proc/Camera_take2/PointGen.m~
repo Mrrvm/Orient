@@ -7,7 +7,7 @@ function [p1, p2, R, t] = PointGen(width, height, nPoints, angles, t, radius)
 %      width:   Width of the image
 %      height:  Height of the image
 %      nPoints: Number of points to generate
-%      angles:  Vector of radians representing what rotation matrix to 
+%      angles:  Vector of degrees representing what rotation matrix to 
 %               generate [rx ry rz]
 %      t:       Vector of distances representing what translation to 
 %               generate [tx ty tz]
@@ -25,13 +25,13 @@ function [p1, p2, R, t] = PointGen(width, height, nPoints, angles, t, radius)
     max = height;
     p1(:, 2) = (max-min).*rand(nPoints,1) + min;
     
-    P1 = SphereProj(p1, radius, 1);
+    P1 = SphereProj(p1, radius, 1)
     
-    R = eul2rotm([angles(1) angles(2) angles(3)], 'ZYX'); 
+    R = angle2rod(angles(1), angles(2), rType(3), 'XYZ')
     
-    P2 = R*P1' + t';
+    P2 = R.*P1 + t'
     
-    p2 = SphereProj(P2', radius, 0);
+    p2 = SphereProj(P2, radius, 0)
 
 end
 

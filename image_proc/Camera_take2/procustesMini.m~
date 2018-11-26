@@ -1,0 +1,18 @@
+% Image resolution
+width = 2056; height = 1542;
+
+% Example of baseline (must be measured)
+baselineIncm = [0 10 10];
+
+% Normalize baseline
+baseline = baselineIncm/(norm(baselineIncm));
+
+%% SIMULATOR
+% Number of points to generate
+nPoints = 100;
+% Rotation to impose
+
+% Raidius of projection sphere
+
+% Generate image points
+[p1, p2, R, t] = PointGen(width, height, nPoints, [0, 0 , 0], baseline, radius);
