@@ -9,6 +9,7 @@
 #include "defs.hpp"
 
 #define MIN_HESSIAN 300
+#define PRINT 0 
 
 void GetCalibration(Mat& intrinsics, Mat& distCoeffs) {
     FileStorage fs("intrinsics.xml", FileStorage::READ);
@@ -55,9 +56,7 @@ void convertToEuleraxis(Mat rotation) {
   float e2 = (r13-r31)/(2*sin(teta));
   float e3 = (r21-r12)/(2*sin(teta));
 
-  cout << "Axis: [" << e1 << " " << e2 << " " << e3 << " ]" << endl;
-  cout << "Angle: " << teta << endl;
-
+  cout << "[" << e1 << " " << e2 << " " << e3 << " " << teta << "]" << endl;
 }
 
 
@@ -128,7 +127,9 @@ int main(int argc, char *argv[]){
     last_n_good_matches = n_good_matches;
   }
 
+  #if PRINT
   cout << "Hessian is " << true_hessian << endl;
+  #endif
 
   detector = SURF::create(true_hessian);
   detector->detect(img_1, keypoints_1);
@@ -155,6 +156,7 @@ int main(int argc, char *argv[]){
       good_matches.push_back(matches[i]);;
   }
   // Visualise the "good" matches
+  #if PRINT
   Mat img_matches;
   drawMatches(img_1, keypoints_1, img_2, keypoints_2,
               good_matches, img_matches, Scalar::all(-1), Scalar::all(-1),
@@ -164,6 +166,7 @@ int main(int argc, char *argv[]){
     printf( "-- Good Match [%d] Keypoint 1: %d  -- Keypoint 2: %d  \n", i, good_matches[i].queryIdx, good_matches[i].trainIdx ); 
   }
   waitKey(0);
+  #endif
   /*******************************/
 
   // Get keypoints from the "good" matches
@@ -176,12 +179,14 @@ int main(int argc, char *argv[]){
       cx = (float)intrinsics.at<double>(0,2);
       cy = (float)intrinsics.at<double>(1,2);
       
+      #if PRINT
       for(u_int i = 0; i < good_matches.size(); i++) 
         cout << keypoints_1[good_matches[i].queryIdx].pt << endl << endl;
       cout << endl;
       for(u_int i = 0; i < good_matches.size(); i++) 
         cout << keypoints_2[good_matches[i].trainIdx].pt << endl << endl;
-      
+      #endif
+
       for(u_int i = 0; i < good_matches.size(); i++) {
         x = keypoints_1[good_matches[i].queryIdx].pt.x;
         y = keypoints_1[good_matches[i].queryIdx].pt.y;
@@ -194,13 +199,17 @@ int main(int argc, char *argv[]){
         l = 1/(sqrt((u*u)+(v*v)+1));
         scene_points.push_back(Point3f(u/l, v/l, 1/l));
       }
+      #if PRINT
       cout << object_points << endl << endl;
       cout << scene_points << endl << endl;
+      #endif
       /*******************************/
       // Calculate rotation matrix using Procrustes
       /*******************************/
       Mat rotation = simpleProcrustes(object_points, scene_points);
+      #if PRINT
       cout << "Rotation\n" << rotation << endl;
+      #endif
       convertToEuleraxis(rotation);
       keypoints_1.clear();
       descriptors_1.release();
