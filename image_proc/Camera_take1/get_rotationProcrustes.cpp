@@ -9,7 +9,7 @@
 #include "defs.hpp"
 
 #define MIN_HESSIAN 300
-#define PRINT 0 
+#define PRINT 1 
 
 void GetCalibration(Mat& intrinsics, Mat& distCoeffs) {
     FileStorage fs("intrinsics.xml", FileStorage::READ);

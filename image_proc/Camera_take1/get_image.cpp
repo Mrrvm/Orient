@@ -1,5 +1,3 @@
-// Compile with g++ -Wall get_image.cpp -lopencv_core -lopencv_highgui -lopencv_imgproc -lopencv_imgcodecs -lueye_api -o get_image
-
 #include "defs.hpp"
 #include <ueye.h>
 

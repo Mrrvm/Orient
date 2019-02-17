@@ -17,7 +17,7 @@ int main(int argc, char *argv[])
 	LpmsSensorManagerI* manager = LpmsSensorManagerFactory();
 
 	// Connects to LPMS-B sensor with address 00:11:22:33:44:55 
-	LpmsSensorI* lpms = manager->addSensor(DEVICE_LPMS_U, "A1019SCB");
+	LpmsSensorI* lpms = manager->addSensor(DEVICE_LPMS_U, "A5014194");
 
 	//UART BAUDRATE
 	int a=100;

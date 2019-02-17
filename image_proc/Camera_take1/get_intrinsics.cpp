@@ -1,4 +1,4 @@
-/************
+  /************
  Based on 
   http://www.aishack.in/tutorials/calibrating-undistorting-opencv-oh-yeah/
   https://docs.opencv.org/2.4/modules/calib3d/doc/camera_calibration_and_3d_reconstruction.html
@@ -17,9 +17,9 @@ int main() {
     int i = 0, successes = 0;
     Size board_sz = Size(N_HCORNERS, N_VCORNERS);
     
-    vector<vector<Point3f>> object_points;
+    vector<vector<Point3f> > object_points;
     vector<Point3f> obj_original;
-    vector<vector<Point2f>> image_points;
+    vector<vector<Point2f> > image_points;
     vector<Point2f> corners;
     
     Mat image, gray_image;
@@ -43,7 +43,7 @@ int main() {
       bool found = findChessboardCorners(image, board_sz, corners, CV_CALIB_CB_ADAPTIVE_THRESH | CV_CALIB_CB_FILTER_QUADS);
       if(found) {
           // Refine the corners
-          cornerSubPix(gray_image, corners, Size(11, 11), Size(-1, -1), TermCriteria(CV_TERMCRIT_EPS | CV_TERMCRIT_ITER, 23, 0.1));
+          cornerSubPix(gray_image, corners, Size(11, 11), Size(-1, -1), TermCriteria(CV_TERMCRIT_EPS | CV_TERMCRIT_ITER, 20, 0.1));
           
           /* Draw the corners for verification
           drawChessboardCorners(gray_image, board_sz, corners, found);

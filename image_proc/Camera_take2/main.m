@@ -1,24 +1,37 @@
 %% SETTINGS
 % Image resolution
 width = 2056; height = 1542;
-% Example of baseline (must be measured)
-baselineIncm = [0 10 10];
-% Normalize baseline
-baseline = baselineIncm/(norm(baselineIncm));
-% Camera Intrinsics (to change)
-K = [1 0 0;
+nobaseline = 1;
+if nobaseline
+    baseline = [0 0 0];
+else
+    % Example of baseline (must be measured)
+    baselineIncm = [0 10 10];
+    % Normalize baseline
+    baseline = baselineIncm/(norm(baselineIncm));
+end
+I = [1 0 0;
      0 1 0;
      0 0 1];
+% Camera Intrinsics (todo)
+K = I;
+fx = K(1,1);
+fy = K(2,2);
+cx = K(1,2);
+cy = K(2,3);
+s = K(1,2); %skew
 
 %% SIMULATOR
 % Number of points to generate
 nPoints = 100;
 % Rotation to impose (XYZ)
-angles = [0 0 0];
+angles = [30 0 0];
 % Radius of projection sphere
 radius = 1;
+% Maximum depth of scene objects
+maxdepth = 1;
 % Generate image points
-[p1, p2, R, t] = PointGen(width, height, nPoints, angles, baseline, radius, K);
+[p1, p2, R, t] = PointGen(width, height, maxdepth, nPoints, angles, baseline, radius, K);
 
 %% METHODS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -27,17 +40,22 @@ P1 = SphereProj(p1, radius, 1, K);
 P2 = SphereProj(p2, radius, 1, K);
 
 %% 1 - PROCRUSTES ANALYSIS
-[d,Z,tr] = procrustes(P1,P2,'scaling', false, 'reflection', false); 
+[d,Z,tr] = procrustes(P1, P2, 'scaling', false, 'reflection', false); 
 tProcrustes = tr.c(1,:);
-rProcrustes = tr.T;
+rProcrustes =  I;
 
 %% 2 - FUNDAMENTAL MATRIX ESTIMATION
 
 %% 3 - PROCRUSTES ANALYSIS OPTIMIZATION WITH fminsearch (???) 
 
-f = @(rFmin)square(norm( P2 - (rFmin*P1' + (rFmin*baseline'-baseline') )' , 2));
-r0 = rProcrustes;
-[rFmin,fval,exitflag,output] = fminsearch(f, r0); %optimset('MaxFunEvals', nPoints*2)
+f = @(x)parameterfun(x, p1, p2, baseline, K)
+x0 = [rProcrustes(1,1); rProcrustes(1,2); rProcrustes(1,3); 
+    rProcrustes(2,1); rProcrustes(2,2); rProcrustes(2,3);
+    rProcrustes(3,1); rProcrustes(3,2); rProcrustes(3,3);
+    ones(nPoints, 1)];
+[sol,fval,exitflag,output] = fminsearch(f, x0); 
+%optimset('MaxFunEvals', nPoints*2)
+rFmin = [sol(1) sol(2) sol(3); sol(4) sol(5) sol(6); sol(7) sol(8) sol(9)];
 
 
 %% 4 - CVX
