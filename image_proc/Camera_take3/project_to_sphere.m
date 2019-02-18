@@ -8,9 +8,7 @@ function M = project_to_sphere(m, radius)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % Determine lambda as ||(?x, ?y, ?)|| = 1
-
 x = m(1,:); y = m(2,:);
-
 l = radius./sqrt( 1 + x.*x + y.*y);
 
 M = l.*m;

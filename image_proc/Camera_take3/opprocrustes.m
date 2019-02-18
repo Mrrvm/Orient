@@ -1,4 +1,12 @@
 function [R, T] = opprocrustes(m1, m2)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Input
+%   m1,m2   2D points before and after
+%            transformation
+% Output
+%   R       Rotation matrix
+%   T       Translation
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 radius = 1;
 M1 = project_to_sphere(m1, radius);
