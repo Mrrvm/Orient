@@ -1,10 +1,14 @@
-function R = get_Rmatrix(ax, ay, az)
+function R = get_Rmatrix(angles)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Input
-%   ax,ay,az   Angles of rotation per axis
+%   angles     Angles of rotation per axis
 % Output
 %   R          Rotation matrix
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+ax = angles(1);
+ay = angles(2);
+az = angles(3);
 
 Rx = [1 0       0; 
       0 cos(ax) -sin(ax); 
