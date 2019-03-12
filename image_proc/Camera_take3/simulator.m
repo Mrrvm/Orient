@@ -1,4 +1,4 @@
-function [m1, m2] = simulator(N, d, R, T)
+function [M1, M2, m1, m2] = simulator(N, d, R, T)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Input
 %   angles  Rotation angles per axis

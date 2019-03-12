@@ -24,7 +24,7 @@ m2h = [m2; ones(1,N)];
 aux = R*(Z1.*m1h)+T;
 Z2 = aux(3,:);
 
-m2e= (aux)./Z2;
+m2e = (aux)./Z2;
 m1e = (Rt*(Z2.*m2h)-Rt*T)./Z1;
 
 u1d = m1e(1,:) - m1(1,:);

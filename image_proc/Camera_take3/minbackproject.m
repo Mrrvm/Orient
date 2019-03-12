@@ -2,7 +2,9 @@ function [R, T] = minbackproject(m1, m2, B, N, R_pro)
 
 I = [1 0 0; 0 1 0; 0 0 1];
 Rinit = [R_pro(1,1:3) R_pro(2,1:3) R_pro(3,1:3)];
-Zinit = ones(1, N);
+radius = 1;
+M1 = project_to_sphere(m1, radius);
+Zinit = M1(3,:);
 
 options = optimset('MaxFunEvals',100000);
 [x,fval,exitflag,output] = fminsearch(@(x)objectivefun(x, m1, m2, B, N), [Rinit, Zinit], options);
