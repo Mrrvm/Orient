@@ -2,21 +2,22 @@ close all;
 clear all;
 
 I = [1 0 0; 0 1 0; 0 0 1];
-N = 30;                     % number of point matches
-maxd = 4;                   % max distance to camera
-mind = 3;                   % min distance to camera
+N = 10;                      % number of point matches
+maxd = 4;                      % max distance to camera
+mind = 0.05;                % min distance to camera
 B = [0.0 0.1 0.0]';         % baseline
 N_samples = 10;             % number of tries per axis
-sigma = 5;                  % normal distribution sigma
+sigma = 45;                  % normal distribution sigma
 angles = generate_angles(N_samples, sigma);
 
 % x-1,y-2,z-3 
 for i=1:3
     for j=1:N_samples
         %% Simulate points
+        clear M1 M2 m1 m2;
         R = get_Rmatrix(angles((i-1)*j+j,:));
         T = (R-I)*B;
-        [M1, M2, m1, m2] = simulator(N, R, T, maxd, mind);
+        [M1, M2, m1, m2] = simulator(N, d, R, T, min);
 
         %% Run orthogonal procrustes problem
         [R_pro, T_pro] = opprocrustes(m1, m2);
