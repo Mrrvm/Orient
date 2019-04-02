@@ -1,22 +1,20 @@
-function [R, T] = opprocrustes(m1, m2)
+function [R, T] = matprocrustes(m1, m2)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Input
+%   m1,m2   2D points before and after
 %   m1,m2    2D points before and after
 %            transformation
 % Output
 %   R       Rotation matrix
-%   T       Translation
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 radius = 1;
 M1 = project_to_sphere(m1, radius);
 M2 = project_to_sphere(m2, radius);
 
-A = M1*M2';
-[U,S,V] = svd(A);
+[d,Z,tr] = procrustes(M1', M2', 'scaling', false, 'reflection', false); 
 
-R = U*V;
-
-T = [0 0 0];
+T = tr.c(1,:)';
+R = tr.T;
 
 end

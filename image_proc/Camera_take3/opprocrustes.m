@@ -15,8 +15,8 @@ M2 = project_to_sphere(m2, radius);
 A = M1*M2';
 [U,S,V] = svd(A);
 
-R = U*V;
+R = V*U';
 
-T = [0 0 0];
+T = [0 0 0]';
 
 end
