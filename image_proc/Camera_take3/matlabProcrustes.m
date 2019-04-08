@@ -1,5 +1,6 @@
-function [R, T] = matprocrustes(m1, m2)
+function [R, T] = matlabProcrustes(m1, m2)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Run matlab procrustes function
 % Input
 %   m1,m2   2D points before and after
 %   m1,m2    2D points before and after

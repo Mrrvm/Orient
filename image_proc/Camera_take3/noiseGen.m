@@ -1,5 +1,6 @@
-function [mn1, mn2] = noisegen(m1, m2, N)
+function [mn1, mn2] = noiseGen(m1, m2, N)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Generate noise in pixel images
 % Input
 %   m1,m2    2D points before and after
 %            transformation

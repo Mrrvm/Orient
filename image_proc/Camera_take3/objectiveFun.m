@@ -1,5 +1,6 @@
-function f = objectivefun(x, m1, m2, B, N)
+function f = objectiveFun(x, m1, m2, B, N)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Objective function for MBPE
 % Input
 %   x(1:9) = R       Rotation matrix
 %   x(10:N+10) = Z1  Depth

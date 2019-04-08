@@ -1,4 +1,15 @@
-function [R, T] = epipolargeo(m1, m2, K)
+function [R, T] = epipolarGeo(m1, m2, K)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Estimate transformation using epipolar 
+% geometry
+% Input
+%   m1,m2    2D points before and after
+%            transformation
+%   K        Intrinsics matrix
+% Output
+%   R,T      Rotation and Translation
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 
 % Estimates fundamental matrix using LMedS
 F = estimateFundamentalMatrix(m1', m2');

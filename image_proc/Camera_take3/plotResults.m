@@ -1,5 +1,15 @@
-function plotgen(ang, eR_oppr, eR_fpro, eR_mbpe, eR_epog, i)
-
+function plotResults(ang, eR_oppr, eR_fpro, eR_mbpe, eR_epog, i, axis)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Plot results with a best fit curve
+% Input
+%   ang      Angles used to simulate
+%   eR_oppr  Error from Orth Procrustes
+%   eR_fpro  Error from Full Procrustes
+%   eR_mbpe  Error from Min Back Proj 
+%   eR_epog  Error from Epipolar Geometry
+%   i        Axis to plot x,y,z=1,2,3
+%   axis     Axis Label
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 label = {'error oppr', 'error fpro', 'error mbpe', 'error epog'};
 
 figure;
@@ -27,7 +37,7 @@ hold on;
 plot(fittedX, fittedY_mbpe, 'r-', 'LineWidth', 1);
 hold on;
 plot(fittedX, fittedY_epog, 'm-', 'LineWidth', 1);
-title('z axis');
+title(axis);
 legend(label,'Location','northeast');
 xlabel('Degrees');
 ylabel('Half Radians');

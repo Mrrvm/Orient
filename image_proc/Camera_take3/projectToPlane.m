@@ -1,5 +1,6 @@
-function m = project_to_plane(M)
+function m = projectToPlane(M)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Project 3D coordinates into plane
 % Input
 %   M       3D points
 % Output

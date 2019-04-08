@@ -1,5 +1,6 @@
-function R = get_Rmatrix(angles)
+function R = getRmatrix(angles)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Obtain rotation matrix from angles XYZ
 % Input
 %   angles     Angles of rotation per axis
 % Output

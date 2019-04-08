@@ -1,5 +1,6 @@
-function M = project_to_sphere(m, radius)
+function M = projectToSphere(m, radius)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Project 2D coordinates into sphere
 % Input
 %   m       2D points 
 %   radius  Sphere radius
