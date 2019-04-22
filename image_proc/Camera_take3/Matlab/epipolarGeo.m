@@ -1,21 +1,24 @@
-function [R, T] = epipolarGeo(m1, m2, K)
+    function [R, T] = epipolarGeo(m1, m2, radius, K)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Estimate transformation using epipolar 
 % geometry
 % Input
 %   m1,m2    2D points before and after
 %            transformation
+%   radius   Sphere radius
 %   K        Intrinsics matrix
 % Output
 %   R,T      Rotation and Translation
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
+Kt = K';
 
 % Estimates fundamental matrix using LMedS
+%M1 = projectToSphere(m1, radius);
+%M2 = projectToSphere(m2, radius);
 F = estimateFundamentalMatrix(m1', m2');
 
 % Obtain essential matrix
-E = K'*F*K;
+E = Kt*F*K;
 
 % Obtain R 
 W = [0 -1 0; 1 0 0; 0 0 1];
@@ -27,22 +30,32 @@ R2 = U*W*V';
 T1 = U(:,3);
 T2 = -T1;
 
-% Test all solutions
+% Get one 2D match
 p1 = [m1(:,1); 1];
 p2 = [m2(:,1); 1];
 
-p2l = R1*p1 + T1; 
+% Convert to 3D
+P1 = projectToSphere(p1, radius);
+P1 = Kt*P1;
+
+% Transform the point and compare with original
+P2l = R1*P1 + T1; 
+p2l = [projectToPlane(K*P2l); 1];
 err(1) = norm(p2 - p2l);
 
-p2l = R1*p1 + T2; 
+P2l = R1*P1 + T2; 
+p2l = [projectToPlane(K*P2l); 1];
 err(2) = norm(p2 - p2l);
 
-p2l = R2*p1 + T1; 
+P2l = R2*P1 + T1; 
+p2l = [projectToPlane(K*P2l); 1];
 err(3) = norm(p2 - p2l);
 
-p2l = R2*p1 + T2; 
+P2l = R2*P1 + T2; 
+p2l = [projectToPlane(K*P2l); 1];
 err(4) = norm(p2 - p2l);
 
+% Choose the transformation with least error
 [a chosen] = min(err);
 
 if chosen == 1

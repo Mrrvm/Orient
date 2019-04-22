@@ -1,0 +1,62 @@
+function [eRoppr, eRfpro, eRmbpe, eRepog] = simulator(angles, radius, K, nMatches, maxD, minD, B, nAngles, sigma, nPixels)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Simulate points on space and test methods
+% Input
+%   radius     Sphere radius
+%   K          Intrinsics matrix
+%   nMatches   Number of matches per sample
+%   maxD       Max distance to camera
+%   minD       Min distance to camera
+%   B          Baseline
+%   nAngles    Number of different angles to try
+%   sigma      Normal distribution sigma
+%   nPixels    Number of pixels to deviate in noise
+% Output
+%   eR...      Error from each method
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+I = [1 0 0; 0 1 0; 0 0 1];
+
+% x-1,y-2,z-3 
+for i=1:3
+    for j=1:nAngles
+        %% Simulate points
+        R = getRmatrix(angles((i-1)*j+j,:));
+        T = (R-I)*B;
+        [M1, M2, m1, m2, err] = pointGen(nMatches, R, maxd, mind, B, K);
+        if err == 1
+            continue;
+        end
+        %showScenario(M1, M2, B, R, maxd);
+        [m1, m2] = noiseGen(m1, m2, N_matches, N_pixels);
+
+        %% Run orthogonal procrustes problem
+        [R_oppr, T_oppr] = orthProcrustesProb(m1, m2, radius, K);
+        
+        %% Run matlab procrustes
+        [R_fpro, T_fpro] = fullProcrustes(m1, m2, N_matches, radius, K);
+
+        %% Run minimization of back projection error
+        [R_mbpe, T_mbpe] = minBackProject(m1, m2, B, N_matches, R_oppr, radius, K);
+        
+        %% Run epipolar geometry approach
+        [R_epog, T_epog] = epipolarGeo(m1, m2, radius, K);
+
+        %% Compute error between each method results and truth
+        r       = matrixToAxisAngle(R);
+        r_oppr  = matrixToAxisAngle(R_oppr);
+        r_fpro  = matrixToAxisAngle(R_fpro);
+        r_mbpe  = matrixToAxisAngle(R_mbpe);
+        r_epog  = matrixToAxisAngle(R_epog);
+        eR_oppr(i,j)  = norm(r-r_oppr);
+        eR_fpro(i,j)  = norm(r-r_fpro);
+        eR_mbpe(i,j)  = norm(r-r_mbpe);
+        eR_epog(i,j)  = norm(r-r_epog);
+        eT_oppr(i,j)  = norm(T-T_oppr);
+        eT_fpro(i,j)  = norm(T-T_fpro);
+        eT_mbpe(i,j)  = norm(T-T_mbpe);
+        eT_epog(i,j)  = norm(T-T_epog);
+    end  
+end
+ 
+end

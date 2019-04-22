@@ -14,8 +14,8 @@ nAngles = 10;                               % number of angles to test per axis
 sigma = 5;                                  % normal distribution sigma
 radius = 1;                                 % sphere radius
 angles = generateAngles(nAngles, sigma);    % angles to test
-maxConstD = 3;                              % max distance to camera for angle and noise testing
-minConstD = 0.05;                           % min distance to camera
+maxD = 3;                                   % max distance to camera
+minD = 0.05;                                % min distance to camera
 nPixels = 2;                                % number of pixels to deviate in noise
 %% Constants for DISTANCE (in m)
 maxDistance = 5;
@@ -35,7 +35,7 @@ if DISTANCES
     i = 1;
     while i <= iters
         distances(i+1) = distances(i) + incDistance;
-        [eRoppr, eRfpro, eRmbpe, eRepog] = simulator(angles, radius, K, nMatches, distances(i+1), distances(i), B, nAngles, nPixels);
+        [eRoppr, eRfpro, eRmbpe, eRepog] = simulator(angles, radius, K, nMatches, distances(i+1), distances(i), B, nAngles, sigma, nPixels);
         meRAllAxis(1,i) = mean(mean(eRoppr, 2));
         meRAllAxis(2,i) = mean(mean(eRfpro, 2));
         meRAllAxis(3,i) = mean(mean(eRmbpe, 2));
@@ -54,7 +54,7 @@ if NOISES
     meRAllAxis = zeros(4, iters);
     i = 1;
     while i <= iters
-        [eRoppr, eRfpro, eRmbpe, eRepog] = simulator(angles, radius, K, nMatches, maxConstD, minConstD, B, nAngles, noises(i));
+        [eRoppr, eRfpro, eRmbpe, eRepog] = simulator(angles, radius, K, nMatches, maxd, mind, B, nAngles, sigma, noises(i));
         meRAllAxis(1,i) = mean(mean(eRoppr, 2));
         meRAllAxis(2,i) = mean(mean(eRfpro, 2));
         meRAllAxis(3,i) = mean(mean(eRmbpe, 2));
@@ -68,8 +68,8 @@ end
 
 %% Test error in terms of axis
 if ANGLES
-    [eRoppr, eRfpro, eRmbpe, eRepog] = simulator(angles, radius, K, nMatches, maxConstD, minConstD, B, nAngles, nPixels);
-    % Compute mean error and variance
+    [eRoppr, eRfpro, eRmbpe, eRepog] = simulator(angles, radius, K, nMatches, maxd, mind, B, nAngles, sigma, nPixels);
+    %% Compute mean error and variance
     meRoppr = mean(eRoppr, 2);
     meRfpro = mean(eRfpro, 2);
     meRmbpe = mean(eRmbpe, 2);
@@ -82,13 +82,13 @@ if ANGLES
     fprintf('\n\t Mean | Variance \n OPPR | %f | %f \n FPRO | %f | %f \n MBPE | %f | %f \n EPOG | %f | %f \n\n', meRoppr(2), veRoppr(2), meRfpro(2), veRfpro(2), meRmbpe(2), veRmbpe(2), meRepog(2), veRepog(2));
     fprintf('\n\t Mean | Variance \n OPPR | %f | %f \n FPRO | %f | %f \n MBPE | %f | %f \n EPOG | %f | %f \n\n', meRoppr(3), veRoppr(3), meRfpro(3), veRfpro(3), meRmbpe(3), veRmbpe(3), meRepog(3), veRepog(3));
 
-    % Determine the method with least mean error
+    %% Determine the method with least mean error
     meR = [meRoppr meRfpro meRmbpe meRepog];
     [minerror, method] = min(sum(meR));
     label = {'error oppr', 'error fpro', 'error mbpe', 'error epog'};
     fprintf('\nBest method was %s with %f half radians of error.\n\n', string(label(method)), minerror);
 
-    % Visualise error in terms of axis angle
+    %% Visualise error in terms of axis angle
     ang = angles(1:nAngles)*180/pi;
     plotError(ang, [eRoppr(1,:); eRfpro(1,:); eRmbpe(1,:); eRepog(1,:)], 'Angles (?)', 'Error per angle (x axis)');
     plotError(ang, [eRoppr(2,:); eRfpro(2,:); eRmbpe(2,:); eRepog(2,:)], 'Angles (?)', 'Error per angle (y axis)');
