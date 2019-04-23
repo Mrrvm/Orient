@@ -7,8 +7,8 @@ function [R, T] = orthProcrustesProb(m1, m2, radius, K)
 %  radius    Sphere radius
 %  K         Intrinsics matrix
 % Output
-%   R       Rotation matrix
-%   T       Translation
+%  R         Rotation matrix
+%  T         Translation
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 Kt = K';

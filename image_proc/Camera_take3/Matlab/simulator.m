@@ -42,7 +42,7 @@ for i=1:3
         [Repog, Tepog] = epipolarGeo(m1, m2, radius, K);
 
         %% Compute error between each method results and truth
-        r       = matrixToAxisAngle(R);
+        r      = matrixToAxisAngle(R);
         roppr  = matrixToAxisAngle(Roppr);
         rfpro  = matrixToAxisAngle(Rfpro);
         rmbpe  = matrixToAxisAngle(Rmbpe);

@@ -40,7 +40,6 @@ P2 = Kt*P2;
 
 % Transform P1 into P2, check for positive depth
 chosen = zeros(1, 4);
-err = zeros(1, 4);
 P2l = R1*P1 + T1; 
 if P2l(3) > 0
     chosen(1) = 1;

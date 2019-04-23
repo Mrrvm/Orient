@@ -3,8 +3,8 @@ clear;
 
 %% Testing types (Choose which are ON ...)
 DISTANCES        = 0;
-NOISES           = 0;
-ANGLES           = 1;
+NOISES           = 1;
+ANGLES           = 0;
 
 %% Constants
 K = [1 0 0; 0 1 0; 0 0 1];
@@ -14,13 +14,13 @@ nAngles = 10;                               % number of angles to test per axis
 sigma = 5;                                  % normal distribution sigma
 radius = 1;                                 % sphere radius
 angles = generateAngles(nAngles, sigma);    % angles to test
-maxConstD = 3;                              % max distance to camera for angle and noise testing
+maxConstD = 0.5;                            % max distance to camera for angle and noise testing
 minConstD = 0.05;                           % min distance to camera
 nPixels = 2;                                % number of pixels to deviate in noise
 %% Constants for DISTANCE (in m)
-maxDistance = 5;
+maxDistance = 15;
 minDistance = 0.05;
-incDistance = 0.5;                               
+incDistance = 2;                               
 %% Constants for NOISE (in pixels)
 maxNoise = 6;
 minNoise = 1;
@@ -28,7 +28,7 @@ incNoise = 1;
 
 %% Test error in terms of distance
 if DISTANCES
-    iters = floor((maxDistance-minDistance)/incDistance);
+    iters = round((maxDistance-minDistance)/incDistance);
     distances = zeros(1, iters);
     distances(1) = minDistance;
     meRAllAxis = zeros(4, iters);
@@ -42,13 +42,13 @@ if DISTANCES
         meRAllAxis(4,i) = mean(mean(eRepog, 2));
         i = i + 1;
     end
-    plotError(distances(1:iter), meRAllAxis, 'Distance (m)', 'Error per distance');
+    plotError(distances(1:iters), meRAllAxis, 'Distance (m)', 'Error per distance');
     clear meRAllAxis;
 end
 
 %% Test error in terms of noise
 if NOISES
-    iters = floor((maxNoise-minNoise)/incNoise);
+    iters = round((maxNoise-minNoise)/incNoise);
     noises = zeros(1, iters);
     noises(1) = minNoise;
     meRAllAxis = zeros(4, iters);
@@ -62,7 +62,7 @@ if NOISES
         noises(i+1) = noises(i) + incNoise;
         i = i + 1;
     end
-    plotError(noises, eRAllAxis, 'Noise (pixel)', 'Error per pixel noise');
+    plotError(noises(1:iters), meRAllAxis, 'Noise (pixel)', 'Error per pixel noise');
     clear meRAllAxis;
 end
 
@@ -90,9 +90,9 @@ if ANGLES
 
     % Visualise error in terms of axis angle
     ang = angles(1:nAngles)*180/pi;
-    plotError(ang, [eRoppr(1,:); eRfpro(1,:); eRmbpe(1,:); eRepog(1,:)], 'Angles (?)', 'Error per angle (x axis)');
-    plotError(ang, [eRoppr(2,:); eRfpro(2,:); eRmbpe(2,:); eRepog(2,:)], 'Angles (?)', 'Error per angle (y axis)');
-    plotError(ang, [eRoppr(3,:); eRfpro(3,:); eRmbpe(3,:); eRepog(3,:)], 'Angles (?)', 'Error per angle (z axis)');
+    plotError(ang, [eRoppr(1,:); eRfpro(1,:); eRmbpe(1,:); eRepog(1,:)], 'Angles (degrees)', 'Error per angle (x axis)');
+    plotError(ang, [eRoppr(2,:); eRfpro(2,:); eRmbpe(2,:); eRepog(2,:)], 'Angles (degrees)', 'Error per angle (y axis)');
+    plotError(ang, [eRoppr(3,:); eRfpro(3,:); eRmbpe(3,:); eRepog(3,:)], 'Angles (degrees)', 'Error per angle (z axis)');
 end
 
 

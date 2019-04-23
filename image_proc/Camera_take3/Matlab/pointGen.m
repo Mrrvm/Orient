@@ -18,7 +18,7 @@ function [M1, M2, m1, m2, err] = pointGen(nMatches, R, maxD, minD, B, K)
 err = 0;
 errorc = 0;
 % Generate random 3D points
-M1 = (maxD-minD)*rand([3,nMatches*100])+minD;
+M1 = (maxD-minD)*rand([3,nMatches*10])+minD;
 M1 = M1+B;
 % Rotate points
 M2 = R*M1;
