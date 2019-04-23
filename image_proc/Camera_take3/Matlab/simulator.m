@@ -1,7 +1,9 @@
 function [eRoppr, eRfpro, eRmbpe, eRepog] = simulator(angles, radius, K, nMatches, maxD, minD, B, nAngles, nPixels)
+%simulator Simulate methods of computing rotation
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Simulate points on space and test methods
 % Input
+%   angles     Set of angles to test
 %   radius     Sphere radius
 %   K          Intrinsics matrix
 %   nMatches   Number of matches per sample

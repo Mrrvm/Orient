@@ -1,4 +1,4 @@
-function f = objectiveFun(x, m1, m2, B, N, K)
+function f = objectiveFun(x, m1, m2, B, nMatches, K)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Objective function for MBPE
 % Input
@@ -6,6 +6,7 @@ function f = objectiveFun(x, m1, m2, B, N, K)
 %   x(10:N+10) = Z1  Depth
 %   m1,m2            2D points
 %   B                Baseline 
+%   nMatches         Number of point matches
 %   K                Intrinsics matrix
 % Output
 %   f                Min value
@@ -21,8 +22,8 @@ Z1 = x(10:end);
 T = (R-I)*B;
 Rt = R';
 
-m1h = [m1; ones(1,N)];
-m2h = [m2; ones(1,N)];
+m1h = [m1; ones(1,nMatches)];
+m2h = [m2; ones(1,nMatches)];
 
 M2 = R*Kt*(Z1.*m1h)+T;
 Z2 = M2(3,:);

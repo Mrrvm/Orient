@@ -1,21 +1,21 @@
-function [mn1, mn2] = noiseGen(m1, m2, N, npixels)
+function [mn1, mn2] = noiseGen(m1, m2, nMatches, nPixels)
+%noiseGen Pixel Noise Generation
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Generate noise in pixel images
 % Input
-%   m1,m2    2D points before and after
-%            transformation
-%   npixels  Number of pixels to deviate 
-%            from
+%   m1,m2      2D points before and after
+%              transformation
+%   nMatches   Number of point matches
+%   nPixels    Number of pixels to deviate 
 % Output
-%   mn1,mn2  2D points before and after
-%            transformation with noise
+%   mn1,mn2    2D points before and after
+%              transformation with noise
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-pixel2m = 0.0002645833;
-max = pixel2m*npixels;
-min = -pixel2m*npixels;
-noise1 = (max-min)*rand([2, N])+min;
-noise2 = (max-min)*rand([2, N])+min;
+max =  nPixels;
+min = -nPixels;
+noise1 = (max-min)*rand([2, nMatches])+min;
+noise2 = (max-min)*rand([2, nMatches])+min;
 
 mn1 = m1 + noise1;
 mn2 = m2 + noise2;

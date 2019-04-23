@@ -1,4 +1,4 @@
-function showScenario(M1, M2, B, R, maxd)
+function showScenario(M1, M2, B, R, maxD)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Show the camera positions and points
 % Input
@@ -6,14 +6,14 @@ function showScenario(M1, M2, B, R, maxd)
 %            transformation
 %   B        Baseline
 %   R        Rotation matrix
-%   maxd     Maximum distance of the points
+%   maxD     Maximum distance of the points
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 I = [1 0 0; 0 1 0; 0 0 1];
 figure;
-xlim([0 maxd]);
-ylim([0 maxd]);
-zlim([0 maxd]);
+xlim([0 maxD]);
+ylim([0 maxD]);
+zlim([0 maxD]);
 plot3(M1(1,:), M1(2,:), M1(3,:), 'o');
 hold on;
 plot3(M2(1,:), M2(2,:), M2(3,:), 'go')

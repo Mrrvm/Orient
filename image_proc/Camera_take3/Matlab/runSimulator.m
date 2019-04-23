@@ -3,11 +3,17 @@ clear;
 
 %% Testing types (Choose which are ON ...)
 DISTANCES        = 0;
-NOISES           = 1;
-ANGLES           = 0;
+NOISES           = 0;
+ANGLES           = 1;
 
 %% Constants
-K = [1 0 0; 0 1 0; 0 0 1];
+focalLength = 1;                            % Intrinsic parameters
+m2pix = [3779.5275591 3779.5275591];        % ...
+skew = 0;                                   % ...
+axisOffset = [0 0];                         % ...
+K = [focalLength*m2pix(1) skew                 axisOffset(1); 
+     0                    focalLength*m2pix(2) axisOffset(2); 
+     0                    0                    1           ]; 
 nMatches = 20;                              % number of point matches
 B = [0.0 0.0 0.07]';                        % baseline
 nAngles = 10;                               % number of angles to test per axis
