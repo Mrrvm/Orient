@@ -1,18 +1,18 @@
 function [M1, M2, m1, m2, err] = simulator(nMatches, R, maxD, minD, B, K)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Generate 3D points
+%simulator Simulate two views of a 3D scene
 % Input
 %   nMatches Number of points
-%   R        3D points rotation to make
-%   maxD     Max distance to the camera
-%   minD     Min distance to the camera
-%   B        Baseline
-%   K        Intrinsics matrix
+%   R              3D points rotation to make
+%   maxD       Max distance to the camera
+%   minD        Min distance to the camera
+%   B              Baseline
+%   K              Intrinsics matrix
 % Output
-%   M1,M2    3D points before and after
-%   m1,m2    2D points before and after 
-%            transformation
-%   err      Error of generation success
+%   M1,M2      3D points before and after
+%   m1,m2     2D points before and after 
+%                   transformation
+%   err           Error of generation success
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 err = 0;

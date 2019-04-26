@@ -1,17 +1,17 @@
 function f = objectiveFun(x, m1, m2, B, K)
+%objectiveFun Objective function for MBPE
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Objective function for MBPE
 % Input
-%   x(1:9) = R       Rotation matrix
+%   x(1:9) = R             Rotation matrix
 %   x(10:N+10) = Z1  Depth
-%   m1,m2            2D points
-%   B                Baseline 
-%   K                Intrinsics matrix
+%   m1,m2                 2D points
+%   B                          Baseline 
+%   K                          Intrinsics matrix
 % Output
-%   f                Min value
+%   f                           Min value
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-I = [1 0 0; 0 1 0; 0 0 1];
 Ki = inv(K);
+I = [1 0 0; 0 1 0; 0 0 1];
 nMatches = size(m1, 2);
 
 R(1, 1:3) = x(1:3);

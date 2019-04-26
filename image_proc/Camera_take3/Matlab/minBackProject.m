@@ -1,16 +1,15 @@
 function [R, T] = minBackProject(m1, m2, B, Rinit, radius, K)
+%minBackProject Minimization of Back Projection Error
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Minimization of Back Projection Error
 % Input
 %   m1,m2    2D points before and after
-%            transformation
-%   B        Baseline
-%   Rinit    Initialization for the 
-%            rotation matrix
-%   radius   Sphere radius
-%   K        Intrinsics matrix
+%                  transformation
+%   B             Baseline
+%   Rinit        Initialization for the rotation matrix
+%   radius     Sphere radius
+%   K             Intrinsics matrix
 % Output
-%   R,T      Rotation and Translation
+%   R,T          Rotation and Translation
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 Ki = inv(K);
 I = [1 0 0; 0 1 0; 0 0 1];

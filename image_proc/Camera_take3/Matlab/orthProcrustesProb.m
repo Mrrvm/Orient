@@ -1,14 +1,15 @@
 function [R, T] = orthProcrustesProb(m1, m2, radius, K)
+%orthProcrustesProb Estimate using only orthogonal 
+% procrustes
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Estimate using only orthogonal procrustes
 % Input
-%   m1,m2    2D points before and after
-%            transformation
+%   m1,m2  2D points before and after
+%                transformation
 %  radius    Sphere radius
-%  K         Intrinsics matrix
+%  K            Intrinsics matrix
 % Output
-%  R         Rotation matrix
-%  T         Translation
+%  R            Rotation matrix
+%  T            Translation
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 Ki = inv(K);

@@ -1,7 +1,7 @@
 function [R, T] = epipolarGeo(m1, m2, radius, K)
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Estimate transformation using epipolar 
+%epipolarGeo Estimate transformation using epipolar 
 % geometry
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Input
 %   m1,m2    2D points before and after
 %            transformation

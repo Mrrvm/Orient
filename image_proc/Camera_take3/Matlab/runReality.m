@@ -1,12 +1,12 @@
 close all;
 clear;
 
+B         = [0.0 0.0 0.07]';  % baseline
+radius = 1;
 K = [1.1446e+03 0                    9.8904e+02; 
         0                  1.1452e+03  7.554e+02  ;
         0                  0                    1                 ];
-B              = [0.0 0.0 0.07]';         % baseline
-radius = 1;
-
+    
 %% Obtain 2D points from camera images
 [imgs1, imgs2] = readImages('../cam_img');
 
@@ -37,7 +37,7 @@ for k = 1:numel(imgs1)
     [Rfpro, Tfpro] = fullProcrustes(m1, m2, radius, K);
 
     %% Run minimization of back projection error
-    [Rmbpe, Tmbpe] = minBackProject(m1, m2, B, nMatches, Roppr, radius, K);
+    [Rmbpe, Tmbpe] = minBackProject(m1, m2, B, Roppr, radius, K);
 
     %% Run epipolar geometry approach
     [Repog, Tepog] = epipolarGeo(m1, m2, radius, K);

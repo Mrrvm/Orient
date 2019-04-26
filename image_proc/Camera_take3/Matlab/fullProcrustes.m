@@ -1,7 +1,7 @@
 function [R, T] = fullProcrustes(m1, m2, radius, K)
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Procrustes analysis with SVD and 
+%fullProcrustes Procrustes analysis with SVD and 
 % point standardization
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Input
 %   m1,m2    2D points before and after
 %            transformation
