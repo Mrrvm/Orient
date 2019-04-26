@@ -3,26 +3,26 @@ clear;
 
 %% Testing types (Choose which are ON ...)
 DISTANCES        = 0;
-NOISES           = 0;
-ANGLES           = 1;
+NOISES              = 0;
+ANGLES             = 1;
 
 %% Constants
-focalLength = 1;                            % Intrinsic parameters
-m2pix = [3779.5275591 3779.5275591];        % ...
-skew = 0;                                   % ...
-axisOffset = [0 0];                         % ...
-K = [focalLength*m2pix(1) skew                 axisOffset(1); 
-     0                    focalLength*m2pix(2) axisOffset(2); 
-     0                    0                    1           ]; 
-nMatches = 20;                              % number of point matches
-B = [0.0 0.0 0.07]';                        % baseline
-nAngles = 10;                               % number of angles to test per axis
-sigma = 5;                                  % normal distribution sigma
-radius = 1;                                 % sphere radius
-angles = generateAngles(nAngles, sigma);    % angles to test
-maxConstD = 0.5;                            % max distance to camera for angle and noise testing
-minConstD = 0.05;                           % min distance to camera
-nPixels = 2;                                % number of pixels to deviate in noise
+focalLength = 1;                                                % Intrinsic parameters
+m2pix = [3779.5275591 3779.5275591];          % ...
+skew = 0;                                                           % ...
+axisOffset = [0 0];                                              % ...
+K = [focalLength*m2pix(1) skew                           axisOffset(1); 
+     0                                   focalLength*m2pix(2) axisOffset(2); 
+     0                                   0                                 1           ]; 
+nMatches = 20;                                                  % number of point matches
+B = [0.0 0.0 0.07]';                                             % baseline
+nAngles = 10;                                                    % number of angles to test per axis
+sigma = 5;                                                         % normal distribution sigma
+radius = 1;                                                         % sphere radius
+angles = generateAngles(nAngles, sigma);        % angles to test
+maxConstD = 1;                                                % max distance to camera for angle and noise testing
+minConstD = 0.05;                                            % min distance to camera
+nPixels = 2;                                                       % number of pixels to deviate in noise
 %% Constants for DISTANCE (in m)
 maxDistance = 15;
 minDistance = 0.05;
@@ -41,7 +41,7 @@ if DISTANCES
     i = 1;
     while i <= iters
         distances(i+1) = distances(i) + incDistance;
-        [eRoppr, eRfpro, eRmbpe, eRepog] = simulator(angles, radius, K, nMatches, distances(i+1), distances(i), B, nAngles, nPixels);
+        [eRoppr, eRfpro, eRmbpe, eRepog] =  runSimulation(angles, radius, K, nMatches, distances(i+1), distances(i), B, nAngles, nPixels);
         meRAllAxis(1,i) = mean(mean(eRoppr, 2));
         meRAllAxis(2,i) = mean(mean(eRfpro, 2));
         meRAllAxis(3,i) = mean(mean(eRmbpe, 2));
@@ -60,7 +60,7 @@ if NOISES
     meRAllAxis = zeros(4, iters);
     i = 1;
     while i <= iters
-        [eRoppr, eRfpro, eRmbpe, eRepog] = simulator(angles, radius, K, nMatches, maxConstD, minConstD, B, nAngles, noises(i));
+        [eRoppr, eRfpro, eRmbpe, eRepog] =  runSimulation(angles, radius, K, nMatches, maxConstD, minConstD, B, nAngles, noises(i));
         meRAllAxis(1,i) = mean(mean(eRoppr, 2));
         meRAllAxis(2,i) = mean(mean(eRfpro, 2));
         meRAllAxis(3,i) = mean(mean(eRmbpe, 2));
@@ -74,7 +74,7 @@ end
 
 %% Test error in terms of axis
 if ANGLES
-    [eRoppr, eRfpro, eRmbpe, eRepog] = simulator(angles, radius, K, nMatches, maxConstD, minConstD, B, nAngles, nPixels);
+    [eRoppr, eRfpro, eRmbpe, eRepog] =  runSimulation(angles, radius, K, nMatches, maxConstD, minConstD, B, nAngles, nPixels);
     % Compute mean error and variance
     meRoppr = mean(eRoppr, 2);
     meRfpro = mean(eRfpro, 2);
@@ -102,7 +102,44 @@ if ANGLES
 end
 
 
+function [eRoppr, eRfpro, eRmbpe, eRepog] = runSimulation(angles, radius, K, nMatches, maxD, minD, B, nAngles, nPixels)
+%runSimulation
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Simulate points on space and estimate transformation
+% Input
+%   angles     Set of angles to test
+%   radius     Sphere radius
+%   K          Intrinsics matrix
+%   nMatches   Number of matches per sample
+%   maxD       Max distance to camera
+%   minD       Min distance to camera
+%   B          Baseline
+%   nAngles    Number of different angles to try
+%   nPixels    Number of pixels to deviate in noise
+% Output
+%   eR...      Error from each method
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+I = [1 0 0; 0 1 0; 0 0 1];
+
+% x-1, y-2, z-3 
+for i=1:3
+    for j=1:nAngles
+        %% Simulate points
+        R = getRmatrix(angles((i-1)*j+j,:));
+        T = (R-I)*B;
+        [M1, M2, m1, m2, err] = simulator(nMatches, R, maxD, minD, B, K);
+        if err == 1
+            continue;
+        end
+        %showScenario(M1, M2, B, R, maxD);
+        [m1, m2] = noiseGen(m1, m2, nMatches, nPixels);
+        %% Estimate transformation
+        [eRoppr, eRfpro, eRmbpe, eRepog] = estimator(m1, m2, radius, K, B);
+    end  
+end
+ 
+end
 
 
 

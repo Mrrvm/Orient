@@ -1,63 +1,55 @@
-function [eRoppr, eRfpro, eRmbpe, eRepog] = simulator(angles, radius, K, nMatches, maxD, minD, B, nAngles, nPixels)
-%simulator Simulate methods of computing rotation
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Simulate points on space and test methods
+function [M1, M2, m1, m2, err] = simulator(nMatches, R, maxD, minD, B, K)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Generate 3D points
 % Input
-%   angles     Set of angles to test
-%   radius     Sphere radius
-%   K          Intrinsics matrix
-%   nMatches   Number of matches per sample
-%   maxD       Max distance to camera
-%   minD       Min distance to camera
-%   B          Baseline
-%   nAngles    Number of different angles to try
-%   nPixels    Number of pixels to deviate in noise
+%   nMatches Number of points
+%   R        3D points rotation to make
+%   maxD     Max distance to the camera
+%   minD     Min distance to the camera
+%   B        Baseline
+%   K        Intrinsics matrix
 % Output
-%   eR...      Error from each method
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%   M1,M2    3D points before and after
+%   m1,m2    2D points before and after 
+%            transformation
+%   err      Error of generation success
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-I = [1 0 0; 0 1 0; 0 0 1];
-
-% x-1,y-2,z-3 
-for i=1:3
-    for j=1:nAngles
-        %% Simulate points
-        R = getRmatrix(angles((i-1)*j+j,:));
-        T = (R-I)*B;
-        [M1, M2, m1, m2, err] = pointGen(nMatches, R, maxD, minD, B, K);
-        if err == 1
-            continue;
-        end
-        %showScenario(M1, M2, B, R, maxD);
-        [m1, m2] = noiseGen(m1, m2, nMatches, nPixels);
-
-        %% Run orthogonal procrustes problem
-        [Roppr, Toppr] = orthProcrustesProb(m1, m2, radius, K);
-        
-        %% Run matlab procrustes
-        [Rfpro, Tfpro] = fullProcrustes(m1, m2, radius, K);
-
-        %% Run minimization of back projection error
-        [Rmbpe, Tmbpe] = minBackProject(m1, m2, B, nMatches, Roppr, radius, K);
-        
-        %% Run epipolar geometry approach
-        [Repog, Tepog] = epipolarGeo(m1, m2, radius, K);
-
-        %% Compute error between each method results and truth
-        r      = matrixToAxisAngle(R);
-        roppr  = matrixToAxisAngle(Roppr);
-        rfpro  = matrixToAxisAngle(Rfpro);
-        rmbpe  = matrixToAxisAngle(Rmbpe);
-        repog  = matrixToAxisAngle(Repog);
-        eRoppr(i,j)  = norm(r-roppr);
-        eRfpro(i,j)  = norm(r-rfpro);
-        eRmbpe(i,j)  = norm(r-rmbpe);
-        eRepog(i,j)  = norm(r-repog);
-        eToppr(i,j)  = norm(T-Toppr);
-        eTfpro(i,j)  = norm(T-Tfpro);
-        eTmbpe(i,j)  = norm(T-Tmbpe);
-        eTepog(i,j)  = norm(T-Tepog);
-    end  
+err = 0;
+errorc = 0;
+% Generate random 3D points
+M1 = (maxD-minD)*rand([3, nMatches*10])+minD;
+M1 = M1+B;
+% Rotate points
+M2 = R*M1;
+% Keep the points with positive depth only
+keep = M2(3, :) > 0;
+M1 = M1(:, keep);
+M2 = M2(:, keep);
+% Guarantee there are at least N points with positive depth
+while size(M1, 2) < nMatches
+    M1 = (maxD-minD)*rand([3,N*10])+minD;
+    M1 = M1+B;
+    M2 = R*M1;
+    keep = M2(3, :) > 0;
+    M1 = M1(:, keep);
+    M2 = M2(:, keep);
+    errorc = errorc + 1;
+    if errorc > 5 % try this max 5 times
+        err = 1;
+        break;
+    end
 end
- 
+
+if err ~= 1 
+    M1 = M1(1:3, 1:nMatches); 
+    M2 = M2(1:3, 1:nMatches); 
+    
+    m1 = projectToPlane(K*M1);
+    m2 = projectToPlane(K*M2);
+else
+    m1 = 0; m2 = 0;
 end
+
+end
+
