@@ -1,23 +1,23 @@
-function [plotAng, axisCount, eRoppr, eRfpro, eRmbpe, eRepog] = runReality(samplePer, enoughPer, maxIters, maxErr, B,  radius, K, imgDir)
+function [plotAng, axisCount, eRoppr, eRfpro, eRmbpe, eRepog] = runReality(imgs1, imgs2, axisCount, samplePer, enoughPer, maxIters, maxErr, B,  radius, K)
 %runReality Estimate transformation on real data
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Input
-%   samplePer  Percentage of the points set to target randomly
-%   enoughPer  Percentage of the points set to accept the model
-%   maxErr       Maximum error allowed for a good model
-%   maxIters    Maximum number of iterations for ransac
-%   B                Baseline
-%   radius        Sphere radius
-%   K                Intrinsics matrix
-%   imgDir       Image directory to read from
+%   imgs1,imgs2 Data with grayscale images, axis, angle and 
+%                         distance information
+%   axisCount      Number of images per axis
+%   samplePer      Percentage of the points set to target randomly
+%   enoughPer     Percentage of the points set to accept the model
+%   maxErr           Maximum error allowed for a good model
+%   maxIters        Maximum number of iterations for ransac
+%   B                    Baseline
+%   radius            Sphere radius
+%   K                    Intrinsics matrix
+%   imgDir           Image directory to read from
 % Output
-%   eR...           Error from each method
-%   plotAng     Angles used for plotting
+%   eR...               Error from each method
+%   plotAng          Angles used for plotting
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     
-%% Obtain 2D points from camera images
-[imgs1, imgs2, axisCount] = readImages(imgDir);
-
 i = 1;
 j = 1;
 for k = 1:numel(imgs1)
@@ -34,7 +34,7 @@ for k = 1:numel(imgs1)
     bestInds = ransacByProcrustes(m1a.Location', m2a.Location', K, radius, maxErr, maxIters, samplePer, enoughPer);
     m1Best = m1a(bestInds'>0,:);
     m2Best = m2a(bestInds'>0,:);
-    figure; showMatchedFeatures(img1, img2, m1Best', m2Best');
+    %figure; showMatchedFeatures(img1, img2, m1Best', m2Best');
     
     m1 = double(m1Best.Location');
     m2 = double(m2Best.Location');
@@ -62,6 +62,7 @@ for k = 1:numel(imgs1)
     
     % Save angles for plot
     plotAng(i,j) = imgs1(k).angle*pi/180;
+    
     
     R = getRmatrix(angles);
     %% Estimate transformation error

@@ -7,6 +7,11 @@ SIM_NOISES           = 0;
 SIM_AXISANGLES   = 0;
 REAL_DISTANCES   = 0;
 REAL_AXISANGLES = 1;
+% ATTENTION -----------------------------------------------
+% Images must have the following name "im[1/2][x/y/z][angle in
+% degrees].jpg" and be organized by distance in different directories.
+% Each directory should be named d[distance in meters].
+% ---------------------------------------------------------
 
 %% Constants
 if SIM_DISTANCES || SIM_NOISES || SIM_AXISANGLES
@@ -39,7 +44,12 @@ if SIM_DISTANCES || SIM_NOISES || SIM_AXISANGLES
         incNoise   = 1;
     end
 else
-    imgDir = '../cam_img';          % images directory
+    if REAL_DISTANCES 
+        allFilesDir = '../cam_img';     % files directory
+    end
+    if REAL_AXISANGLES
+        imgsDir = '.../cam_img/d5';  % imgs directory
+    end
     samplePer = 0.10;                 % ransac parameters
     enoughPer = 0.50;                % ...
     maxIters    = 20;                   % ...
@@ -123,12 +133,30 @@ end
 
 %% Test error in terms of distance using real data
 if REAL_DISTANCES
-    
+    [dirs, dists] = readDirs(allFilesDir);
+    for i = 1:size(dirs,1)
+        [imgs1, imgs2, axisCount] = readImages(strcat(allFilesDir, '/', dirs(i).name));
+        [eRoppr, eRfpro, eRmbpe, eRepog] =  runReality(imgs1, imgs2, axisCount, samplePer, enoughPer, maxIters, maxErr, B,  radius, K);
+        clear imgs1 imgs2 axisCount;
+        sz = size(eRoppr(1,:), 2);
+        meRAllAxis(1,i) = safeMean([safeMean(eRoppr(1,:), sz)+safeMean(eRoppr(2,:), sz)+safeMean(eRoppr(3,:), sz)], 3);
+        sz = size(eRfpro(1,:), 2);
+        meRAllAxis(2,i) = safeMean([safeMean(eRfpro(1,:), sz)+safeMean(eRfpro(2,:), sz)+safeMean(eRfpro(3,:),sz)], 3);
+        sz = size(eRmbpe(1,:), 2);
+        meRAllAxis(3,i) = safeMean([safeMean(eRmbpe(1,:), sz)+safeMean(eRmbpe(2,:), sz)+safeMean(eRmbpe(3,:), size(eRoppr(1,:), 2)], 3);
+        meRAllAxis(4,i) = safeMean([safeMean(eRepog(1,:), size(eRepog(1,:), 2))+safeMean(eRepog(2,:), size(eRoppr(1,:), 2))+safeMean(eRepog(3,:), size(eRepog(1,:), 2)], 3);
+        
+    end
+    plotError(distances(1:iters), meRAllAxis, 'Distance (m)', 'Error per distance  - Sim data');
+    clear meRAllAxis;
+        
+    end
 end
 
 %% Test error in terms of angles using real data
 if REAL_AXISANGLES
-    [angles, axisCount, eRoppr, eRfpro, eRmbpe, eRepog] = runReality(samplePer, enoughPer, maxIters, maxErr, B,  radius, K, imgDir)
+    [imgs1, imgs2, axisCount] = readImages(imgsDir);
+    [angles, axisCount, eRoppr, eRfpro, eRmbpe, eRepog] = runReality(imgs1, imgs2, axisCount, samplePer, enoughPer, maxIters, maxErr, B,  radius, K);
     % Compute mean error and variance
     meRoppr = mean(eRoppr, 2);
     meRfpro = mean(eRfpro, 2);
@@ -139,21 +167,20 @@ if REAL_AXISANGLES
     veRfpro = sum((eRfpro - meRfpro).^2,2)/nAngles;
     veRmbpe = sum((eRmbpe - meRmbpe).^2,2)/nAngles;
     veRepog = sum((eRepog - meRepog).^2,2)/nAngles;
-    
-    ang = angles(1:nAngles)*180/pi;
+    % Visualise error in terms of axis angle
+    ang = angles*180/pi;
     if axisCount(1)
         fprintf('\n\t Mean | Variance \n OPPR | %f | %f \n FPRO | %f | %f \n MBPE | %f | %f \n EPOG | %f | %f \n\n', meRoppr(1), veRoppr(1), meRfpro(1), veRfpro(1), meRmbpe(1), veRmbpe(1), meRepog(1), veRepog(1));
-        plotError(ang, [eRoppr(1,:); eRfpro(1,:); eRmbpe(1,:); eRepog(1,:)], 'Angles (degrees)', 'Error per angle (x axis) - Real data');
+        plotError(ang(1,:), [eRoppr(1,:); eRfpro(1,:); eRmbpe(1,:); eRepog(1,:)], 'Angles (degrees)', 'Error per angle (x axis) - Real data');
     end
     if axisCount(2)
         fprintf('\n\t Mean | Variance \n OPPR | %f | %f \n FPRO | %f | %f \n MBPE | %f | %f \n EPOG | %f | %f \n\n', meRoppr(2), veRoppr(2), meRfpro(2), veRfpro(2), meRmbpe(2), veRmbpe(2), meRepog(2), veRepog(2));
-        plotError(ang, [eRoppr(2,:); eRfpro(2,:); eRmbpe(2,:); eRepog(2,:)], 'Angles (degrees)', 'Error per angle (y axis) - Real data');
+        plotError(ang(2,:), [eRoppr(2,:); eRfpro(2,:); eRmbpe(2,:); eRepog(2,:)], 'Angles (degrees)', 'Error per angle (y axis) - Real data');
     end
     if axisCount(3)
         fprintf('\n\t Mean | Variance \n OPPR | %f | %f \n FPRO | %f | %f \n MBPE | %f | %f \n EPOG | %f | %f \n\n', meRoppr(3), veRoppr(3), meRfpro(3), veRfpro(3), meRmbpe(3), veRmbpe(3), meRepog(3), veRepog(3));
-        plotError(ang, [eRoppr(3,:); eRfpro(3,:); eRmbpe(3,:); eRepog(3,:)], 'Angles (degrees)', 'Error per angle (z axis) - Real data');
+        plotError(ang(3,:), [eRoppr(3,:); eRfpro(3,:); eRmbpe(3,:); eRepog(3,:)], 'Angles (degrees)', 'Error per angle (z axis) - Real data');
     end
-    
     % Determine the method with least mean error
     meR = [meRoppr meRfpro meRmbpe meRepog];
     [minerror, method] = min(sum(meR));

@@ -1,0 +1,41 @@
+function res = safeMean(val, option)
+
+szh = size(val, 2);
+szv = size(val,1);
+    
+if option == 1
+    for j=1:szv
+        res = 0;
+        count = 0;
+        for i=1:szh
+            if val(j, i) ~= 0
+                res(j) = res(j) + val(j, i);
+            end
+            count = count + 1;
+        end
+        if res(j) ~= 0
+            res(j) =  res(j)/count;
+        end
+    end
+end
+
+    
+if option == 1
+    for j=1:szh
+        res = 0;
+        count = 0;
+        for i=1:szv
+            if val(i, j) ~= 0
+                res(j) = res(j) + val(i, j);
+            end
+            count = count + 1;
+        end
+        if res(j) ~= 0
+         res(j) =  res(j)/count;
+        end
+    end
+end
+
+
+
+

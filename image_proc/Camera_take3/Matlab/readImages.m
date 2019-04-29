@@ -1,4 +1,5 @@
 function [imgs1, imgs2, axisCount] = readImages(imgDir)
+%readImages Read images with name im[1/2][x/y/z][angle in degrees].jpg
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Read images into useful data
 % Input
@@ -13,7 +14,8 @@ axisCount = zeros(1,3);
 
 files1 = dir(fullfile(imgDir,'im1*'));
 files2 = dir(fullfile(imgDir,'im2*'));
-for k = 1:numel(files1)
+
+for k = 1:numel(files1) 
     name = files1(k).name;
     img = fullfile(imgDir, name);
     grayimg = rgb2gray(imread(img));
@@ -21,13 +23,9 @@ for k = 1:numel(files1)
     
     imgs1(k).axis = name(4);
     imgs2(k).axis = imgs1(k).axis;
-    [token remain] = strtok(name(6:end), 'd');
+    [token remain] = strtok(name(5:end), '.');
     imgs1(k).angle = str2double(token);
     imgs2(k).angle = imgs1(k).angle;
-    [token remain] = strtok(remain, 'd');
-    [token remain] = strtok(token, '.');
-    imgs1(k).distance = str2double(token);
-    imgs2(k).distance= imgs1(k).distance;
     
     name = files2(k).name;
     img = fullfile(imgDir, name);

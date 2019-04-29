@@ -1,12 +1,17 @@
 close all;
 clear;
 
-%% Testing types (Choose which are ON ...)
+%% Testing types (Choose one ...)
 SIM_DISTANCES     = 0;
 SIM_NOISES           = 0;
 SIM_AXISANGLES   = 0;
-REAL_DISTANCES   = 0;
-REAL_AXISANGLES = 1;
+REAL_DISTANCES   = 1;
+REAL_AXISANGLES = 0;
+% ATTENTION -----------------------------------------------
+% Images must have the following name "im[1/2][x/y/z][angle in
+% degrees].jpg" and be organized by distance in different directories.
+% Each directory should be named d[distance in meters].
+% ---------------------------------------------------------
 
 %% Constants
 if SIM_DISTANCES || SIM_NOISES || SIM_AXISANGLES
@@ -39,7 +44,8 @@ if SIM_DISTANCES || SIM_NOISES || SIM_AXISANGLES
         incNoise   = 1;
     end
 else
-    imgDir = '../cam_img';          % images directory
+    allFilesDir = '../cam_img';     % files directory
+    imgsDir = 'd5';                      % imgs directory
     samplePer = 0.10;                 % ransac parameters
     enoughPer = 0.50;                % ...
     maxIters    = 20;                   % ...
@@ -123,12 +129,24 @@ end
 
 %% Test error in terms of distance using real data
 if REAL_DISTANCES
-    
+    [dirs, dists] = readDirs(allFilesDir);
+    for i = 1:size(dirs,1)
+        [imgs1, imgs2, axisCount] = readImages(strcat(allFilesDir, '/', dirs(i).name));
+        [eRoppr, eRfpro, eRmbpe, eRepog] =  runReality(imgs1, imgs2, axisCount, samplePer, enoughPer, maxIters, maxErr, B,  radius, K);
+        clear imgs1 imgs2 axisCount;
+        meRAllAxis(1,i) = safeMean(safeMean(eRoppr, 2), 1);
+        meRAllAxis(2,i) = safeMean(safeMean(eRfpro, 2), 1);
+        meRAllAxis(3,i) = safeMean(safeMean(eRmbpe, 2), 1);
+        meRAllAxis(4,i) = safeMean(safeMean(eRepog, 2), 1);
+    end
+    plotError(dists, meRAllAxis, 'Distance (m)', 'Error per distance  - Real data');
+    clear meRAllAxis;
 end
 
 %% Test error in terms of angles using real data
 if REAL_AXISANGLES
-    [angles, axisCount, eRoppr, eRfpro, eRmbpe, eRepog] = runReality(samplePer, enoughPer, maxIters, maxErr, B,  radius, K, imgDir);
+    [imgs1, imgs2, axisCount] = readImages(strcat(allFilesDir, '/', imgsDir));
+    [angles, axisCount, eRoppr, eRfpro, eRmbpe, eRepog] = runReality(imgs1, imgs2, axisCount, samplePer, enoughPer, maxIters, maxErr, B,  radius, K);
     % Compute mean error and variance
     meRoppr = mean(eRoppr, 2);
     meRfpro = mean(eRfpro, 2);
