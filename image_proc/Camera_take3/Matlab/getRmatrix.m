@@ -2,7 +2,7 @@ function R = getRmatrix(angles)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Obtain rotation matrix from angles XYZ
 % Input
-%   angles     Angles of rotation per axis
+%   angles     Angles of rotation per axis in radians
 % Output
 %   R          Rotation matrix
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

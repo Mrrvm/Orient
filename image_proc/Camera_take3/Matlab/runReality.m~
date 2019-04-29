@@ -1,25 +1,21 @@
-function [plotAng, axisCount, eRoppr, eRfpro, eRmbpe, eRepog] = runReality(samplePer, enoughPer, maxIters, maxErr, B,  radius, K, imgDir)
-%runReality Estimate transformation on real data
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Input
-%   samplePer  Percentage of the points set to target randomly
-%   enoughPer  Percentage of the points set to accept the model
-%   maxErr       Maximum error allowed for a good model
-%   maxIters    Maximum number of iterations for ransac
-%   B                Baseline
-%   radius        Sphere radius
-%   K                Intrinsics matrix
-%   imgDir       Image directory to read from
-% Output
-%   eR...           Error from each method
-%   plotAng     Angles used for plotting
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+close all;
+clear;
+
+samplePer = 0.10;          % ransac parameters
+enoughPer = 0.50;         % ...
+maxIters = 20;               % ...
+maxErr =  0.0003;          % ...
+B         = [0.0 0.0 0.01]';  % baseline
+radius = 1;
+K = [1.1446e+03 0                    9.8904e+02; 
+        0                  1.1452e+03  7.554e+02  ;
+        0                  0                    1                 ];
     
 %% Obtain 2D points from camera images
-[imgs1, imgs2, axisCount] = readImages(imgDir);
+[imgs1, imgs2, axisCount] = readImages('../cam_img');
 
 i = 1;
-j = 1;
+j
 for k = 1:numel(imgs1)
     %% Extract matches from images
     img1 = imgs1(k).data;
@@ -43,25 +39,22 @@ for k = 1:numel(imgs1)
         i = 2; % change to y
         j = 1;
     end
-    if k == axisCount(1) + axisCount(2) + 1
+    if k == axisCount(2) + 1
             i = 3; % change to z
             j = 1;
     end
     
     if i == 1
-        angles = [imgs1(k).angle*pi/180 0 0];
+        angles = [imgs1(k).angle 0 0];
     else
         if i == 2
-            angles = [0 imgs1(k).angle*pi/180 0];
+            angles = [0 imgs1(k).angle 0];
         else 
             if i ==3
-                angles = [0 0 imgs1(k).angle*pi/180];
+                angles = [0 0 imgs1(k).angle];
             end
         end
     end
-    
-    % Save angles for plot
-    plotAng(i,j) = imgs1(k).angle*pi/180;
     
     R = getRmatrix(angles);
     %% Estimate transformation error
@@ -70,5 +63,5 @@ for k = 1:numel(imgs1)
 
 end
 
-end
+
 

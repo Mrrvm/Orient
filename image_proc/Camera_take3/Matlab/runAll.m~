@@ -128,7 +128,7 @@ end
 
 %% Test error in terms of angles using real data
 if REAL_AXISANGLES
-    [angles, axisCount, eRoppr, eRfpro, eRmbpe, eRepog] = runReality(samplePer, enoughPer, maxIters, maxErr, B,  radius, K, imgDir);
+    [angles, axisCount, eRoppr, eRfpro, eRmbpe, eRepog] = runReality(samplePer, enoughPer, maxIters, maxErr, B,  radius, K, imgDir)
     % Compute mean error and variance
     meRoppr = mean(eRoppr, 2);
     meRfpro = mean(eRfpro, 2);
@@ -139,20 +139,21 @@ if REAL_AXISANGLES
     veRfpro = sum((eRfpro - meRfpro).^2,2)/nAngles;
     veRmbpe = sum((eRmbpe - meRmbpe).^2,2)/nAngles;
     veRepog = sum((eRepog - meRepog).^2,2)/nAngles;
-    % Visualise error in terms of axis angle
-    ang = angles*180/pi;
+    
+    ang = angles(1:nAngles)*180/pi;
     if axisCount(1)
         fprintf('\n\t Mean | Variance \n OPPR | %f | %f \n FPRO | %f | %f \n MBPE | %f | %f \n EPOG | %f | %f \n\n', meRoppr(1), veRoppr(1), meRfpro(1), veRfpro(1), meRmbpe(1), veRmbpe(1), meRepog(1), veRepog(1));
-        plotError(ang(1,:), [eRoppr(1,:); eRfpro(1,:); eRmbpe(1,:); eRepog(1,:)], 'Angles (degrees)', 'Error per angle (x axis) - Real data');
+        plotError(ang, [eRoppr(1,:); eRfpro(1,:); eRmbpe(1,:); eRepog(1,:)], 'Angles (degrees)', 'Error per angle (x axis) - Real data');
     end
     if axisCount(2)
         fprintf('\n\t Mean | Variance \n OPPR | %f | %f \n FPRO | %f | %f \n MBPE | %f | %f \n EPOG | %f | %f \n\n', meRoppr(2), veRoppr(2), meRfpro(2), veRfpro(2), meRmbpe(2), veRmbpe(2), meRepog(2), veRepog(2));
-        plotError(ang(2,:), [eRoppr(2,:); eRfpro(2,:); eRmbpe(2,:); eRepog(2,:)], 'Angles (degrees)', 'Error per angle (y axis) - Real data');
+        plotError(ang, [eRoppr(2,:); eRfpro(2,:); eRmbpe(2,:); eRepog(2,:)], 'Angles (degrees)', 'Error per angle (y axis) - Real data');
     end
     if axisCount(3)
         fprintf('\n\t Mean | Variance \n OPPR | %f | %f \n FPRO | %f | %f \n MBPE | %f | %f \n EPOG | %f | %f \n\n', meRoppr(3), veRoppr(3), meRfpro(3), veRfpro(3), meRmbpe(3), veRmbpe(3), meRepog(3), veRepog(3));
-        plotError(ang(3,:), [eRoppr(3,:); eRfpro(3,:); eRmbpe(3,:); eRepog(3,:)], 'Angles (degrees)', 'Error per angle (z axis) - Real data');
+        plotError(ang, [eRoppr(3,:); eRfpro(3,:); eRmbpe(3,:); eRepog(3,:)], 'Angles (degrees)', 'Error per angle (z axis) - Real data');
     end
+    
     % Determine the method with least mean error
     meR = [meRoppr meRfpro meRmbpe meRepog];
     [minerror, method] = min(sum(meR));

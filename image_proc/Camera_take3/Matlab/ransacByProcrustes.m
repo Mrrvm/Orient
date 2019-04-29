@@ -1,20 +1,22 @@
-function bestInds =  ransacByProcrustes(m1, m2, K, radius)
+function bestInds =  ransacByProcrustes(m1, m2, K, radius, maxErr, maxIters, samplePer, enoughPer)
 %ransacByProcrustes Ransac point matches by distance
 %%%%%%%%%%%%%%%%%%%s%%%%%%%%%%%%%%%%%%%%%%
 % Filter point matches by distance through ransac
 % Input
 %   m1,m2       2D points before and after
 %                     transformation
-%   nMatches   Number of point matches
+%   K                Intrinsics matrix
+%   maxErr       Maximum error allowed for a good model
+%   maxIters    Maximum number of iterations for ransac
+%   samplePer  Percentage of the points set to target randomly
+%   enoughPer  Percentage of the points set to accept the model
 % Output
 %   l1, l2          2D points indexes to keep
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-maxIters = 20;
 i = 0;
-nRand = round(size(m1,2)*0.10);
-maxErr =  0.0003;
-enough = round(size(m1,2)*0.50);
+nRand = round(size(m1,2)*samplePer);
+enough = round(size(m1,2)*enoughPer);
 bestScore = 0;
 
 Ki = inv(K);
