@@ -11,11 +11,9 @@ function [R, T] = minBackProject(m1, m2, B, Rinit, radius, K)
 % Output
 %   R,T          Rotation and Translation
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-Ki = inv(K);
 I = [1 0 0; 0 1 0; 0 0 1];
 Rinitv = [Rinit(1,1:3) Rinit(2,1:3) Rinit(3,1:3)];
-M1 = projectToSphere(m1, radius);
-M1 = Ki*M1;
+M1 = projectToSphere(K, m1, radius);
 Zinit = M1(3,:);
 
 options = optimset('MaxFunEvals',10000000000);

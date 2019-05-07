@@ -2,17 +2,17 @@ function [eRoppr, eRfpro, eRmbpe, eRepog] = runSimulation(angles, radius, K, nMa
 %runSimulation Simulate points on space and estimate transformation
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Input
-%   angles     Set of angles to test
-%   radius     Sphere radius
-%   K          Intrinsics matrix
+%   angles        Set of angles to test
+%   radius        Sphere radius
+%   K                Intrinsics matrix
 %   nMatches   Number of matches per sample
-%   maxD       Max distance to camera
-%   minD       Min distance to camera
-%   B          Baseline
-%   nAngles    Number of different angles to try
-%   nPixels    Number of pixels to deviate in noise
+%   maxD        Max distance to camera
+%   minD         Min distance to camera
+%   B                Baseline
+%   nAngles     Number of different angles to try
+%   nPixels      Number of pixels to deviate in noise
 % Output
-%   eR...      Error from each method
+%   eR...          Error from each method
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 I = [1 0 0; 0 1 0; 0 0 1];

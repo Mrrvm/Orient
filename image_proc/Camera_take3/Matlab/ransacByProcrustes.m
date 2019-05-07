@@ -37,7 +37,7 @@ while i < maxIters
      restInds =  testModel(rest1, rest2, maxErr, R);
      alsoInliers1 = M1(:, restInds>0);
      alsoInliers2 = M2(:, restInds>0);
-     if size(alsoInliers1,2) > enough
+     if size(alsoInliers1,2) >= enough
          allInliers1 = [maybeInliers1 alsoInliers1];
          allInliers2 = [maybeInliers2 alsoInliers2];
          modelScore = sum(testModel(allInliers1, allInliers2, maxErr, R));
@@ -52,6 +52,7 @@ end
 bestInds = testModel(M1, M2, maxErr, bestR);
 
 end
+
 
 function R = findModel(M1, M2)
 

@@ -11,11 +11,8 @@ function [R, T] = fullProcrustes(m1, m2, radius, K)
 %   R,T      Rotation and Translation
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-Ki = inv(K);
-M1 = projectToSphere(m1, radius);
-M1 = (Ki*M1)';
-M2 = projectToSphere(m2, radius);
-M2 = (Ki*M2)';
+M1 = projectToSphere(K, m1, radius)';
+M2 = projectToSphere(K, m2, radius)';
 
 mu1 = mean(M1, 1);
 mu2 = mean(M2, 1);

@@ -34,11 +34,10 @@ for k = 1:numel(imgs1)
     bestInds = ransacByProcrustes(m1a.Location', m2a.Location', K, radius, maxErr, maxIters, samplePer, enoughPer);
     m1Best = m1a(bestInds'>0,:);
     m2Best = m2a(bestInds'>0,:);
-    %figure; showMatchedFeatures(img1, img2, m1Best', m2Best');
-    
     m1 = double(m1Best.Location');
     m2 = double(m2Best.Location');
-    
+    figure; showMatchedFeatures(img1, img2, m1Best', m2Best');
+        
     if k == axisCount(1) + 1
         i = 2; % change to y
         j = 1;

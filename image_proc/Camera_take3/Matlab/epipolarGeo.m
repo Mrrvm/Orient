@@ -4,19 +4,18 @@ function [R, T] = epipolarGeo(m1, m2, radius, K)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Input
 %   m1,m2    2D points before and after
-%            transformation
-%   radius   Sphere radius
-%   K        Intrinsics matrix
+%                  transformation
+%   radius     Sphere radius
+%   K             Intrinsics matrix
 % Output
-%   R,T      Rotation and Translation
+%   R,T          Rotation and Translation
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-Ki = inv(K);
 
 % Estimates fundamental matrix using LMedS
 F = estimateFundamentalMatrix(m1', m2');
 
 % Obtain essential matrix
-E = Ki*F*K;
+E = (K\F)*K;
 
 % Obtain R 
 W = [0 -1 0; 1 0 0; 0 0 1];
@@ -33,10 +32,8 @@ p1 = m1(:,1);
 p2 = m2(:,1);
 
 % Convert to 3D
-P1 = projectToSphere(p1, radius);
-P1 = Ki*P1;
-P2 = projectToSphere(p2, radius);
-P2 = Ki*P2;
+P1 = projectToSphere(K, p1, radius);
+P2 = projectToSphere(K, p2, radius);
 
 % Transform P1 into P2, check for positive depth
 chosen = zeros(1, 4);

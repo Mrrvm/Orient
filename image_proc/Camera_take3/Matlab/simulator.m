@@ -45,8 +45,8 @@ if err ~= 1
     M1 = M1(1:3, 1:nMatches); 
     M2 = M2(1:3, 1:nMatches); 
     
-    m1 = projectToPlane(K*M1);
-    m2 = projectToPlane(K*M2);
+    m1 = projectToPlane(K, M1);
+    m2 = projectToPlane(K, M2);
 else
     m1 = 0; m2 = 0;
 end

@@ -12,11 +12,9 @@ function [R, T] = orthProcrustesProb(m1, m2, radius, K)
 %  T            Translation
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-Ki = inv(K);
-M1 = projectToSphere(m1, radius);
-M1 = Ki*M1;
-M2 = projectToSphere(m2, radius);
-M2 = Ki*M2;
+
+M1 = projectToSphere(K, m1, radius);
+M2 = projectToSphere(K, m2, radius);
 
 A = M1*M2';
 [U,S,V] = svd(A);

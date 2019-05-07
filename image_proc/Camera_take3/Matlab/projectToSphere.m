@@ -1,17 +1,23 @@
-function M = projectToSphere(m, radius)
+function M = projectToSphere(K, m, radius)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Project 2D coordinates into sphere
 % Input
-%   m       2D points 
+%   K          Intrinsics matrix
+%   m         2D points 
 %   radius  Sphere radius
 % Output
 %   M       3D points in sphere
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-x = m(1,:); y = m(2,:);
-l = radius./sqrt( 1 + x.*x + y.*y);
+nMatches = size(m, 2);
 
-M = l.*m;
+mh = [m; ones(1, nMatches)];
+mhk = K\mh;
+
+x = mhk(1,:); y = mhk(2,:); z = mhk(3,:);
+l = radius./sqrt(x.*x + y.*y + z.*z);
+
+M = l.*mhk;
 M(3,:) = l;
 
 end

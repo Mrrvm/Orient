@@ -1,4 +1,4 @@
-function f = objectiveFun(x, m1, m2, B, K)
+    function f = objectiveFun(x, m1, m2, B, K)
 %objectiveFun Objective function for MBPE
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Input
@@ -10,7 +10,6 @@ function f = objectiveFun(x, m1, m2, B, K)
 % Output
 %   f                           Min value
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-Ki = inv(K);
 I = [1 0 0; 0 1 0; 0 0 1];
 nMatches = size(m1, 2);
 
@@ -25,12 +24,12 @@ Rt = R';
 m1h = [m1; ones(1,nMatches)];
 m2h = [m2; ones(1,nMatches)];
 
-M2 = R*Ki*(Z1.*m1h)+T;
+M2 = R*(Z1.*(K\m1h))+T;
 Z2 = M2(3,:);
-m2e = projectToPlane(K*M2);
+m2e = projectToPlane(K, M2); 
 
-M1 = Rt*Ki*(Z2.*m2h)-Rt*T;
-m1e = projectToPlane(K*M1);
+M1 = Rt*(Z2.*(K\m2h))-Rt*T;
+m1e = projectToPlane(K, M1);
 
 u1d = m1e(1,:) - m1(1,:);
 v1d = m1e(2,:) - m1(2,:);

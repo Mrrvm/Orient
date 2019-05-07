@@ -2,10 +2,10 @@ close all;
 clear;
 
 %% Testing types (Choose one ...)
-SIM_DISTANCES     = 0;
+SIM_DISTANCES     = 1;
 SIM_NOISES           = 0;
 SIM_AXISANGLES   = 0;
-REAL_DISTANCES   = 1;
+REAL_DISTANCES   = 0;
 REAL_AXISANGLES = 0;
 % ATTENTION -----------------------------------------------
 % Images must have the following name "im[1/2][x/y/z][angle in
@@ -23,34 +23,34 @@ if SIM_DISTANCES || SIM_NOISES || SIM_AXISANGLES
          0                                   focalLength*m2pix(2) axisOffset(2); 
          0                                   0                                 1           ]; 
     nMatches    = 20;                                                % number of point matches
-    B                 = [0.0 0.0 0.07]';                              % baseline
-    nAngles      = 50;                                                % number of angles to test per axis
+    B                 = [0.0 0.0 0.7]'  ;                            % baseline
+    nAngles      = 100;                                              % number of angles to test per axis
     sigma         = 5;                                                  % normal distribution sigma
-    radius         = 5;                                                  % sphere radius
+    radius         = 1;                                                  % sphere radius
     maxConstD = 5;                                                  % max distance to camera for angle and noise testing
-    minConstD  = 1;                                                  % min distance to camera
+    minConstD  = 0.05;                                             % min distance to camera
     nPixels        = 2;                                                  % number of pixels to deviate in noise
     angles         = generateAngles(nAngles, sigma); % angles to test
     %% Constants for DISTANCE (in m)
     if SIM_DISTANCES
-        maxDistance = 15;
+        maxDistance = 30;
         minDistance  = 0.05;
-        incDistance    = 2;      
+        incDistance    = 5;      
     end
     %% Constants for NOISE (in pixels)
-    if SIM_NOISE
+    if SIM_NOISES
         maxNoise = 6;
         minNoise  = 1;
         incNoise   = 1;
     end
 else
     allFilesDir = '../cam_img';     % files directory
-    imgsDir = 'd5';                      % imgs directory
-    samplePer = 0.10;                 % ransac parameters
-    enoughPer = 0.50;                % ...
+    imgsDir = 'd1';                      % imgs directory
+    samplePer = 0.5;                  % ransac parameters
+    enoughPer = 0.2;                  % ...
     maxIters    = 20;                   % ...
-    maxErr       = 0.0003;            % ...
-    B                = [0.0 0.0 0.07]';  % baseline
+    maxErr       = 0.01;                % ...
+    B                = [0.0 0.0 0.01]';  % baseline
     radius        = 1;
     K = [1.1446e+03 0                    9.8904e+02; 
             0                  1.1452e+03  7.554e+02  ;
