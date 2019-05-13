@@ -20,15 +20,17 @@ mu2 = mean(M2, 1);
 N1 = M1 - repmat(mu1, size(M1, 1), 1);
 N2 = M2 - repmat(mu2, size(M1, 1), 1);
 
-ssq1 = sum(N1.^2,1);
-ssq2 = sum(N2.^2,1);
+ssq1 = sum(N1.^2, 1);
+ssq2 = sum(N2.^2, 1);
 ssq1 = sum(ssq1);
 ssq2 = sum(ssq2);
 norm1 = sqrt(ssq1);
 norm2 = sqrt(ssq2);
-    
-N1 = N1 / norm1;
-N2 = N2 / norm2;
+
+if((1/norm1 ~= Inf) && (1/norm2 ~= Inf))
+    N1 = N1 / norm1;
+    N2 = N2 / norm2;
+end
 
 A = N1'*N2;
 [U,S,V] = svd(A);

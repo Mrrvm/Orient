@@ -2,27 +2,16 @@ close all;
 clear;
 
 %% Testing types (Choose one ...)
-SIM_DISTANCES                    = 0;
-SIM_NOISES                          = 0;
-SIM_AXISANGLES                  = 1;
-REAL_DISTANCES_GRID        = 0;
-REAL_DISTANCES_MOTIVE    = 0;
-REAL_AXISANGLES_GRID       = 0;
-REAL_AXISANGLES_MOTIVE   = 0;
+SIM_DISTANCES                     = 1   ;
+SIM_NOISES                           = 0;
+SIM_AXISANGLES                   = 0;
+REAL_DISTANCES                  = 0;
+REAL_AXISANGLES                = 0;
 % ATTENTION -----------------------------------------------
-% For REAL_AXISANGLES_GRID
-% Images must have the following name "im[1/2][x/y/z][angle in
-% degrees].jpg"
-% For REAL_DISTANCES_GRID
-% The images should also be organized by distance in different directories.
-% Each directory should be named d[distance in meters].
-% For REAL_AXISANGLES_MOTIVE
-% The data file should contain 2 fields: data(k).position and data(k).img
-% corresponding to x,y,z position of the body and the image pixels,
-% respectively.
 % ---------------------------------------------------------
 
 %% Constants
+I = [1 0 0; 0 1 0; 0 0 1];
 if SIM_DISTANCES || SIM_NOISES || SIM_AXISANGLES
     focalLength = 1;                                                 % intrinsic parameters
     m2pix         = [3779.53 3779.53];                       % ...
@@ -31,14 +20,15 @@ if SIM_DISTANCES || SIM_NOISES || SIM_AXISANGLES
     K = [focalLength*m2pix(1) skew                           axisOffset(1); 
          0                                   focalLength*m2pix(2) axisOffset(2); 
          0                                   0                                 1           ]; 
+    K = I;
     nMatches    = 20;                                                % number of point matches
     B                 = [0.0 0.0 0.07]'  ;                            % baseline
-    nAngles      = 10;                                                % number of angles to test per axis
+    nAngles      = 100;                                               % number of angles to test per axis
     sigma         = 5;                                                  % normal distribution sigma
     radius         = 1;                                                  % sphere radius
     maxConstD = 5;                                                  % max distance to camera for angle and noise testing
     minConstD  = 0.05;                                             % min distance to camera
-    nPixels        = 2;                                                  % number of pixels to deviate in noise
+    nPixels        = 0;                                                  % number of pixels to deviate in noise
     angles         = generateAngles(nAngles, sigma); % angles to test
     %% Constants for DISTANCE (in m)
     if SIM_DISTANCES
@@ -52,19 +42,21 @@ if SIM_DISTANCES || SIM_NOISES || SIM_AXISANGLES
         minNoise  = 1;
         incNoise   = 1;
     end
+end
+
 if REAL_AXISANGLES || REAL_DISTANCES
-    allFilesDir = '../cam_img';     % files directory
-    samplePer = 0.5;                  % ransac parameters
-    enoughPer = 0.2;                  % ...
+    allFilesDir = '../input/Motive/filteredata/';     % files directory
+    samplePer = 0.4;                  % ransac parameters
+    enoughPer = 0.3;                  % ...
     maxIters    = 20;                   % ...
-    maxErr       = 0.01;                % ...
+    maxErr       = 0.05;                % ...
     B                = [0.0 0.0 0.01]';  % baseline
     radius        = 1;
     K = [1.1446e+03 0                    9.8904e+02; 
             0                  1.1452e+03  7.554e+02  ;
             0                  0                    1                 ];
      if REAL_AXISANGLES
-          imgsDir = 'd1';                 % imgs directory
+          imgsDir = 'd5/';                 % imgs directory
      end
 end
 
@@ -139,10 +131,10 @@ end
 
 
 %% Test error in terms of distance using real data
-if REAL_DISTANCES_GRID
+if REAL_DISTANCES
     [dirs, dists] = readDirs(allFilesDir);
     for i = 1:size(dirs,1)
-        [~, ~, eRoppr, eRfpro, eRmbpe, eRepog] =  runRealityByGrid(strcat(allFilesDir, '/', dirs(i).name), samplePer, enoughPer, maxIters, maxErr, B,  radius, K);
+        [~, ~, eRoppr, eRfpro, eRmbpe, eRepog] =  runReality(strcat(allFilesDir, '/', dirs(i).name), samplePer, enoughPer, maxIters, maxErr, B,  radius, K);
         clear imgs1 imgs2 axisCount;
         meRAllAxis(1,i) = safeMean(safeMean(eRoppr, 2), 1);
         meRAllAxis(2,i) = safeMean(safeMean(eRfpro, 2), 1);
@@ -154,8 +146,8 @@ if REAL_DISTANCES_GRID
 end
 
 %% Test error in terms of angles using real data taken with a grid
-if REAL_AXISANGLES_GRID
-    [angles, axisCount, eRoppr, eRfpro, eRmbpe, eRepog] = runRealityByGrid(strcat(allFilesDir, '/', imgsDir), samplePer, enoughPer, maxIters, maxErr, B,  radius, K);
+if REAL_AXISANGLES
+    [angles, axisCount, eRoppr, eRfpro, eRmbpe, eRepog] = runReality(strcat(allFilesDir, '/', imgsDir), samplePer, enoughPer, maxIters, maxErr, B,  radius, K);
     % Compute mean error and variance
     meRoppr = safeMean(eRoppr, 2);
     meRfpro = safeMean(eRfpro, 2);
@@ -185,13 +177,5 @@ if REAL_AXISANGLES_GRID
     [minerror, method] = min(sum(meR));
     label = {'error oppr', 'error fpro', 'error mbpe', 'error epog'};
     fprintf('\nBest method was %s with %f half radians of error.\n\n', string(label(method)), minerror);
-
-end
-
-if REAL_AXISANGLES_MOTIVE
-end
-
-if REAL_DISTANCES_MOTIVE
-end
 
 end

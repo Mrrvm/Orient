@@ -19,11 +19,10 @@ nRand = round(size(m1,2)*samplePer);
 enough = round(size(m1,2)*enoughPer);
 bestScore = 0;
 
-Ki = inv(K);
-M1 = projectToSphere(double(m1), radius);
-M1 = Ki*M1;
-M2 = projectToSphere(double(m2), radius);
-M2 = Ki*M2;
+M1 = projectToSphere(K, double(m1), radius);
+M2 = projectToSphere(K, double(m2), radius);
+
+bestR = findModel(M1, M2);
 
 while i < maxIters
      firstInds = randi(size(M1,2), 1, nRand);

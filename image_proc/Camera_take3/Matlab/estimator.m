@@ -1,4 +1,4 @@
-function [eRoppr, eRfpro, eRmbpe, eRepog] = estimator(m1, m2, radius, K, B, R)
+function [eRoppr, eRfpro, eRmbpe, eRepog] = estimator(m1, m2, radius, K, B, r)
 %estimator Estimate transformation error based on 4 different methods: 
 % orthogonal procrustes problem, full procrustes, minimization of back
 % projection error and epipolar geometry 
@@ -7,7 +7,7 @@ function [eRoppr, eRfpro, eRmbpe, eRepog] = estimator(m1, m2, radius, K, B, R)
 %   radius       Sphere radius
 %   K               Intrinsics matrix
 %   B               Baseline
-%   R               Ground truth
+%   r               Ground truth
 % Output
 %   eR...          Error from each method
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -25,7 +25,6 @@ function [eRoppr, eRfpro, eRmbpe, eRepog] = estimator(m1, m2, radius, K, B, R)
 [Repog, Tepog] = epipolarGeo(m1, m2, radius, K);
 
 %% Compute error between each method results and truth
-r         = matrixToAxisAngle(R);
 roppr  = matrixToAxisAngle(Roppr);
 rfpro   = matrixToAxisAngle(Rfpro);
 rmbpe = matrixToAxisAngle(Rmbpe);

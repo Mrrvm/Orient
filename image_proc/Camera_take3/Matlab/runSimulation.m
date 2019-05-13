@@ -30,7 +30,8 @@ for i=1:3
         %showScenario(M1, M2, B, R, maxD);
         [m1, m2] = noiseGen(m1, m2, nMatches, nPixels);
         %% Estimate transformation error
-        [eRoppr(i,j), eRfpro(i,j), eRmbpe(i,j), eRepog(i,j) ]= estimator(m1, m2, radius, K, B, R);
+        r = matrixToAxisAngle(R);
+        [eRoppr(i,j), eRfpro(i,j), eRmbpe(i,j), eRepog(i,j) ]= estimator(m1, m2, radius, K, B, r);
     end  
 end
  

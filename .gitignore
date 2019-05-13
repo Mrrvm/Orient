@@ -34,3 +34,6 @@ build/Makefile
 *.tgz
 *.zip
 *.tar
+
+*.csv
+*.fig
