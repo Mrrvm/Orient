@@ -1,4 +1,4 @@
-function [plotAng, axisCount, eRoppr, eRfpro, eRmbpe, eRepog] = runReality(filepath, samplePer, enoughPer, maxIters, maxErr, B,  radius, K)
+function [plotAng, axisCount, eRoppr, eRfpro, eRmbpe, eRepog] = runReality(filepath, samplePer, enoughPer, maxIters, maxErr, B,  radius, K, minPoints, maxPoints)
 %runReality Estimate transformation on real data
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Input
@@ -11,6 +11,8 @@ function [plotAng, axisCount, eRoppr, eRfpro, eRmbpe, eRepog] = runReality(filep
 %   radius            Sphere radius
 %   K                    Intrinsics matrix
 %   imgDir           Image directory to read from
+%   minPoints      Minimum number of points allowed
+%   maxPoints     Maximum number of points allowed
 % Output
 %   plotAng          Angles used for plotting
 %   axisCount      Number of images per axis
@@ -24,30 +26,35 @@ dirs = dirs(~ismember({dirs.name},{'.','..'}));
 for z = 1:numel(dirs)
 
      if dirs(z).name == 'x'
-            i = 1; 
-            load(strcat(filepath, 'x/images.mat'));
-            load(strcat(filepath, 'x/rotations.mat'));
-            axisCount(1) = numel(rotations);
+            if(exist(strcat(filepath, 'x/data.mat'), 'file') && exist(strcat(filepath, 'x/rotations.mat'), 'file'))
+                i = 1; 
+                load(strcat(filepath, 'x/data.mat'));
+                load(strcat(filepath, 'x/rotations.mat'));
+                axisCount(1) = numel(rotations);
+            end
      end
      if dirs(z).name == 'y'
-            i = 2; 
-            load(strcat(filepath, 'y/images.mat'));
-            load(strcat(filepath, 'y/rotations.mat'));
-            axisCount(2) = numel(rotations);
+            if(exist(strcat(filepath, 'y/data.mat'), 'file') && exist(strcat(filepath, 'y/rotations.mat'), 'file'))
+                i = 2; 
+                load(strcat(filepath, 'y/data.mat'));
+                load(strcat(filepath, 'y/rotations.mat'));
+                axisCount(2) = numel(rotations);
+            end
      end
      if dirs(z).name == 'z'
-            i = 3; 
-            load(strcat(filepath, 'z/images.mat'));
-            load(strcat(filepath, 'z/rotations.mat'));
-            axisCount(3) = numel(rotations);
+            if(exist(strcat(filepath, 'z/data.mat'), 'file') && exist(strcat(filepath, 'z/rotations.mat'), 'file'))
+                i = 3; 
+                load(strcat(filepath, 'z/data.mat'));
+                load(strcat(filepath, 'z/rotations.mat'));
+                axisCount(3) = numel(rotations);
+            end
      end
     
      j = 1;
-
      for k = 1:numel(rotations)
         %% Extract matches from images
-        img1 = images(rotations(k).indImg1).img;
-        img2 = images(rotations(k).indImg2).img;
+        img1 = data(rotations(k).indImg1).img;
+        img2 = data(rotations(k).indImg2).img;
         p1 = detectSURFFeatures(img1);
         p2 = detectSURFFeatures(img2);
         [f1,vpts1] = extractFeatures(img1, p1);
@@ -58,14 +65,18 @@ for z = 1:numel(dirs)
         bestInds = ransacByProcrustes(m1a.Location', m2a.Location', K, radius, maxErr, maxIters, samplePer, enoughPer);
         m1Best = m1a(bestInds'>0,:);
         m2Best = m2a(bestInds'>0,:);
-        m1 = double(m1Best.Location');
-        m2 = double(m2Best.Location');
-        %figure; showMatchedFeatures(img1, img2, m1Best', m2Best');
-        
-        if((size(m1, 2) <= 8) && (size(m2, 2) <= 8))
+        if sum(bestInds'>0) <= minPoints 
             continue;
         end
-        
+        if sum(bestInds'>0) >= maxPoints
+            m1 = double(m1Best.Location(1:maxPoints,:)');
+            m2 = double(m2Best.Location(1:maxPoints,:)');
+        else
+            m1 = double(m1Best.Location(1:sum(bestInds'>0),:)');
+            m2 = double(m2Best.Location(1:sum(bestInds'>0),:)');
+        end
+        %figure; showMatchedFeatures(img1, img2, m1Best', m2Best');
+             
         % Save angles for plot
         plotAng(i,j) = rotations(k).angle;
 
@@ -75,7 +86,7 @@ for z = 1:numel(dirs)
 
      end
     
-    clear images rotations;
+    clear data rotations;
     
 end
 

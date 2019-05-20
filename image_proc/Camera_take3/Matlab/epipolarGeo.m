@@ -12,7 +12,7 @@ function [R, T] = epipolarGeo(m1, m2, radius, K)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % Estimates fundamental matrix using LMedS
-F = estimateFundamentalMatrix(m1', m2');
+F = estimateFundamentalMatrix(m1', m2', 'Method', 'LMedS');
 
 % Obtain essential matrix
 E = (K\F)*K;

@@ -1,16 +1,16 @@
 function filterdataMotive(imgDir, csvFilepath, savePath)
 %filterdataMotive Filter data from images and csv file. It produces
-% a structure images with all the images and a structure 
-% rotations describing all the rotations with the respective
-% indexes to address the imgs structure.
+% a structure data with all the images and the marker positions and 
+% a structure rotations describing all the rotations with the respective
+% indexes to address the data.img structure.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Input
 %   imgDir        Images directory (.jpg or .png)
 %   csvFilepath CSV motive file 
 %   savePath     Directory where to save the new structures
 % Output
-%   images       Structure with all the images
-%   rotations    Structure with  all the possible rotations
+%   data            Structure with all the images and marker positions
+%   rotations     Structure with  all the possible rotations
 %                       contains the rotation vector (rot), 
 %                       the index to the first and second image 
 %                       (indImg1, inImg2) 
@@ -18,8 +18,8 @@ function filterdataMotive(imgDir, csvFilepath, savePath)
 
 imgs = dir(fullfile(imgDir, '*'));
 
-csvFile = csvread(csvFilepath, 7, 1);
-csvData = csvFile(:,1:10);
+csvFile = csvread(csvFilepath, 7, 0);
+csvData = [csvFile(:,2) csvFile(:,27:38)];
 clear csvFile;
 
 csvID = fopen(csvFilepath);
@@ -44,32 +44,38 @@ for i=1:numel(imgs)
          dataSeconds = seconds(csvData(:, 1));
          dataSeconds.Format =  'hh:mm:ss.SSS';
          [minValue,closestIndex] = min(abs(timePassedRep-dataSeconds));
-         images(j).position = csvData(closestIndex, 7:9);
-         img = fullfile(imgDir, imgName);
-         images(j).img = rgb2gray(imread(img));
-         j = j+1;
+         if((sum(csvData(closestIndex, 2:4)) ~= 0) && (sum(csvData(closestIndex, 5:7)) ~= 0) ...
+                 && (sum(csvData(closestIndex, 8:10)) ~= 0) && (sum(csvData(closestIndex, 11:13)) ~= 0) )
+             data(j).marker(1,:) = csvData(closestIndex, 2:4);
+             data(j).marker(2,:) = csvData(closestIndex, 5:7);
+             data(j).marker(3,:) = csvData(closestIndex, 8:10);
+             data(j).marker(4,:) = csvData(closestIndex, 11:13);       
+             img = fullfile(imgDir, imgName);
+             data(j).img = rgb2gray(imread(img));
+             j = j+1;
+         end
     end
 end
 clear csvData;
 
 z = 1;
-for i=1:(numel(images)-1)
-    pos1 = images(i).position;
-    for k=(i+1):numel(images)  
-        pos2 = images(k).position;
-        angle = acos(dot(pos1, pos2)/(norm(pos1)*norm(pos2)));
-        vector = cross(pos1,pos2)/norm(cross(pos1,pos2));
+for i=1:(numel(data)-1)
+    M1 = data(i).marker(:,:);
+    for k=(i+1):numel(data)  
+        M2 = data(k).marker(:,:);
+        [d, Z, tr] = procrustes(M1, M2, 'reflection', false, 'scaling', false);
         rotations(z).indImg1 = i;
         rotations(z).indImg2 = k;
-        rotations(z).rot = vector*tan(angle/2);
-        rotations(z).angle = angle;
+        rotations(z).rot = matrixToAxisAngle(tr.T);
+        rotations(z).tr = tr.c(1, :);
+        a = vrrotmat2vec(tr.T);
+        rotations(z).angle = a(4)*180/pi;
         z = z + 1;
     end
 end
 
-
 mkdir(savePath);
-save(strcat(savePath, 'images.mat') , 'images');
+save(strcat(savePath, 'data.mat') , 'data');
 save(strcat(savePath, 'rotations.mat') , 'rotations');
 
 end

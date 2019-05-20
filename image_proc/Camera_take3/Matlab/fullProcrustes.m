@@ -4,11 +4,11 @@ function [R, T] = fullProcrustes(m1, m2, radius, K)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Input
 %   m1,m2    2D points before and after
-%            transformation
-%   radius   Sphere radius
-%   K        Intrinsics matrix
+%                  transformation
+%   radius     Sphere radius
+%   K             Intrinsics matrix
 % Output
-%   R,T      Rotation and Translation
+%   R,T          Rotation and Translation
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 M1 = projectToSphere(K, m1, radius)';

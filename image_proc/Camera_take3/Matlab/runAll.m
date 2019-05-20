@@ -2,13 +2,12 @@ close all;
 clear;
 
 %% Testing types (Choose one ...)
-SIM_DISTANCES                     = 1   ;
+SIM_DISTANCES                     = 0   ;
 SIM_NOISES                           = 0;
 SIM_AXISANGLES                   = 0;
 REAL_DISTANCES                  = 0;
-REAL_AXISANGLES                = 0;
-% ATTENTION -----------------------------------------------
-% ---------------------------------------------------------
+REAL_AXISANGLES                = 1;
+
 
 %% Constants
 I = [1 0 0; 0 1 0; 0 0 1];
@@ -19,16 +18,15 @@ if SIM_DISTANCES || SIM_NOISES || SIM_AXISANGLES
     axisOffset   = [0 0];                                             % ...
     K = [focalLength*m2pix(1) skew                           axisOffset(1); 
          0                                   focalLength*m2pix(2) axisOffset(2); 
-         0                                   0                                 1           ]; 
-    K = I;
+         0                                   0                                 1           ];
     nMatches    = 20;                                                % number of point matches
-    B                 = [0.0 0.0 0.07]'  ;                            % baseline
-    nAngles      = 100;                                               % number of angles to test per axis
+    B                 = [0.0 0.0 0.0]'  ;                            % baseline
+    nAngles      = 50;                                               % number of angles to test per axis
     sigma         = 5;                                                  % normal distribution sigma
     radius         = 1;                                                  % sphere radius
     maxConstD = 5;                                                  % max distance to camera for angle and noise testing
     minConstD  = 0.05;                                             % min distance to camera
-    nPixels        = 0;                                                  % number of pixels to deviate in noise
+    nPixels        = 2;                                                  % number of pixels to deviate in noise
     angles         = generateAngles(nAngles, sigma); % angles to test
     %% Constants for DISTANCE (in m)
     if SIM_DISTANCES
@@ -46,15 +44,17 @@ end
 
 if REAL_AXISANGLES || REAL_DISTANCES
     allFilesDir = '../input/Motive/filteredata/';     % files directory
-    samplePer = 0.4;                  % ransac parameters
-    enoughPer = 0.3;                  % ...
+    samplePer = 0.2;                  % ransac parameters
+    enoughPer = 0.9;                  % ...
     maxIters    = 20;                   % ...
-    maxErr       = 0.05;                % ...
-    B                = [0.0 0.0 0.01]';  % baseline
+    maxErr       = 0.005;                % ...
+    B                = [-0.01 0.00 0.01]';  % baseline
     radius        = 1;
     K = [1.1446e+03 0                    9.8904e+02; 
             0                  1.1452e+03  7.554e+02  ;
             0                  0                    1                 ];
+    minPoints = 20;
+    maxPoints = 50;
      if REAL_AXISANGLES
           imgsDir = 'd5/';                 % imgs directory
      end
@@ -97,7 +97,6 @@ if SIM_NOISES
         i = i + 1;
     end
     plotError(noises(1:iters), meRAllAxis, 'Noise (pixel)', 'Error per pixel noise  - Sim data');
-    clear meRAllAxis;
 end
 
 %% Test error in terms of axis using simulated data
@@ -134,7 +133,7 @@ end
 if REAL_DISTANCES
     [dirs, dists] = readDirs(allFilesDir);
     for i = 1:size(dirs,1)
-        [~, ~, eRoppr, eRfpro, eRmbpe, eRepog] =  runReality(strcat(allFilesDir, '/', dirs(i).name), samplePer, enoughPer, maxIters, maxErr, B,  radius, K);
+        [~, ~, eRoppr, eRfpro, eRmbpe, eRepog] =  runReality(strcat(allFilesDir, '/', dirs(i).name), samplePer, enoughPer, maxIters, maxErr, B,  radius, K, minPoints, maxPoints);
         clear imgs1 imgs2 axisCount;
         meRAllAxis(1,i) = safeMean(safeMean(eRoppr, 2), 1);
         meRAllAxis(2,i) = safeMean(safeMean(eRfpro, 2), 1);
@@ -147,7 +146,7 @@ end
 
 %% Test error in terms of angles using real data taken with a grid
 if REAL_AXISANGLES
-    [angles, axisCount, eRoppr, eRfpro, eRmbpe, eRepog] = runReality(strcat(allFilesDir, '/', imgsDir), samplePer, enoughPer, maxIters, maxErr, B,  radius, K);
+    [ang, axisCount, eRoppr, eRfpro, eRmbpe, eRepog] = runReality(strcat(allFilesDir, '/', imgsDir), samplePer, enoughPer, maxIters, maxErr, B,  radius, K, minPoints, maxPoints);
     % Compute mean error and variance
     meRoppr = safeMean(eRoppr, 2);
     meRfpro = safeMean(eRfpro, 2);
@@ -159,7 +158,6 @@ if REAL_AXISANGLES
     pveRmbpe = sum((eRmbpe - meRmbpe).^2,2);
     pveRepog = sum((eRepog - meRepog).^2,2);
     % Visualise error in terms of axis angle
-    ang = angles*180/pi;
     if axisCount(1)
         fprintf('\n\t Mean | Variance \n OPPR | %f | %f \n FPRO | %f | %f \n MBPE | %f | %f \n EPOG | %f | %f \n\n', meRoppr(1), pveRoppr(1)/axisCount(1), meRfpro(1), pveRfpro(1)/axisCount(1), meRmbpe(1), pveRmbpe(1)/axisCount(1), meRepog(1), pveRepog(1)/axisCount(1));
         plotError(ang(1,:), [eRoppr(1,:); eRfpro(1,:); eRmbpe(1,:); eRepog(1,:)], 'Angles (degrees)', 'Error per angle (x axis) - Real data');
@@ -174,7 +172,7 @@ if REAL_AXISANGLES
     end
     % Determine the method with least mean error
     meR = [meRoppr meRfpro meRmbpe meRepog];
-    [minerror, method] = min(sum(meR));
+    [minerror, method] = min(sum(meR, 1));
     label = {'error oppr', 'error fpro', 'error mbpe', 'error epog'};
     fprintf('\nBest method was %s with %f half radians of error.\n\n', string(label(method)), minerror);
 
