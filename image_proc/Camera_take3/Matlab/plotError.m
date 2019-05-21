@@ -1,18 +1,19 @@
-function plotError(var, yvar, xLabel, pTitle)
+function plotError(var, yvar, xLabel, pTitle, saveDir)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Plot error in terms of distances or 
 % or noises with a  best fit curve
 % Input
-%   var        Distance to the camera or 
-%              pixel noise
-%   xLabel     x label
-%   pTitle     Plot title
+%   var             Distance to the camera or 
+%                        pixel noise
+%   xLabel        x label
+%   pTitle         Plot title
 %   eR_AllAxis Mean error of all axis 
-%              per method
+%                        per method
+%   saveDir      Directory to save graphs
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 label = {'error oppr', 'error fpro', 'error mbpe', 'error epog'};
 
-figure;
+fig = figure;
 plot(var, yvar(1,:), 'bo');
 hold on;
 plot(var, yvar(2,:), 'gx');
@@ -41,5 +42,7 @@ title(pTitle);
 legend(label,'Location','northeast');
 xlabel(xLabel);
 ylabel('Error (rad/2)');
+saveas(fig, strcat(saveDir, pTitle, '.fig'));
+saveas(fig, strcat(saveDir, pTitle, '.png'));
 
 end

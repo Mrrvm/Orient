@@ -1,6 +1,6 @@
 function [R, T] = epipolarGeo(m1, m2, radius, K)
 %epipolarGeo Estimate transformation using epipolar 
-% geometry
+%geometry
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Input
 %   m1,m2    2D points before and after
@@ -15,7 +15,7 @@ function [R, T] = epipolarGeo(m1, m2, radius, K)
 F = estimateFundamentalMatrix(m1', m2', 'Method', 'LMedS');
 
 % Obtain essential matrix
-E = (K\F)*K;
+E = K'*F*K;
 
 % Obtain R 
 W = [0 -1 0; 1 0 0; 0 0 1];
