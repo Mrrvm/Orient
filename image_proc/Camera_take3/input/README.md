@@ -1,4 +1,8 @@
-#  How to set data for testing
+# Obtain data
+
+Data may be obtained through a motion capture software ([OptiTrack Motive](https://v20.wiki.optitrack.com/index.php?title=Quick_Start_Guide:_Getting_Started) for example), or using a grid or even a chessboard.
+
+#  Set data for testing
 
 To test real data under the Matlab Estimator, it must be set on the following formats.
 
@@ -29,9 +33,9 @@ There is no need to include all axis directories, the Matlab Estimator can run u
 
 As an argument for the Matlab Estimator ``runAll``, the path to the directory with the distances directories should be provided if the type is ``REAL_DISTANCES`` as explained previously, in this case that would be ``real.distance.inputDir = input/``. For a specific distance when testing the error by angle, it should be ``real.inputDir = input/d5/`` for example.
 
-Data may be obtained through a motion capture software (Motive for example), or using a grid or even a chessboard. To obtain the input data on the necessary format, scripts for this 3 different methods are provided as follows. For alternative methods, alternative code should be developed.
+To obtain the input data on the necessary format, scripts for the 3 different methods metioned are provided as follows. For alternative methods, alternative code should be developed.
 
-## Motive data
+## OptiTrack Motive data
 
 1) For each distance and axis, the image files should be inside a directory and named with their date of creation. To change their names,
 the script [converting.sh](https://github.com/Mrrvm/Visual-Odometry/blob/master/image_proc/Camera_take3/input/Motive/converting.sh) may be used
