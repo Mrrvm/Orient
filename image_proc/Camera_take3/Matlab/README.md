@@ -2,7 +2,9 @@
 
 This program finds the accuracy of camera rotation estimations for simulated data according to the length of the baseline, the distance of the points to the camera, the pixel noise in the images, and also provides results with the error (in relation to the ground truth) according to the angle for a specific situations (for example, having baseline or not, having intrinsic parameters or not). It can also find the accuracy of the camera rotation estimations for real world data, possibly presenting it according to the distance of the points to the camera.
 
-The program ``runAll(TYPE, vars)`` takes two arguments, the first is the type of testing desired,
+## How to run
+
+``runAll(TYPE, vars)`` takes two arguments, the first is the type of testing desired,
 
 - ``SIM_BASELINES`` estimate rotations with simulated points based on the length of the baseline;
 
@@ -70,6 +72,23 @@ and the other is a structure with all the necessary variables to run the program
       for ``REAL_DISTANCES``
 
       real.distance.inputDir - Directory with the data files 
+      
+## Implementation notes
+
+### Real data
+      
+- The program reads from two data files ([previously generated](https://github.com/Mrrvm/Visual-Odometry/tree/master/image_proc/Camera_take3/input)), with the image and rotation data. 
+- It uses the [SURF algorithm](https://www.mathworks.com/help/vision/ref/detectsurffeatures.html) to find the point matches between images and then [RANSAC with a Procrustes model](https://github.com/Mrrvm/Visual-Odometry/blob/master/image_proc/Camera_take3/Matlab/ransacByProcrustes.m) to decide what are the best matches to keep.
+
+### Simulated data
+
+### Estimating methods
+#### Orthogonal Procrustes Problem (OPPR)
+#### Full Procrustes (FPRO)
+#### Minimization of the Back Projection Error (MBPE)
+#### Epipolar Geometry
+
+### Result plots
       
       
       
