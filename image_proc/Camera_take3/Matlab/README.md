@@ -4,6 +4,23 @@ This program finds the accuracy of camera rotation estimations for simulated dat
 
 ## Objective
 
+The main goal is two evaluate the 4 different estimation methods, this is just a time saver.
+
+- [How to run](#how-to-run)
+- [Implementation notes](#implementation-notes)
+  * [Using real data](#using-real-data)
+  * [Using simulated data](#using-simulated-data)
+  * [Estimation methods](#estimation-methods)
+    + [Orthogonal Procrustes Problem (OPPR)](#orthogonal-procrustes-problem)
+    + [Full Procrustes (FPRO)](#full-procrustes)
+    + [Minimization of the Back Projection Error (MBPE)](#minimization-of-the-back-projection-error)
+    + [Epipolar Geometry](#epipolar-geometry)
+  * [Comparing Results](#comparing-results)
+  * [Time concerns](#time-concerns)
+- [How to define the parameters](#how-to-define-the-parameters)
+- [My obtained results](#my-obtained-results)
+
+
 ## How to run
 
 ``runAll(TYPE, vars)`` takes two arguments, the first is the type of testing desired,
@@ -103,11 +120,26 @@ Finally, this points may be used as if it were images to
 
 6) Return to  2)
 
+### Estimation methods
+#### Orthogonal Procrustes Problem 
+Minimizes the difference between the pointclouds M1 and M2 through
 
-### Estimating methods
-#### Orthogonal Procrustes Problem (OPPR)
-#### Full Procrustes (FPRO)
-#### Minimization of the Back Projection Error (MBPE)
+<a href="https://www.codecogs.com/eqnedit.php?latex=\left&space;\|&space;M_1&space;-&space;RM_2&space;\right&space;\|^2" target="_blank"><img src="https://latex.codecogs.com/gif.latex?\left&space;\|&space;M_1&space;-&space;RM_2&space;\right&space;\|^2" title="\left \| M_1 - RM_2 \right \|^2" /></a>
+
+which may be expanded as 
+
+<a href="https://www.codecogs.com/eqnedit.php?latex=\left&space;\|&space;M_1&space;-&space;RM_2&space;\right&space;\|^2&space;=&space;trace(M_1^T&space;M_1&space;&plus;&space;M_2^T&space;M_2&space;)&space;−&space;2&space;trace(M_2^T&space;M_1&space;R)" target="_blank"><img src="https://latex.codecogs.com/gif.latex?\left&space;\|&space;M_1&space;-&space;RM_2&space;\right&space;\|^2&space;=&space;trace(M_1^T&space;M_1&space;&plus;&space;M_2^T&space;M_2&space;)&space;−&space;2&space;trace(M_2^T&space;M_1&space;R)" title="\left \| M_1 - RM_2 \right \|^2 = trace(M_1^T M_1 + M_2^T M_2 ) − 2 trace(M_2^T M_1 R)" /></a>.
+
+So minimizing is the same as maximizing the second term. Applying the SVD on the second term, 
+
+<a href="https://www.codecogs.com/eqnedit.php?latex=trace(M_2^T&space;M_1&space;R)&space;=&space;trace(U&space;\Sigma&space;V^T&space;R)&space;=&space;trace(\Sigma&space;H)&space;=&space;\sum^N_{i=1}&space;\sigma_i&space;h_{ii}" target="_blank"><img src="https://latex.codecogs.com/gif.latex?trace(M_2^T&space;M_1&space;R)&space;=&space;trace(U&space;\Sigma&space;V^T&space;R)&space;=&space;trace(\Sigma&space;H)&space;=&space;\sum^N_{i=1}&space;\sigma_i&space;h_{ii}" title="trace(M_2^T M_1 R) = trace(U \Sigma V^T R) = trace(\Sigma H) = \sum^N_{i=1} \sigma_i h_{ii}" /></a>
+
+Because the values <a href="https://www.codecogs.com/eqnedit.php?latex=\sigma_i" target="_blank"><img src="https://latex.codecogs.com/gif.latex?\sigma_i" title="\sigma_i" /></a> are all non negative, the expression is its maximum when <a href="https://www.codecogs.com/eqnedit.php?latex=h_{ii}" target="_blank"><img src="https://latex.codecogs.com/gif.latex?h_{ii}" title="h_{ii}" /></a> is at 1, so R may be obtained through <a href="https://www.codecogs.com/eqnedit.php?latex=I&space;=&space;V^TRU" target="_blank"><img src="https://latex.codecogs.com/gif.latex?I&space;=&space;V^TRU" title="I = V^TRU" /></a>.
+
+Hence, the implentation is a simple SVD of <a href="https://www.codecogs.com/eqnedit.php?latex=M_2^TM_1" target="_blank"><img src="https://latex.codecogs.com/gif.latex?M_2^TM_1" title="R = VU^T" /></a> and obtaining of <a href="https://www.codecogs.com/eqnedit.php?latex=R&space;=&space;VU^T" target="_blank"><img src="https://latex.codecogs.com/gif.latex?R&space;=&space;VU^T" title="R = VU^T" /></a>.
+
+#### Full Procrustes
+#### Minimization of the Back Projection Error
 #### Epipolar Geometry
 
 ### Comparing Results
