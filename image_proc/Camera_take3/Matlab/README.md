@@ -77,12 +77,32 @@ and the other is a structure with all the necessary variables to run the program
       
 ## Implementation notes
 
-### Real data
+### Using real data
       
 - The program reads from two data files ([previously generated](https://github.com/Mrrvm/Visual-Odometry/tree/master/image_proc/Camera_take3/input)), with the image and rotation data. 
 - It uses the [SURF algorithm](https://www.mathworks.com/help/vision/ref/detectsurffeatures.html) to find the point matches between images and then [RANSAC with a Procrustes model](https://github.com/Mrrvm/Visual-Odometry/blob/master/image_proc/Camera_take3/Matlab/ransacByProcrustes.m) to decide what are the best matches to keep.
 
-### Simulated data
+### Using simulated data
+In order to produce simulated points, a few steps are taken,
+
+1) Generate a number, ``sim.nAngles``, of different angles in a normal distribution with sigma, ``sim.sigma``.
+
+Now per each axis, per each of the generated angles, 
+
+2) Generate a number, ``nMatches``, of different 3D points within a 90º degree viewfield seen from the camera. This will be the first pointcloud, M1.
+
+3)  Rotate the point cloud by the generated angle. The result will be the second pointcloud, M2.
+
+4) Convert this points to image points, m1 and m2.
+
+![](https://github.com/Mrrvm/Visual-Odometry/blob/master/image_proc/simulation_diagram.png)
+
+Finally, this points may be used as if it were images to 
+
+5) Estimate the transformation and get results by comparing with the ground truth.
+
+6) Return to  2)
+
 
 ### Estimating methods
 #### Orthogonal Procrustes Problem (OPPR)
@@ -90,7 +110,7 @@ and the other is a structure with all the necessary variables to run the program
 #### Minimization of the Back Projection Error (MBPE)
 #### Epipolar Geometry
 
-### Result plots
+### Comparing Results
 
 ### Time concerns
       
