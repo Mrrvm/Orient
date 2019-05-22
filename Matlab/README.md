@@ -96,8 +96,8 @@ and the other is a structure with all the necessary variables to run the program
 
 ### Using real data
       
-- The program reads from two data files ([previously generated](https://github.com/Mrrvm/Visual-Odometry/tree/master/image_proc/Camera_take3/input)), with the image and rotation data. 
-- It uses the [SURF algorithm](https://www.mathworks.com/help/vision/ref/detectsurffeatures.html) to find the point matches between images and then [RANSAC with a Procrustes model](https://github.com/Mrrvm/Visual-Odometry/blob/master/image_proc/Camera_take3/Matlab/ransacByProcrustes.m) to decide what are the best matches to keep.
+- The program reads from two data files ([previously generated](https://github.com/Mrrvm/Visual-Odometry/tree/master/input)), with the image and rotation data. 
+- It uses the [SURF algorithm](https://www.mathworks.com/help/vision/ref/detectsurffeatures.html) to find the point matches between images and then [RANSAC with a Procrustes model](https://github.com/Mrrvm/Visual-Odometry/blob/master/Matlab/ransacByProcrustes.m) to decide what are the best matches to keep.
 
 ### Using simulated data
 In order to produce simulated points, a few steps are taken,
