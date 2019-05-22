@@ -27,10 +27,9 @@ input/
 where ``d5`` means the depth of 5 meters.
 There is no need to include all axis directories, the Matlab Estimator can run using solely ``d5/x/`` for example, but it needs to be structured that way!
 
-As an argument for the Matlab Estimator, the path to the directory with the distances directories should be provided, in this case that would be 
-``input/``, as well as the path for a specific distance directory when testing for a specific axis angle.
+As an argument for the Matlab Estimator ``runAll``, the path to the directory with the distances directories should be provided if the type is ``REAL_DISTANCES`` as explained previously, in this case that would be ``real.distance.inputDir = input/``. For a specific distance when testing the error by angle, it should be ``real.inputDir = input/d5/`` for example.
 
-To obtain the input data on this format, scripts are provided as follows.
+Data may be obtained through a motion capture software (Motive for example), or using a grid or even a chessboard. To obtain the input data on the necessary format, scripts for this 3 different methods are provided as follows. For alternative methods, alternative code should be developed.
 
 ## Motive data
 
