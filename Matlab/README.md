@@ -112,7 +112,7 @@ Now per each axis, per each of the generated angles,
 
 4) Convert this points to image points, m1 and m2.
 
-![](https://github.com/Mrrvm/Visual-Odometry/blob/master/image_proc/simulation_diagram.png)
+![](https://github.com/Mrrvm/Visual-Odometry/blob/master/images/simulation_diagram.png)
 
 Finally, this points may be used as if it were images to 
 
