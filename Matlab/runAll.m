@@ -39,7 +39,7 @@ if strcmp(TYPE, 'SIM_DISTANCES')
     i = 1;
     while i <= iters
         distances(i+1) = distances(i) + vars.distance.inc;
-        [eRoppr, eRfpro, eRmbpe, eRepog] =  runSimulation(angles, vars.radius, vars.intrinsics, vars.nMatches, distances(i+1), distances(i), vars.baseline, vars.nAngles, vars.nPixels);
+        [eRoppr, eRfpro, eRmbpe, eRepog] =  runSimulation(angles, vars.radius, vars.intrinsics, vars.nMatches, distances(i), distances(i), vars.baseline, vars.nAngles, vars.nPixels);
         meRAllAxis(1,i) = mean(mean(eRoppr, 2));
         meRAllAxis(2,i) = mean(mean(eRfpro, 2));
         meRAllAxis(3,i) = mean(mean(eRmbpe, 2));

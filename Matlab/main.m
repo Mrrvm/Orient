@@ -16,7 +16,7 @@ sim.minD = 0.05;
 sim.radius = 1;
 sim.nMatches = 20;
 
-%% Test baseline effect
+% Test baseline effect
 sim.nAngles = 100;
 sim.intrinsics = I;
 sim.nPixels = 0;
@@ -30,7 +30,7 @@ sim.saveDir = 'results/simulation/angleaxis_baselineON_K==I/';
 runAll('SIM_AXISANGLES', sim);
 
 %% Test baseline effect with intrinsics
-sim.nAngles = 100;
+sim.nAngles = 20;
 sim.intrinsics =  [focalLength*m2pix(1)   skew                               axisOffset(1); 
                            0                                   focalLength*m2pix(2)     axisOffset(2); 
                            0                                   0                                     1                 ];
@@ -45,12 +45,12 @@ sim.saveDir = 'results/simulation/angleaxis_baselineON_K!=I/';
 runAll('SIM_AXISANGLES', sim);
 
 %% Test distance of points to camera effect w/o baseline
-sim.nAngles = 50;
+sim.nAngles = 20;
 sim.intrinsics = I;
 sim.nPixels = 0;
-sim.distance.max = 30;
+sim.distance.max = 20;
 sim.distance.min = 0.05;
-sim.distance.inc = 5;
+sim.distance.inc = 0.5;
 % Distances with baseline OFF 
 sim.baseline = [0.0 0.0 0.0]';  
 sim.saveDir = 'results/simulation/distance_baselineOFF_K==I/';

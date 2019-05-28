@@ -18,7 +18,13 @@ function [M1, M2, m1, m2, err] = simulator(nMatches, R, maxD, minD, B, K)
 err = 0;
 errorc = 0;
 % Generate random 3D points
-M1 = (maxD-minD)*rand([3, nMatches*10])+minD;
+if maxD == minD
+    a = rand([2, nMatches*10])+minD;
+    M1(1:2, :) = a;
+    M1(3, :) = ones(1, nMatches*10)*minD;
+else
+    M1 = (maxD-minD)*rand([3, nMatches*10])+minD;
+end
 M1 = M1+B;
 % Rotate points
 M2 = R*M1;
@@ -26,9 +32,9 @@ M2 = R*M1;
 keep = M2(3, :) > 0;
 M1 = M1(:, keep);
 M2 = M2(:, keep);
-% Guarantee there are at least N points with positive depth
+% Guarantee there are at least nMatches points with positive depth
 while size(M1, 2) < nMatches
-    M1 = (maxD-minD)*rand([3,N*10])+minD;
+    M1 = (maxD-minD)*rand([3, nMatches*10])+minD;
     M1 = M1+B;
     M2 = R*M1;
     keep = M2(3, :) > 0;
