@@ -2,28 +2,24 @@ function R = getRmatrix(angles)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Obtain rotation matrix from angles XYZ
 % Input
-%   angles     Angles of rotation per axis in radians
+%   angles   Angles of rotation
 % Output
 %   R          Rotation matrix
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-ax = angles(1);
-ay = angles(2);
-az = angles(3);
-
 Rx = [1 0       0; 
-      0 cos(ax) -sin(ax); 
-      0 sin(ax) cos(ax)];
+         0 cos(angles(1)) -sin(angles(1)); 
+         0 sin(angles(1)) cos(angles(1))];
 
-Ry = [cos(ay)  0 sin(ay); 
-      0        1 0; 
-      -sin(ay) 0 cos(ay)];
+Ry = [cos(angles(2))  0 sin(angles(2)); 
+         0        1 0; 
+        -sin(angles(2)) 0 cos(angles(2))];
   
-Rz = [cos(az) -sin(az) 0; 
-      sin(az) cos(az)  0; 
-      0       0        1];
+Rz = [cos(angles(3)) -sin(angles(3)) 0; 
+         sin(angles(3)) cos(angles(3))  0; 
+         0       0        1];
   
-R = Rx*Ry*Rz;
+R = Rz*Ry*Rx;
  
 end
 

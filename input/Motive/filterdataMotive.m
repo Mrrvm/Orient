@@ -64,13 +64,16 @@ for i=1:(numel(data)-1)
     for k=(i+1):numel(data)  
         M2 = data(k).marker(:,:);
         [d, Z, tr] = procrustes(M1, M2, 'reflection', false, 'scaling', false);
-        rotations(z).indImg1 = i;
-        rotations(z).indImg2 = k;
-        rotations(z).rot = matrixToAxisAngle(tr.T);
-        rotations(z).tr = tr.c(1, :);
-        a = vrrotmat2vec(tr.T);
-        rotations(z).angle = a(4)*180/pi;
-        z = z + 1;
+        a = rotm2eul(tr.T);
+        [ang ind] = max(abs(a));
+        if (ang*180/pi < 45)       
+            rotations(z).angle = a(ind)*180/pi;
+            rotations(z).indImg1 = i;
+            rotations(z).indImg2 = k;
+            rotations(z).rot = rotm2eul(tr.T);
+            rotations(z).tr = tr.c(1, :);
+            z = z + 1;
+        end
     end
 end
 

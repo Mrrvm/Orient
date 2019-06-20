@@ -18,7 +18,7 @@ if strcmp(TYPE, 'SIM_BASELINES')
     i = 1;
     while i <= iters
         baselines(:, i+1) = baselines(:, i) + vars.baseline.inc;
-        [eRoppr, eRfpro, eRmbpe, eRepog] =  runSimulation(angles, vars.radius, vars.intrinsics, vars.nMatches, vars.maxD, vars.minD, baselines(:, i), vars.nAngles, vars.nPixels);
+        [eRoppr, eRfpro, eRmbpe, eRepog] =  runSimulation(angles, vars.radius, vars.intrinsics, vars.nMatches, vars.maxD, vars.minD, baselines(:, i), vars.nAngles, vars.nPixels, vars.imgDim);
         meRAllAxis(1,i) = mean(mean(eRoppr, 2));
         meRAllAxis(2,i) = mean(mean(eRfpro, 2));
         meRAllAxis(3,i) = mean(mean(eRmbpe, 2));
@@ -39,7 +39,7 @@ if strcmp(TYPE, 'SIM_DISTANCES')
     i = 1;
     while i <= iters
         distances(i+1) = distances(i) + vars.distance.inc;
-        [eRoppr, eRfpro, eRmbpe, eRepog] =  runSimulation(angles, vars.radius, vars.intrinsics, vars.nMatches, distances(i), distances(i), vars.baseline, vars.nAngles, vars.nPixels);
+        [eRoppr, eRfpro, eRmbpe, eRepog] =  runSimulation(angles, vars.radius, vars.intrinsics, vars.nMatches, distances(i), distances(i), vars.baseline, vars.nAngles, vars.nPixels, vars.imgDim);
         meRAllAxis(1,i) = mean(mean(eRoppr, 2));
         meRAllAxis(2,i) = mean(mean(eRfpro, 2));
         meRAllAxis(3,i) = mean(mean(eRmbpe, 2));
@@ -59,7 +59,7 @@ if strcmp(TYPE, 'SIM_NOISES')
     meRAllAxis = zeros(4, iters);
     i = 1;
     while i <= iters
-        [eRoppr, eRfpro, eRmbpe, eRepog] =  runSimulation(angles, vars.radius, vars.intrinsics, vars.nMatches, vars.maxD, vars.minD, vars.baseline, vars.nAngles, noises(i));
+        [eRoppr, eRfpro, eRmbpe, eRepog] =  runSimulation(angles, vars.radius, vars.intrinsics, vars.nMatches, vars.maxD, vars.minD, vars.baseline, vars.nAngles, noises(i), vars.imgDim);
         meRAllAxis(1,i) = mean(mean(eRoppr, 2));
         meRAllAxis(2,i) = mean(mean(eRfpro, 2));
         meRAllAxis(3,i) = mean(mean(eRmbpe, 2));
@@ -73,7 +73,7 @@ end
 %% Test error in terms of axis using simulated data
 if strcmp(TYPE, 'SIM_AXISANGLES')
     angles = generateAngles(vars.nAngles, vars.sigma);
-    [eRoppr, eRfpro, eRmbpe, eRepog] =  runSimulation(angles, vars.radius, vars.intrinsics, vars.nMatches, vars.maxD, vars.minD, vars.baseline, vars.nAngles, vars.nPixels);
+    [eRoppr, eRfpro, eRmbpe, eRepog] =  runSimulation(angles, vars.radius, vars.intrinsics, vars.nMatches, vars.maxD, vars.minD, vars.baseline, vars.nAngles, vars.nPixels, vars.imgDim);
     % Compute mean error and variance
     meRoppr = mean(eRoppr, 2);
     meRfpro = mean(eRfpro, 2);
@@ -91,7 +91,7 @@ if strcmp(TYPE, 'SIM_AXISANGLES')
     meR = [meRoppr meRfpro meRmbpe meRepog];
     [minerror, method] = min(sum(meR));
     label = {'error oppr', 'error fpro', 'error mbpe', 'error epog'};
-    fprintf('\nBest method was %s with %f half radians of error.\n\n', string(label(method)), minerror);
+    fprintf('\nBest method was %s with %f degrees of error.\n\n', string(label(method)), minerror);
 
     % Visualise error in terms of axis angle
     ang = angles(1:vars.nAngles)*180/pi;
@@ -105,7 +105,7 @@ end
 if strcmp(TYPE, 'REAL_DISTANCES')
     [dirs, dists] = readDirs(vars.distance.inputDir);
     for i = 1:size(dirs,1)
-        [~, ~, eRoppr, eRfpro, eRmbpe, eRepog] =  runReality(strcat(vars.distance.inputDir, dirs(i).name, '/'), vars.ransac.samplePer, vars.ransac.enoughPer, vars.ransac.maxIters, vars.ransac.maxErr, vars.baseline, vars.radius, vars.intrinsics, vars.minMatches, vars.maxMatches);
+        [~, ~, eRoppr, eRfpro, eRmbpe, eRepog] =  runReality(strcat(vars.distance.inputDir, dirs(i).name, '/'), vars.ransac.samplePer, vars.ransac.enoughPer, vars.ransac.maxIters, vars.ransac.maxErr, vars.baseline, vars.radius, vars.intrinsics, vars.minMatches, vars.maxMatches, vars.radialDist, vars.tanDist);
         clear imgs1 imgs2 axisCount;
         meRAllAxis(1,i) = safeMean(safeMean(eRoppr, 2), 1);
         meRAllAxis(2,i) = safeMean(safeMean(eRfpro, 2), 1);
@@ -118,7 +118,7 @@ end
 
 %% Test error in terms of angles using real data 
 if strcmp(TYPE, 'REAL_AXISANGLES')
-    [ang, axisCount, eRoppr, eRfpro, eRmbpe, eRepog] = runReality(vars.inputDir, vars.ransac.samplePer, vars.ransac.enoughPer, vars.ransac.maxIters, vars.ransac.maxErr, vars.baseline, vars.radius, vars.intrinsics, vars.minMatches, vars.maxMatches);
+    [ang, axisCount, eRoppr, eRfpro, eRmbpe, eRepog] = runReality(vars.inputDir, vars.ransac.samplePer, vars.ransac.enoughPer, vars.ransac.maxIters, vars.ransac.maxErr, vars.baseline, vars.radius, vars.intrinsics, vars.minMatches, vars.maxMatches, vars.radialDist, vars.tanDist);
     % Compute mean error and variance
     meRoppr = safeMean(eRoppr, 2);
     meRfpro = safeMean(eRfpro, 2);
@@ -145,7 +145,7 @@ if strcmp(TYPE, 'REAL_AXISANGLES')
     meR = [meRoppr meRfpro meRmbpe meRepog];
     [minerror, method] = min(sum(meR, 1));
     label = {'error oppr', 'error fpro', 'error mbpe', 'error epog'};
-    fprintf('\nBest method was %s with %f half radians of error.\n\n', string(label(method)), minerror);
+    fprintf('\nBest method was %s with %f degrees of error.\n\n', string(label(method)), minerror);
 
 end
 

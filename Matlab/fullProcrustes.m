@@ -20,10 +20,8 @@ mu2 = mean(M2, 1);
 N1 = M1 - repmat(mu1, size(M1, 1), 1);
 N2 = M2 - repmat(mu2, size(M1, 1), 1);
 
-ssq1 = sum(N1.^2, 1);
-ssq2 = sum(N2.^2, 1);
-ssq1 = sum(ssq1);
-ssq2 = sum(ssq2);
+ssq1 = sum(sum(N1.^2, 1));
+ssq2 = sum(sum(N2.^2, 1));
 norm1 = sqrt(ssq1);
 norm2 = sqrt(ssq2);
 

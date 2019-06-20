@@ -1,4 +1,4 @@
-function [eRoppr, eRfpro, eRmbpe, eRepog] = estimator(m1, m2, radius, K, B, r)
+function [eRoppr, eRfpro, eRmbpe, eRepog] = estimator(m1, m2, radius, K, B, eul)
 %estimator Estimate transformation error based on 4 different methods: 
 % orthogonal procrustes problem, full procrustes, minimization of back
 % projection error and epipolar geometry 
@@ -15,23 +15,24 @@ function [eRoppr, eRfpro, eRmbpe, eRepog] = estimator(m1, m2, radius, K, B, r)
 %% Run orthogonal procrustes problem
 [Roppr, Toppr] = orthProcrustesProb(m1, m2, radius, K);
 
+%% Run minimization of back projection error
+[Rmbpe, Tmbpe] = minBackProject(m1, m2, B, rotm2eul(Roppr), radius, K);
+
 %% Run full procrustes
 [Rfpro, Tfpro] = fullProcrustes(m1, m2, radius, K);
 
-%% Run minimization of back projection error
-[Rmbpe, Tmbpe] = minBackProject(m1, m2, B, Roppr, radius, K);
-
+REPS = 100;
+for i=1:REPS
+tic;
 %% Run epipolar geometry approach
 [Repog, Tepog] = epipolarGeo(m1, m2, radius, K);
+end
+averageTime = toc/REPS
 
 %% Compute error between each method results and truth
-roppr  = matrixToAxisAngle(Roppr);
-rfpro   = matrixToAxisAngle(Rfpro);
-rmbpe = matrixToAxisAngle(Rmbpe);
-repog  = matrixToAxisAngle(Repog);
-eRoppr  = norm(r-roppr);
-eRfpro   = norm(r-rfpro);
-eRmbpe = norm(r-rmbpe);
-eRepog  = norm(r-repog);
+eRoppr = norm(rotm2eul(Roppr)-eul);
+eRfpro = norm(rotm2eul(Rfpro)-eul);
+eRmbpe = norm(rotm2eul(Rmbpe)-eul);
+eRepog = norm(rotm2eul(Repog)-eul);
  
 end

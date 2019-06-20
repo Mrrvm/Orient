@@ -1,11 +1,11 @@
-function [M1, M2, m1, m2, err] = simulator(nMatches, R, maxD, minD, B, K)
+function [Mw, M1, M2, m1, m2, err] = simulator(nMatches, R, T, maxD, minD, B, K, imgDim)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %simulator Simulate two views of a 3D scene
 % Input
 %   nMatches Number of points
 %   R              3D points rotation to make
-%   maxD       Max distance to the camera
-%   minD        Min distance to the camera
+%   maxD       Max distance to the points
+%   minD        Min distance to the points
 %   B              Baseline
 %   K              Intrinsics matrix
 % Output
@@ -16,45 +16,38 @@ function [M1, M2, m1, m2, err] = simulator(nMatches, R, maxD, minD, B, K)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 err = 0;
-errorc = 0;
-% Generate random 3D points
-if maxD == minD
-    a = rand([2, nMatches*10])+minD;
-    M1(1:2, :) = a;
-    M1(3, :) = ones(1, nMatches*10)*minD;
-else
-    M1 = (maxD-minD)*rand([3, nMatches*10])+minD;
-end
-M1 = M1+B;
-% Rotate points
-M2 = R*M1;
-% Keep the points with positive depth only
-keep = M2(3, :) > 0;
-M1 = M1(:, keep);
-M2 = M2(:, keep);
-% Guarantee there are at least nMatches points with positive depth
-while size(M1, 2) < nMatches
-    M1 = (maxD-minD)*rand([3, nMatches*10])+minD;
-    M1 = M1+B;
-    M2 = R*M1;
-    keep = M2(3, :) > 0;
-    M1 = M1(:, keep);
-    M2 = M2(:, keep);
-    errorc = errorc + 1;
-    if errorc > 5 % try this max 5 times
-        err = 1;
-        break;
+trials = 100;
+
+sz = 1;
+Z = (maxD-minD)*rand(1,nMatches*trials)+minD;
+for i=1:trials*nMatches
+    
+    Y = 2*Z(i)*rand(1,1)-Z(i);
+    X = 2*Z(i)*rand(1,1)-Z(i);
+    Mwi = [X Y Z(i)]';
+    M1i = Mwi-B;
+    M2i = R*M1i+T;
+    m1i = projectToPlane(K, M1i);
+    m2i = projectToPlane(K, M2i);
+
+    if (m1i(1) <= imgDim(1)) && (m1i(1) >= 0) && (m1i(2) <= imgDim(2)) && (m1i(2) >= 0) && ...
+            (m2i(1) <= imgDim(1)) && (m2i(1) >= 0) && (m2i(1) <= imgDim(2)) && (m2i(1) >=0)
+        Mw(:, sz) = Mwi;
+        M1(:, sz) = M1i;
+        M2(:, sz) = M2i;
+        m1(:, sz) = m1i;
+        m2(:, sz) = m2i;
+        if sz == nMatches
+            break;
+        end
+        sz = sz + 1;
     end
+    
 end
 
-if err ~= 1 
-    M1 = M1(1:3, 1:nMatches); 
-    M2 = M2(1:3, 1:nMatches); 
-    
-    m1 = projectToPlane(K, M1);
-    m2 = projectToPlane(K, M2);
-else
-    m1 = 0; m2 = 0;
+if sz < nMatches
+    err = 1;
+    return;
 end
 
 end

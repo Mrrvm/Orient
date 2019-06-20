@@ -65,7 +65,7 @@ function ind = testModel(M1, M2, maxErr, R)
 
     ind = zeros(1, size(M1,2));
     M2a = R*M1;
-    err = sum(abs(M2-M2a));
-    ind(err < maxErr) = 1;
+    err = mean(M2-M2a);
+    ind(abs(err) < maxErr) = 1;
 
 end

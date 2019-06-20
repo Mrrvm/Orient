@@ -1,4 +1,4 @@
-function [eRoppr, eRfpro, eRmbpe, eRepog] = runSimulation(angles, radius, K, nMatches, maxD, minD, B, nAngles, nPixels)
+function [eRoppr, eRfpro, eRmbpe, eRepog] = runSimulation(angles, radius, K, nMatches, maxD, minD, B, nAngles, nPixels, imgDim)
 %runSimulation Simulate points on space and estimate transformation
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Input
@@ -21,17 +21,15 @@ I = [1 0 0; 0 1 0; 0 0 1];
 for i=1:3
     for j=1:nAngles
         %% Simulate points
-        R = getRmatrix(angles((i-1)*j+j,:));
+        R = eul2rotm(-angles(j)*[(3-i)==0 (2-i)==0 (1-i)==0]);
         T = (R-I)*B;
-        [M1, M2, m1, m2, err] = simulator(nMatches, R, maxD, minD, B, K);
+        [Mw, M1, M2, m1, m2, err] = simulator(nMatches, R, T, maxD, minD, B, K, imgDim);
         if err == 1
             continue;
         end
-        %showScenario(M1, M2, B, R, maxD);
         [m1, m2] = noiseGen(m1, m2, nMatches, nPixels);
         %% Estimate transformation error
-        r = matrixToAxisAngle(R);
-        [eRoppr(i,j), eRfpro(i,j), eRmbpe(i,j), eRepog(i,j) ]= estimator(m1, m2, radius, K, B, r);
+        [eRoppr(i,j), eRfpro(i,j), eRmbpe(i,j), eRepog(i,j)]= estimator(m1, m2, radius, K, B, rotm2eul(R));
     end  
 end
  

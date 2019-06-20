@@ -12,9 +12,10 @@ skew = 0;
 axisOffset = [0 0];  
 sim.sigma = 5;
 sim.maxD = 5;
-sim.minD = 0.05;
+sim.minD = 2.5;
 sim.radius = 1;
 sim.nMatches = 20;
+sim.imgDim = [2056 1542];
 
 % Test baseline effect
 sim.nAngles = 100;

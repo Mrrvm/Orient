@@ -8,7 +8,7 @@ function angles = generateAngles(nAngles, sigma)
 %   angles   Generated angles
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-pd = makedist('Normal','mu',0,'sigma',sigma);
+pd = makedist('Uniform','Lower', -45, 'Upper', 45);
 
 ang = zeros(1,nAngles);
 for i=1:nAngles
@@ -18,10 +18,7 @@ end
 figure;
 histfit(ang, nAngles,'Normal');
 
-ang_rad = ang*pi/180;
+angles = ang*pi/180;
 
-angles(1      :nAngles,:)     = [ang_rad;          zeros(1,nAngles); zeros(1,nAngles)]';
-angles((nAngles+1)  :2*nAngles,:)   = [zeros(1,nAngles); ang_rad;          zeros(1,nAngles)]';
-angles((2*nAngles+1):3*nAngles,:)   = [zeros(1,nAngles); zeros(1,nAngles); ang_rad         ]';
         
 end

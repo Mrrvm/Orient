@@ -1,4 +1,4 @@
-function [plotAng, axisCount, eRoppr, eRfpro, eRmbpe, eRepog] = runReality(filepath, samplePer, enoughPer, maxIters, maxErr, B,  radius, K, minPoints, maxPoints)
+function [plotAng, axisCount, eRoppr, eRfpro, eRmbpe, eRepog] = runReality(filepath, samplePer, enoughPer, maxIters, maxErr, B,  radius, K, minPoints, maxPoints, radialDist, tanDist)
 %runReality Estimate transformation on real data
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Input
@@ -19,6 +19,7 @@ function [plotAng, axisCount, eRoppr, eRfpro, eRmbpe, eRepog] = runReality(filep
 %   eR...               Error from each method
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
    
+cameraParams = cameraParameters('IntrinsicMatrix', K,'RadialDistortion',radialDist, 'TangentialDistortion', tanDist); 
 axisCount = zeros(1,3);
 dirs = dir(fullfile(filepath,'*'));
 dirs = dirs(~ismember({dirs.name},{'.','..'}));
@@ -53,6 +54,8 @@ for z = 1:numel(dirs)
      j = 1;
      for k = 1:numel(rotations)
         %% Extract matches from images
+%      img1 = undistortImage(data(rotations(k).indImg1).img, cameraParams);
+%      img2 = undistortImage(data(rotations(k).indImg2).img, cameraParams);
         img1 = data(rotations(k).indImg1).img;
         img2 = data(rotations(k).indImg2).img;
         p1 = detectSURFFeatures(img1);
@@ -75,8 +78,8 @@ for z = 1:numel(dirs)
             m1 = double(m1Best.Location(1:sum(bestInds'>0),:)');
             m2 = double(m2Best.Location(1:sum(bestInds'>0),:)');
         end
-        %figure; showMatchedFeatures(img1, img2, m1Best', m2Best');
-             
+        %figure; showMatchedFeatures(img1, img2, m1Best', m2Best');  
+
         % Save angles for plot
         plotAng(i,j) = rotations(k).angle;
 

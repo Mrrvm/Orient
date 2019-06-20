@@ -1,4 +1,4 @@
-function [R, T] = minBackProject(m1, m2, B, Rinit, radius, K)
+function [Rmbpe, T] = minBackProject(m1, m2, B, eulinit, radius, K)
 %minBackProject Minimization of Back Projection Error
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Input
@@ -12,17 +12,14 @@ function [R, T] = minBackProject(m1, m2, B, Rinit, radius, K)
 %   R,T          Rotation and Translation
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 I = [1 0 0; 0 1 0; 0 0 1];
-Rinitv = [Rinit(1,1:3) Rinit(2,1:3) Rinit(3,1:3)];
 M1 = projectToSphere(K, m1, radius);
 Zinit = M1(3,:);
 
-options = optimset('MaxFunEvals',10000000000);
-[x,fval,exitflag,output] = fminsearch(@(x)objectiveFun(x, m1, m2, B, K), [Rinitv, Zinit], options);
+options = optimset('MaxFunEvals',10000000000, 'MaxIter', 1000000);%, 'PlotFcns',@optimplotfval);
+[x,fval,exitflag,output] = fminsearch(@(x)objectiveFun(x, m1, m2, B, K), [eulinit Zinit], options);
 
-R(1, 1:3) = x(1:3);
-R(2, 1:3) = x(4:6);
-R(3, 1:3) = x(7:9);
-Z1 = x(10:end);
-T = (R-I)*B;
+Rmbpe = eul2rotm(x(1:3));
+Z1 = x(4:end);
+T = (Rmbpe-I)*B;
 
 end
