@@ -5,7 +5,7 @@ set(CMAKE_CXX_STANDARD)
 
 find_package(OpenCV REQUIRED)
 
-add_executable(main main.cpp defs.h camera.cpp camera.h defs.cpp)
+add_executable(main main.cpp defs.h camera.cpp camera.h defs.cpp estimator.cpp estimator.h image.cpp image.h)
 
 include_directories(${OpenCV_INCLUDE_DIRS})
 target_link_libraries(main ${OpenCV_LIBS} ueye_api)

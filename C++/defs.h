@@ -13,12 +13,8 @@
 #include "opencv2/calib3d/calib3d.hpp"
 #include <opencv2/imgproc/imgproc.hpp>
 #include "opencv2/video/tracking.hpp"
-#include <ueye.h>
 
-#define IMGSPATH "/home/imarcher/Dropbox/Tecnico/Visual-Odometry/image_proc/Camera_take3/cam_img/"
-
-
-#define COLOR false
+#define COLOR true
 #define HEIGHT 1542
 #define WIDTH 2056
 
@@ -31,9 +27,11 @@
 #define CVTYPE CV_8UC1
 #endif
 
-using namespace std;
-using namespace cv;
+#define MINHESSIAN 300
 
 void SpawnError(string where);
+double Eul2Rotm();
+vector<double> Rotm2Eul();
+
 
 #endif

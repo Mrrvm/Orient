@@ -8,11 +8,12 @@ int main() {
         SpawnCameraError(cameraHandle, "ConnectCamera");
     Mat imgMatrix = CaptureImage(cameraHandle);
 
-/*    Mat imgMatrix = imread(string(IMGSPATH)+"img1_30v.jpg", CV_LOAD_IMAGE_COLOR);
+    /*
+    Mat imgMatrix = imread(string(IMGSPATH)+"img1_30v.jpg", CV_LOAD_IMAGE_COLOR);
     if(!imgMatrix.data)
         SpawnError("imread");
-    */
     ShowImage(imgMatrix);
+*/
 
     is_ExitCamera(cameraHandle);
     return 0;

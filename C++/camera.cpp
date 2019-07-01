@@ -1,6 +1,19 @@
 #include "camera.h"
 
-void SpawnCameraError(HIDS cameraHandle, string where) {
+using namespace ueye;
+using namespace std;
+using namespace cv;
+
+class Camera::Camera(double *rotm_init[3], vector<double> tr_init) {
+
+    HIDS cameraHandle = 0;
+public:
+    double rotm[3][3] = rotm_init;
+    vector<double> eul = rotm2eul(rotm_init);
+    vector<double> tr = tr_init;
+};
+
+void Camera::SpawnCameraError(string where) {
     char *errDesc;
     int err = 0;
     is_GetError(cameraHandle, &err, &errDesc);
@@ -9,7 +22,7 @@ void SpawnCameraError(HIDS cameraHandle, string where) {
     exit(EXIT_FAILURE);
 }
 
-int ConnectCamera(HIDS *cameraHandle) {
+int Camera::ConnectCamera() {
 
     int ret = is_InitCamera(cameraHandle, NULL);
     if (ret != IS_SUCCESS) {
@@ -30,14 +43,7 @@ int ConnectCamera(HIDS *cameraHandle) {
     return 1;
 }
 
-void ShowImage(Mat imgMatrix) {
-
-    namedWindow("Image", 1);
-    imshow("Image", imgMatrix);
-    waitKey();
-}
-
-Mat ConvertCharToMat(char *img)  {
+Mat Camera::ConvertCharToMat(char *img)  {
     Mat imgMatrix(HEIGHT, WIDTH, CVTYPE);
     if(COLOR) {
         int j = 0, i = 0, m = 0;
@@ -62,7 +68,7 @@ Mat ConvertCharToMat(char *img)  {
     return imgMatrix;
 }
 
-Mat CaptureImage(HIDS cameraHandle) {
+int Camera::CaptureImage(Mat img) {
 
     char *img = NULL;
     int id = 0;
@@ -75,8 +81,16 @@ Mat CaptureImage(HIDS cameraHandle) {
     if(is_FreezeVideo(cameraHandle, IS_WAIT) != IS_SUCCESS)
         SpawnCameraError(cameraHandle, "is_FreezeVideo");
     imgMatrix = ConvertCharToMat(img);
-    cout << "nfpeine" << endl;
     if(is_FreeImageMem(cameraHandle, img, id) != IS_SUCCESS)
         SpawnCameraError(cameraHandle, "is_FreeImageMem");
-    return imgMatrix;
+    img = imgMatrix;
+    return 1;
+}
+
+int Camera::CalibrateCamera() {
+
+}
+
+int Camera::DisconnectCamera() {
+
 }
