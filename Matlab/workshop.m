@@ -1,6 +1,9 @@
 close all;
 clear all;
 
+vars.methods = {'OPPR', 'MEE', 'MBPE', 'N8P', 'GRAT'};
+vars.colors = {'b', 'g', 'r', 'm', 'c'};
+
 vars.baseline = [0.02 -0.055 0.055]';
 vars.intrinsics = [1.1573e+03 -3.3579         975.9459; 
                            0                   1.1584e+03  798.4888;
@@ -11,7 +14,7 @@ vars.nMatches = 20;
 vars.sigma = 10;
 vars.minD = 0.05;
 vars.imgDim = [2056 1542];
-vars.nAngles = 100;
+vars.nAngles = 10;
 vars.nPixels = 5;
 
 vars.maxD = 0.24;

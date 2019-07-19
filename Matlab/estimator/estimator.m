@@ -1,4 +1,4 @@
-function [eRoppr, eRmee, eRmbpe, eRn8p] = estimator(m1, m2, radius, K, B, eul)
+function [eR, eT] = estimator(m1, m2, radius, K, B, rreal, treal, methods)
 %estimator Estimate transformation error based on 4 different methods: 
 % orthogonal procrustes problem, full procrustes, minimization of back
 % projection error and epipolar geometry 
@@ -12,25 +12,38 @@ function [eRoppr, eRmee, eRmbpe, eRn8p] = estimator(m1, m2, radius, K, B, eul)
 %   eR...          Error from each method
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%% Run orthogonal procrustes problem
+nMethods = size(methods, 2);
 [Roppr, Toppr] = orthProcrustesProb(m1, m2, radius, K);
 
-%% Run minimization of back projection error
-[Rmbpe, Tmbpe] = minBackProject(m1, m2, B, rotm2eul(Roppr), radius, K);
-
-%% Run minimization of epipolar error
-[Rmee, Tmee] = minEpipolarError(m1, m2, B, radius, K, rotm2eul(Roppr));
-
-%% Run epipolar geometry norm8point approach
-[Rn8p, Tn8p] = recoverPoseFromF(norm8point(m1, m2) , K, m1(:,1), m2(:,1), radius);
-
-%% Run epipolar geometry linear approach
-
-
-%% Compute error between each method results and truth
-eRoppr = norm(rotm2eul(Roppr)-eul);
-eRmee = norm(rotm2eul(Rmee)-eul);
-eRmbpe = norm(rotm2eul(Rmbpe)-eul);
-eRn8p = norm(rotm2eul(Rn8p)-eul);
+for j=1:nMethods
+    
+    if strcmp(methods(j), 'OPPR')
+        %% Run orthogonal procrustes problem
+        R = Roppr;
+        T = Toppr;
+    end
+    if strcmp(methods(j), 'MBPE') 
+        %% Run minimization of back projection error
+        [R, T] = minBackProject(m1, m2, B, rotm2eul(Roppr), radius, K);
+    end
+    if strcmp(methods(j), 'MEE')
+        %% Run minimization of epipolar error
+        [R, T] = minEpipolarError(m1, m2, B, radius, K, rotm2eul(Roppr));
+    end
+    if strcmp(methods(j), 'N8P')
+        %% Run epipolar geometry norm8point approach
+        [R, T] = recoverPoseFromF(norm8point(m1, m2) , K, m1(:,1), m2(:,1), radius);
+    end
+    if strcmp(methods(j), 'GRAT') 
+        %% Run epipolar geometry gradient technique
+        [R, T] = minEpipolarGradient(m1, m2, B, K, rotm2eul(Roppr));
+    end
+    
+    %% Compute error between each method results and truth
+    eR(j) = norm(rotm2eul(R)-rreal);
+    eT(j) = norm(T-treal);
+    clear R T;
+   
+end
  
 end

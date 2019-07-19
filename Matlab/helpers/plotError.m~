@@ -19,9 +19,9 @@ for j=1:nMethods
     coeffs(j, :) = polyfit(var, yvar(j,:), 1);
 end
 fittedX = linspace(min(var), max(var), 200);
-for j=1:nMethods
+for j=1:vars.nMethods
     fittedY(j, :) =  polyval(coeffs(j, :), fittedX);
-    plot(fittedX, fittedY(j, :), strcat(colors{j},'-'), 'LineWidth', 1);
+    plot(fittedX, fittedY(j, :), colors(j)+'-', 'LineWidth', 1);
     hold on;
 end
 title(pTitle);

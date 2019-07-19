@@ -1,4 +1,4 @@
-function [plotAng, axisCount, eRoppr, eRmee, eRmbpe, eRn8p] = runReality(filepath, samplePer, enoughPer, maxIters, maxErr, B,  radius, K, minPoints, maxPoints, radialDist, tanDist)
+function [plotAng, axisCount, eR, eT] = runReality(filepath, samplePer, enoughPer, maxIters, maxErr, B,  radius, K, minPoints, maxPoints, radialDist, tanDist, methods)
 %runReality Estimate transformation on real data
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Input
@@ -82,7 +82,12 @@ for z = 1:numel(dirs)
         plotAng(i,j) = rotations(k).angle;
 
         %% Estimate transformation error
-        [eRoppr(i,j), eRmee(i,j), eRmbpe(i,j), eRn8p(i,j) ]= estimator(m1, m2, radius, K, B, rotations(k).rot);
+        [eRi, eTi]= estimator(m1, m2, radius, K, B, rotations(k).rot, rotations(k).tr, methods);
+        sizeeRi = size(eRi, 2);
+        for n=1:sizeeRi
+            eR(3*(n-1)+i, j) = eRi(n); 
+            eT(3*(n-1)+i, j) = eTi(n); 
+        end
         j = j + 1;
 
      end

@@ -1,5 +1,5 @@
-function f = objectiveFunMEE(x, m1, m2, B, K)
-%objectiveFun Objective function for MEE
+function f = objectiveFunGRAT(x, m1, m2, B, K)
+%objectiveFun Objective function for GRAT
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Input
 %   x(1:3) = R             Euler Angles
@@ -20,21 +20,17 @@ F = inv(K)'*Tx*R*inv(K);
 m1h = [m1; ones(1, nMatches)];
 m2h = [m2; ones(1, nMatches)];
 
+epiEq = sum(m2h.*(F*m1h));
+
 l2 = F*m1h;
 l1 = F'*m2h;
 
 aux1 = [1 0 0; 0 1 0]*l1;
 aux2 = [1 0 0; 0 1 0]*l2;
 
-norm1 = sqrt(aux1(1, :).*aux1(1, :) + aux1(2, :).*aux1(2, :));
-norm2 = sqrt(aux2(1, :).*aux2(1, :) + aux2(2, :).*aux2(2, :));
+var = aux2(1, :).*aux2(1, :) + aux2(2, :).*aux2(2, :) + ...
+    aux1(1, :).*aux1(1, :) + aux1(2, :).*aux1(2, :);
 
-l1 = l1./norm1;
-l2 = l2./norm2;
-
-err1 = m1h(:)'*l1(:);
-err2 = m2h(:)'*l2(:);
-
-f = err1.^2 + err2.^2;
+f = sum((epiEq.^2)/var.^2);
 
 end

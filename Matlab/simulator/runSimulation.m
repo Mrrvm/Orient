@@ -1,4 +1,4 @@
-function [eRoppr, eRmee, eRmbpe, eRn8p] = runSimulation(angles, radius, K, nMatches, maxD, minD, B, nAngles, nPixels, imgDim)
+function [eR, eT] = runSimulation(angles, radius, K, nMatches, maxD, minD, B, nAngles, nPixels, imgDim, methods)
 %runSimulation Simulate points on space and estimate transformation
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Input
@@ -29,7 +29,12 @@ for i=1:3
         end
         [m1, m2] = noiseGen(m1, m2, nMatches, nPixels);
         %% Estimate transformation error
-        [eRoppr(i,j), eRmee(i,j), eRmbpe(i,j), eRn8p(i,j)]= estimator(m1, m2, radius, K, B, rotm2eul(R));
+        [eRi, eTi]= estimator(m1, m2, radius, K, B, rotm2eul(R), T, methods);
+        sizeeRi = size(eRi, 2);
+        for n=1:sizeeRi
+            eR(3*(n-1)+i, j) = eRi(n); 
+            eT(3*(n-1)+i, j) = eTi(n); 
+        end
     end  
 end
  

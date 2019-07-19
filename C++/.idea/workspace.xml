@@ -11,49 +11,7 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1b2254cd-5c97-43f5-ae2c-68714e152f63" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/estimator.cpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/estimator.h" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/image.cpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/image.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/CMakeLists.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/camera.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/camera.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/camera.h" beforeDir="false" afterPath="$PROJECT_DIR$/camera.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/Makefile" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/Makefile" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/main.cpp.cbp" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/main.cpp.cbp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/defs.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/defs.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/defs.h" beforeDir="false" afterPath="$PROJECT_DIR$/defs.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/main.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Matlab/diverge/constant_simulator.m" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Matlab/diverge/diverge.m" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Matlab/diverge/drawCuboid.m" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Matlab/diverge/fullProcrustes.m" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Matlab/diverge/generateAngles.m" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Matlab/diverge/getRmatrix.m" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Matlab/diverge/matrixToAxisAngle.m" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Matlab/diverge/minBackProject.m" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Matlab/diverge/noiseGen.m" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Matlab/diverge/objectiveFun.m" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Matlab/diverge/orthProcrustesProb.m" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Matlab/diverge/output.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Matlab/diverge/projectToPlane.m" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Matlab/diverge/projectToSphere.m" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Matlab/diverge/showScenario.m" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Matlab/estimator.m" beforeDir="false" afterPath="$PROJECT_DIR$/../Matlab/estimator.m" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Matlab/main.m" beforeDir="false" afterPath="$PROJECT_DIR$/../Matlab/main.m" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Matlab/runReality.m" beforeDir="false" afterPath="$PROJECT_DIR$/../Matlab/runReality.m" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Matlab/workshop.m" beforeDir="false" afterPath="$PROJECT_DIR$/../Matlab/workshop.m" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Matlab/workshop/results/real/d0.24/Error per angle (x axis) - Real data zoom.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Matlab/workshop/results/real/d0.24/Error per angle (y axis) - Real data zoom.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Matlab/workshop/results/real/d0.24/Error per angle (z axis) - Real data zoom.png" beforeDir="false" afterPath="$PROJECT_DIR$/../Matlab/workshop/results/real/d0.24/Error per angle (z axis) - Real data zoom.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Matlab/workshop/results/real/d5/Error per angle (x axis) - Real data zoom.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Matlab/workshop/results/real/d5/Error per angle (y axis) - Real data zoom.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Matlab/workshop/results/real/d5/Error per angle (z axis) - Real data zoom.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Matlab/workshop/results/sim/d0.24/Error per angle (x axis)  - Sim data zoom.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Matlab/workshop/results/sim/d5/Error per angle (x axis)  - Sim data zoom.png" beforeDir="false" />
-    </list>
+    <list default="true" id="1b2254cd-5c97-43f5-ae2c-68714e152f63" name="Default Changelist" comment="" />
     <ignored path="$PROJECT_DIR$/cmake-build-debug/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -85,7 +43,7 @@
         <entry file="file://$PROJECT_DIR$/camera.cpp">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="400">
-              <caret line="16" column="18" lean-forward="true" selection-start-line="16" selection-start-column="18" selection-end-line="16" selection-end-column="18" />
+              <caret line="16" column="18" selection-start-line="16" selection-start-column="18" selection-end-line="16" selection-end-column="18" />
             </state>
           </provider>
         </entry>
@@ -94,7 +52,7 @@
         <entry file="file://$PROJECT_DIR$/camera.h">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="200">
-              <caret line="8" column="22" lean-forward="true" selection-start-line="8" selection-start-column="22" selection-end-line="8" selection-end-column="22" />
+              <caret line="8" column="22" selection-start-line="8" selection-start-column="22" selection-end-line="8" selection-end-column="22" />
               <folding>
                 <element signature="e#55#72#0" expanded="true" />
               </folding>
@@ -105,8 +63,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/image.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="151">
-              <caret line="12" column="31" lean-forward="true" selection-start-line="12" selection-start-column="31" selection-end-line="12" selection-end-column="31" />
+            <state relative-caret-position="275">
+              <caret line="21" column="1" lean-forward="true" selection-start-line="21" selection-start-column="1" selection-end-line="21" selection-end-column="1" />
             </state>
           </provider>
         </entry>
@@ -115,7 +73,7 @@
         <entry file="file://$PROJECT_DIR$/image.h">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="300">
-              <caret line="12" column="31" lean-forward="true" selection-start-line="12" selection-start-column="31" selection-end-line="12" selection-end-column="31" />
+              <caret line="12" column="31" selection-start-line="12" selection-start-column="31" selection-end-line="12" selection-end-column="31" />
             </state>
           </provider>
         </entry>
@@ -124,7 +82,7 @@
         <entry file="file://$PROJECT_DIR$/estimator.cpp">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="125">
-              <caret line="5" lean-forward="true" selection-start-line="5" selection-end-line="5" />
+              <caret line="5" selection-start-line="5" selection-end-line="5" />
             </state>
           </provider>
         </entry>
@@ -199,6 +157,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -210,7 +169,6 @@
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -258,11 +216,12 @@
       <workItem from="1554930048162" duration="13158000" />
       <workItem from="1555759121023" duration="3624000" />
       <workItem from="1561386333279" duration="6803000" />
+      <workItem from="1562184431124" duration="26000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="23585000" />
+    <option name="totallyTimeSpent" value="23611000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -277,10 +236,10 @@
     <frame x="-1" y="49" width="2562" height="1392" extended-state="6" />
     <layout>
       <window_info id="Favorites" order="0" side_tool="true" />
-      <window_info active="true" content_ui="combo" id="Project" order="1" visible="true" weight="0.25882825" />
+      <window_info active="true" content_ui="combo" id="Project" order="1" visible="true" weight="0.26203853" />
       <window_info id="Structure" order="2" side_tool="true" weight="0.25" />
       <window_info anchor="bottom" id="Terminal" order="0" weight="0.32970712" />
-      <window_info anchor="bottom" id="Event Log" order="1" sideWeight="0.50120384" side_tool="true" visible="true" weight="0.23292181" />
+      <window_info anchor="bottom" id="Event Log" order="1" sideWeight="0.50120384" side_tool="true" visible="true" weight="0.23374486" />
       <window_info anchor="bottom" id="Database Changes" order="2" />
       <window_info anchor="bottom" id="Version Control" order="3" />
       <window_info anchor="bottom" id="Message" order="4" />
@@ -303,9 +262,7 @@
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$USER_HOME$/CLionProjects/get_rotation/CMakeLists.txt" />
-    <entry file="file://$PROJECT_DIR$/estimaotr.h">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
+    <entry file="file://$PROJECT_DIR$/estimaotr.h" />
     <entry file="file://$PROJECT_DIR$/CMakeLists.txt">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="250">
@@ -315,6 +272,37 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/main.cpp">
       <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/camera.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="400">
+          <caret line="16" column="18" selection-start-line="16" selection-start-column="18" selection-end-line="16" selection-end-column="18" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/camera.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="200">
+          <caret line="8" column="22" selection-start-line="8" selection-start-column="22" selection-end-line="8" selection-end-column="22" />
+          <folding>
+            <element signature="e#55#72#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/image.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="300">
+          <caret line="12" column="31" selection-start-line="12" selection-start-column="31" selection-end-line="12" selection-end-column="31" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/estimator.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="125">
+          <caret line="5" selection-start-line="5" selection-end-line="5" />
+        </state>
+      </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/estimator.h">
       <provider selected="true" editor-type-id="text-editor">
@@ -344,41 +332,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/camera.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="400">
-          <caret line="16" column="18" lean-forward="true" selection-start-line="16" selection-start-column="18" selection-end-line="16" selection-end-column="18" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/estimator.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="125">
-          <caret line="5" lean-forward="true" selection-start-line="5" selection-end-line="5" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/camera.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="200">
-          <caret line="8" column="22" lean-forward="true" selection-start-line="8" selection-start-column="22" selection-end-line="8" selection-end-column="22" />
-          <folding>
-            <element signature="e#55#72#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/image.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="300">
-          <caret line="12" column="31" lean-forward="true" selection-start-line="12" selection-start-column="31" selection-end-line="12" selection-end-column="31" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/image.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="151">
-          <caret line="12" column="31" lean-forward="true" selection-start-line="12" selection-start-column="31" selection-end-line="12" selection-end-column="31" />
+        <state relative-caret-position="275">
+          <caret line="21" column="1" lean-forward="true" selection-start-line="21" selection-start-column="1" selection-end-line="21" selection-end-column="1" />
         </state>
       </provider>
     </entry>
