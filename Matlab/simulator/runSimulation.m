@@ -27,7 +27,7 @@ for i=1:3
         if err == 1
             continue;
         end
-        [m1, m2] = noiseGen(m1, m2, nMatches, nPixels);
+        [m1, m2] = noiseGen(m1, m2, nPixels);
         %% Estimate transformation error
         [eRi, eTi]= estimator(m1, m2, radius, K, B, rotm2eul(R), T, methods);
         sizeeRi = size(eRi, 2);

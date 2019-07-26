@@ -13,33 +13,44 @@ function [eR, eT] = estimator(m1, m2, radius, K, B, rreal, treal, methods)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 nMethods = size(methods, 2);
-[Roppr, Toppr] = orthProcrustesProb(m1, m2, radius, K);
+I = [1 0 0; 0 0 1; 0 0 1];
 
 for j=1:nMethods
     
-    if strcmp(methods(j), 'OPPR')
-        %% Run orthogonal procrustes problem
-        R = Roppr;
-        T = Toppr;
+    if strcmp(methods(j), 'OPPR')          
+        [R, T] = orthProcrustesProb(m1, m2, radius, K);
     end
-    if strcmp(methods(j), 'MBPE') 
-        %% Run minimization of back projection error
-        [R, T] = minBackProject(m1, m2, B, rotm2eul(Roppr), radius, K);
-    end
+    
     if strcmp(methods(j), 'MEE')
-        %% Run minimization of epipolar error
-        [R, T] = minEpipolarError(m1, m2, B, radius, K, rotm2eul(Roppr));
+        [Roppr, Toppr] = orthProcrustesProb(m1, m2, radius, K);
+        [R, T] = minEpipolarError(m1, m2, B, K, rotm2eul(Roppr), I, I);
     end
+    
+    if strcmp(methods(j), 'MEEN')  
+        N1 = getNormalizationMatrix(m1);
+        N2 = getNormalizationMatrix(m2);
+        [Roppr, Toppr] = orthProcrustesProb(m1, m2, radius, K);
+        [R, T] = minEpipolarError(m1, m2, B, K, rotm2eul(Roppr), N1, N2);
+    end
+    
+        if strcmp(methods(j), 'MBPE')  
+        [Roppr, Toppr] = orthProcrustesProb(m1, m2, radius, K);
+        [R, T] = minBackProject(m1, m2, B, rotm2eul(Roppr), radius, K);     
+    end
+    
     if strcmp(methods(j), 'N8P')
-        %% Run epipolar geometry norm8point approach
-        [R, T] = recoverPoseFromF(norm8point(m1, m2) , K, m1(:,1), m2(:,1), radius);
+        F = norm8point(m1, m2, N1, N2);
+        F = adjustFFrobeniusNorm(F);
+        F = N2'*(F*N1); % Denormalize
+        [R, T] = recoverPoseFromF(F , K, m1(:,1), m2(:,1), radius);
     end
+    
     if strcmp(methods(j), 'GRAT') 
-        %% Run epipolar geometry gradient technique
+        [Roppr, Toppr] = orthProcrustesProb(m1, m2, radius, K);
         [R, T] = minEpipolarGradient(m1, m2, B, K, rotm2eul(Roppr));
     end
     
-    %% Compute error between each method results and truth
+    % Compute error between each method results and truth
     eR(j) = norm(rotm2eul(R)-rreal);
     eT(j) = norm(T-treal);
     clear R T;

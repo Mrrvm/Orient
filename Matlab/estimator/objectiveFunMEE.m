@@ -1,4 +1,4 @@
-function f = objectiveFunMEE(x, m1, m2, B, K)
+function f = objectiveFunMEE(x, m1, m2, B, K, N1, N2)
 %objectiveFun Objective function for MEE
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Input
@@ -15,13 +15,16 @@ nMatches = size(m1, 2);
 R =  eul2rotm(x(1:3));
 T = (R-I)*B;
 Tx = [0 -T(3) T(2); T(3) 0 -T(1); -T(2) T(1) 0];
-F = inv(K)'*Tx*R*inv(K);
+F = N2'*((inv(K)'*Tx*R*inv(K))*N1);
 
 m1h = [m1; ones(1, nMatches)];
 m2h = [m2; ones(1, nMatches)];
 
-l2 = F*m1h;
-l1 = F'*m2h;
+m1n = N1*m1h;
+m2n = N2*m2h;
+
+l2 = F*m1n;
+l1 = F'*m2n;
 
 aux1 = [1 0 0; 0 1 0]*l1;
 aux2 = [1 0 0; 0 1 0]*l2;

@@ -15,8 +15,8 @@ I = [1 0 0; 0 1 0; 0 0 1];
 M1 = projectToSphere(K, m1, radius);
 Zinit = M1(3,:);
 
-%options = optimset('MaxFunEvals',10000000000, 'MaxIter', 100);%, 'PlotFcns',@optimplotfval);
-[x,fval,exitflag,output] = fminsearch(@(x)objectiveFunMBPE(x, m1, m2, B, K), [eulinit Zinit]); %options);
+options = optimset('MaxFunEvals', 100, 'MaxIter', 100);%, 'PlotFcns',@optimplotfval);
+[x,fval,exitflag,output] = fminsearch(@(x)objectiveFunMBPE(x, m1, m2, B, K), [eulinit Zinit], options);
 
 R = eul2rotm(x(1:3));
 Z1 = x(4:end);

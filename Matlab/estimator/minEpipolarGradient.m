@@ -14,7 +14,7 @@ function [Rgrat, Tgrat] = minEpipolarGradient(m1, m2, B, K, eulinit)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 I = [1 0 0; 0 1 0; 0 0 1];
 
-options = optimset('MaxFunEvals',10000000000, 'MaxIter', 1000);%, 'PlotFcns',@optimplotfval);
+options = optimset('MaxFunEvals', 100, 'MaxIter', 100);
 [x,fval,exitflag,output] = fminsearch(@(x)objectiveFunGRAT(x, m1, m2, B, K), eulinit, options);% Finit(:), options);
 
 Rgrat = eul2rotm(x(1:3));

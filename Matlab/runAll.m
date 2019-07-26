@@ -74,16 +74,22 @@ if strcmp(TYPE, 'SIM_AXISANGLES')
     angles = generateAngles(vars.nAngles, vars.sigma);
     ang = angles(1:vars.nAngles)*180/pi;
     [eR, eT] =  runSimulation(angles, vars.radius, vars.intrinsics, vars.nMatches, vars.maxD, vars.minD, vars.baseline, vars.nAngles, vars.nPixels, vars.imgDim, vars.methods);
+    
+    fileID = fopen(strcat(vars.saveDir, vars.filename),'w');
     % Compute mean error and variance
     fprintf('\n\t | [X] Mean | Variance \t | [Y] Mean | Variance \t | [Z] Mean | Variance | \n');
+    fprintf(fileID, 'Rotation Axis \t & X \t\t & \t\t\t  & Y \t\t & \t\t\t & Z \t\t & \t\t\t \n ');
+    fprintf(fileID, '\t\t\t\t & Mean \t & Variance \t & Mean \t & Variance \t & Mean \t & Variance \n');
     for j=1:nMethods
             meR(:, j) = mean( eR( (3*(j-1)+1):(3*(j-1)+3), :), 2);
             veR(:, j)  = sum( (eR( (3*(j-1)+1):(3*(j-1)+3), :) - meR(:, j)).^2, 2) /vars.nAngles;
             fprintf('%s \t | %f | %f | \t | %f | %f | \t | %f | %f |\n', vars.methods{j}, meR(1, j), veR(1, j), meR(2, j), veR(2, j), meR(3, j), veR(3, j));
+            fprintf(fileID, '%s \t & %f & %f \t & %f & %f \t & %f & %f \\\n', vars.methods{j}, meR(1, j), veR(1, j), meR(2, j), veR(2, j), meR(3, j), veR(3, j));
     end
     % Determine the method with least mean error
     [minerror,ind] = min(sum(meR, 1));
     fprintf('\nBest method was %s with %f degrees of mean error.\n\n', vars.methods{ind}, minerror/3);
+    fprintf(fileID, '\nBest method was %s with %f degrees of mean error.\n\n', vars.methods{ind}, minerror/3);
     
     for j=1:nMethods
         xerr(j, :) = eR( (3*(j-1)+1), :);
@@ -94,6 +100,7 @@ if strcmp(TYPE, 'SIM_AXISANGLES')
     plotError(ang, xerr, 'Angles (degrees)', 'Error per angle (x axis)  - Sim data', vars.saveDir, vars.methods, vars.colors);
     plotError(ang, yerr, 'Angles (degrees)', 'Error per angle (y axis)  - Sim data', vars.saveDir, vars.methods, vars.colors);
     plotError(ang, zerr, 'Angles (degrees)', 'Error per angle (z axis)  - Sim data', vars.saveDir, vars.methods, vars.colors);
+    
 end
 
 
@@ -117,24 +124,31 @@ if strcmp(TYPE, 'REAL_AXISANGLES')
     [ang, axisCount, eR] = runReality(vars.inputDir, vars.ransac.samplePer, vars.ransac.enoughPer, vars.ransac.maxIters, vars.ransac.maxErr, ...
         vars.baseline, vars.radius, vars.intrinsics, vars.minMatches, vars.maxMatches, vars.radialDist, vars.tanDist, vars.imgDim, vars.methods);
     
+    fileID = fopen(strcat(vars.saveDir, vars.filename),'w');
+    % Compute mean error and variance
     fprintf('\n\t | [X] Mean | Variance \t | [Y] Mean | Variance \t | [Z] Mean | Variance | \n');
+    fprintf(fileID, '\n\t\t | [X] Mean | Variance \t\t | [Y] Mean | Variance \t\t | [Z] Mean | Variance | \n');
     for j=1:nMethods
             meR(:, j) = safeMean( eR( (3*(j-1)+1):(3*(j-1)+3), :), 2);
             pveR(:, j)  = sum( (eR( (3*(j-1)+1):(3*(j-1)+3), :) - meR(:, j)).^2, 2);
             if axisCount(1)
                 fprintf('%s \t | %f | %f |', vars.methods{j}, meR(1, j), pveR(1, j)/axisCount(1));
+                fprintf(fileID, '%s \t | %f | %f |', vars.methods{j}, meR(1, j), pveR(1, j)/axisCount(1));
             end
             if axisCount(2)
                 fprintf('\t | %f | %f |', meR(2, j), pveR(2, j)/axisCount(2));
+                fprintf(fileID, '\t | %f | %f |', meR(2, j), pveR(2, j)/axisCount(2));
             end
             if axisCount(3)
                 fprintf('\t | %f | %f |', meR(3, j), pveR(3, j)/axisCount(3));
+                fprintf(fileID, '\t | %f | %f |', meR(3, j), pveR(3, j)/axisCount(3));
             end
     end
         
     % Determine the method with least mean error
     [minerror, ind] = min(sum(meR, 1));
     fprintf('\nBest method was %s with %f degrees of mean error.\n\n', vars.methods{ind}, minerror/3);
+    fprintf(fileID, '\nBest method was %s with %f degrees of mean error.\n\n', vars.methods{ind}, minerror/3);
 
     for j=1:nMethods
         xerr(j, :) = eR( (3*(j-1)+1), :);
@@ -148,3 +162,4 @@ if strcmp(TYPE, 'REAL_AXISANGLES')
     end
 
 end
+
