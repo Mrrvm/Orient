@@ -35,8 +35,8 @@ for i=1:trials*nMatches
         Mw(:, sz) = Mwi;
         M1(:, sz) = M1i;
         M2(:, sz) = M2i;
-        m1(:, sz) = m1i;
-        m2(:, sz) = m2i;
+        m1(:, sz) = round(m1i);
+        m2(:, sz) = round(m2i);
         if sz == nMatches
             break;
         end

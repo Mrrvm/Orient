@@ -8,7 +8,7 @@ function angles = generateAngles(nAngles, sigma)
 %   angles   Generated angles
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-pd = makedist('Uniform','Lower', -45, 'Upper', 45);
+pd = makedist('Uniform','Lower', -sigma, 'Upper', sigma);
 
 ang = zeros(1,nAngles);
 for i=1:nAngles

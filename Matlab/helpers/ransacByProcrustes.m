@@ -1,4 +1,4 @@
-function bestInds =  ransacByProcrustes(m1, m2, K, radius, maxErr, maxIters, samplePer, enoughPer)
+function bestInds =  ransacByProcrustes(m1, m2, K, radius, maxErr, minMatches, maxMatches, outlierPer)
 %ransacByProcrustes Ransac point matches by distance
 %%%%%%%%%%%%%%%%%%%s%%%%%%%%%%%%%%%%%%%%%%
 % Filter point matches by distance through ransac
@@ -8,24 +8,22 @@ function bestInds =  ransacByProcrustes(m1, m2, K, radius, maxErr, maxIters, sam
 %   K                Intrinsics matrix
 %   maxErr       Maximum error allowed for a good model
 %   maxIters    Maximum number of iterations for ransac
-%   samplePer  Percentage of the points set to target randomly
-%   enoughPer  Percentage of the points set to accept the model
 % Output
 %   l1, l2          2D points indexes to keep
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 i = 0;
-nRand = round(size(m1,2)*samplePer);
-enough = round(size(m1,2)*enoughPer);
 bestScore = 0;
 
 M1 = projectToSphere(K, double(m1), radius);
 M2 = projectToSphere(K, double(m2), radius);
+goodMatches = round(maxMatches*(1-outlierPer));
+maxIters        = round(log(1-0.99)/(log(1-(1-outlierPer)^(minMatches)))); 
 
 bestR = findModel(M1, M2);
 
 while i < maxIters
-     firstInds = randi(size(M1,2), 1, nRand);
+     firstInds = randi(size(M1,2), 1, minMatches);
      maybeInliers1 = M1(:, firstInds);
      maybeInliers2 = M2(:, firstInds);
      R = findModel(maybeInliers1, maybeInliers2);
@@ -36,7 +34,7 @@ while i < maxIters
      restInds =  testModel(rest1, rest2, maxErr, R);
      alsoInliers1 = M1(:, restInds>0);
      alsoInliers2 = M2(:, restInds>0);
-     if size(alsoInliers1,2) >= enough
+     if size(alsoInliers1,2) >= goodMatches
          allInliers1 = [maybeInliers1 alsoInliers1];
          allInliers2 = [maybeInliers2 alsoInliers2];
          modelScore = sum(testModel(allInliers1, allInliers2, maxErr, R));
@@ -69,3 +67,4 @@ function ind = testModel(M1, M2, maxErr, R)
     ind(abs(err) < maxErr) = 1;
 
 end
+

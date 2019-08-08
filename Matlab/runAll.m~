@@ -31,7 +31,6 @@ if strcmp(TYPE, 'SIM_BASELINES')
     clear meRAllAxis;
 end
 
-
 %% Test error in terms of distance using simulated data
 if strcmp(TYPE, 'SIM_DISTANCES')
     angles = generateAngles(vars.nSaccades, vars.saccadeDistrSigma);
@@ -46,7 +45,7 @@ if strcmp(TYPE, 'SIM_DISTANCES')
         vars.distance.max =  distances(i+1);
          [eR, eT] =  runSimulation(angles, vars);
         for j=1:nMethods
-            meRAllAxis(j, i) = safeMean( safeMean( eR( (3*(j-1)+1):(3*(j-1)+3), :), 2), 1);
+            meRAllAxis(j, i) = safeMean( safeMean( eR( (3*(j-1)+1):(3*(j-1)+3), :), 2), 2);
         end
         i = i + 1;
     end
@@ -54,27 +53,25 @@ if strcmp(TYPE, 'SIM_DISTANCES')
     clear meRAllAxis;
 end
 
-
 %% Test error in terms of noise using simulated data
 if strcmp(TYPE, 'SIM_NOISES')
     angles = generateAngles(vars.nSaccades, vars.saccadeDistrSigma);
     iters = round((vars.noise.max-vars.noise.min)/vars.noise.inc);
     noises = zeros(1, iters);
     noises(1) = vars.noise.min;
-    meRAllAxis = zeros(nMethods, iters);
+    meRAllAxis = zeros(4, iters);
     i = 1;
     while i <= iters
         vars.noise.min = noises(i);
         [eR, eT] =  runSimulation(angles, vars);
         for j=1:nMethods
-            meRAllAxis(j, i) = safeMean( safeMean( eR( (3*(j-1)+1):(3*(j-1)+3), :), 2), 1);
+            meRAllAxis(j, i) = mean(mean( eR( (3*(j-1)+1):(3*(j-1)+3), :) ));
         end
         noises(i+1) = noises(i) + vars.noise.inc;
         i = i + 1;
     end
     plotError(noises(1:iters), meRAllAxis, 'Noise (pixel)', 'Error per pixel noise  - Sim data', vars.saveDir, vars.methods, vars.colors);
 end
-
 
 %% Test error in terms of axis using simulated data CHANGE
 if strcmp(TYPE, 'SIM_AXISANGLES')
