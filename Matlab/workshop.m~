@@ -14,9 +14,8 @@ vars.imgDim = [2056 1542];
 vars.minMatches = 3;
 vars.maxMatches = 20;
 vars.ransac.outlierPer      = 0.40; 
-vars.ransac.goodMatches = round(vars.maxMatches*0.50);
-vars.ransac.maxIters        = round(log(1-0.99)/(log(1-(1-vars.ransac.outlierPer)^(vars.minMatches))));                 
-vars.ransac.maxErr       = 0.005;   
+vars.ransac.enoughMatches = 10;
+vars.ransac.maxErr          = 0.005;   % in meters
 
 %%%%%%%%%%%%%%%%%%%% SIMULATION
 vars.nMatches = 50;

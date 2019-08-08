@@ -30,8 +30,8 @@ for i=1:trials*nMatches
     m1i = projectToPlane(K, M1i);
     m2i = projectToPlane(K, M2i);
 
-    if (m1i(1) <= imgDim(1)) && (m1i(1) >= 0) && (m1i(2) <= imgDim(2)) && (m1i(2) >= 0) && ...
-            (m2i(1) <= imgDim(1)) && (m2i(1) >= 0) && (m2i(1) <= imgDim(2)) && (m2i(1) >=0)
+    if ((m1i(1) <= imgDim(1)) && (m1i(1) >= 0) && (m1i(2) <= imgDim(2)) && (m1i(2) >= 0) && ...
+            (m2i(1) <= imgDim(1)) && (m2i(1) >= 0) && (m2i(2) <= imgDim(2)) && (m2i(2) >=0))
         Mw(:, sz) = Mwi;
         M1(:, sz) = M1i;
         M2(:, sz) = M2i;

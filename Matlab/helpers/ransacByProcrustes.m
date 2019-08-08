@@ -1,4 +1,4 @@
-function bestInds =  ransacByProcrustes(m1, m2, K, radius, maxErr, minMatches, maxMatches, outlierPer)
+function [mn1, mn2, err, res] =  ransacByProcrustes(m1, m2, K, radius, minMatches, maxMatches, ransac)
 %ransacByProcrustes Ransac point matches by distance
 %%%%%%%%%%%%%%%%%%%s%%%%%%%%%%%%%%%%%%%%%%
 % Filter point matches by distance through ransac
@@ -14,11 +14,11 @@ function bestInds =  ransacByProcrustes(m1, m2, K, radius, maxErr, minMatches, m
 
 i = 0;
 bestScore = 0;
+err = 0;
 
 M1 = projectToSphere(K, double(m1), radius);
 M2 = projectToSphere(K, double(m2), radius);
-goodMatches = round(maxMatches*(1-outlierPer));
-maxIters        = round(log(1-0.99)/(log(1-(1-outlierPer)^(minMatches)))); 
+maxIters = round(log(1-0.99)/(log(1-(1-ransac.outlierPer)^(minMatches)))); 
 
 bestR = findModel(M1, M2);
 
@@ -31,13 +31,13 @@ while i < maxIters
      aux(firstInds) = 0;
      rest1 = M1(:, aux>0);
      rest2 = M2(:, aux>0);
-     restInds =  testModel(rest1, rest2, maxErr, R);
+     restInds =  testModel(rest1, rest2, ransac.maxErr, R);
      alsoInliers1 = M1(:, restInds>0);
      alsoInliers2 = M2(:, restInds>0);
-     if size(alsoInliers1,2) >= goodMatches
+     if size(alsoInliers1,2) >= ransac.goodMatches
          allInliers1 = [maybeInliers1 alsoInliers1];
          allInliers2 = [maybeInliers2 alsoInliers2];
-         modelScore = sum(testModel(allInliers1, allInliers2, maxErr, R));
+         modelScore = sum(testModel(allInliers1, allInliers2, ransac.maxErr, R));
          if modelScore > bestScore
              bestR = R;
              bestScore = modelScore;
@@ -46,7 +46,22 @@ while i < maxIters
      i = i +1;
 end
 
-bestInds = testModel(M1, M2, maxErr, bestR);
+bestInds = testModel(M1, M2, ransac.maxErr, bestR);
+
+m1Best = m1(:, bestInds>0);
+m2Best = m2(:, bestInds>0);
+if sum(bestInds>0) <= ransac.goodMatches
+    err = 1;
+end
+if sum(bestInds>0) >= maxMatches
+    mn1 = double(m1Best(:, 1:maxMatches));
+    mn2 = double(m2Best(:, 1:maxMatches));
+else
+    mn1 = double(m1Best(:, 1:sum(bestInds>0)));
+    mn2 = double(m2Best(:, 1:sum(bestInds>0)));
+end
+
+res = 1- size(mn1,2)/size(m1, 2);
 
 end
 

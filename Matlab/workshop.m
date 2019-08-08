@@ -13,24 +13,27 @@ vars.radialDist = [-0.3160 0.1699 -0.0569];
 vars.imgDim = [2056 1542];
 vars.minMatches = 3;
 vars.maxMatches = 20;
-vars.ransac.outlierPer      = 0.40; 
-vars.ransac.maxErr          = 0.005;   % in meters
+vars.ransac.on = 1;
+vars.ransac.outlierPer          = 0.40; 
+vars.ransac.goodMatches    = round(vars.maxMatches*0.5);
+vars.ransac.maxErr              = 0.005;   % in meters
 
-%%%%%%%%%%%%%%%%%%%% SIMULATION
+%==========================================================================
+% SIMULATION
 vars.nMatches = 50;
 vars.nFalseMatches = 3;
 vars.saccadeDistrSigma = 10;
 vars.minDistToCam = 0.05;
-vars.nSaccades = 100;
+vars.nSaccades = 10;
 vars.nNoisePixels = 10;
 
 vars.maxDistToCam= 0.24;
-vars.projectionRadius = vars.maxD + 1;
+vars.projectionRadius = vars.maxDistToCam + 1;
 vars.saveDir = '../results/Matlab/sim/d0.24/';
 runAll('SIM_AXISANGLES', vars);
 
 vars.maxDistToCam = 5.77;
-vars.projectionRadius = vars.maxD + 1;        
+vars.projectionRadius = vars.maxDistToCam + 1;        
 vars.saveDir = '../results/Matlab/sim/d5/';
 %runAll('SIM_AXISANGLES', vars);
 
@@ -40,13 +43,16 @@ vars.noise.inc = 30;
 vars.saveDir = '../results/Matlab/sim/d0.24/noise/';
 %runAll('SIM_NOISES', vars);
 
-%%%%%%%%%%%%%%%%%%% REAL DATA 
-vars.radius = 0.24 + 1;
+%==========================================================================
+% REAL DATA 
+vars.maxDistToCam= 0.24;
+vars.projectionRadius = vars.maxDistToCam + 1;
 vars.inputDir = 'workshop/data/d0.24/';
 vars.saveDir = 'results/real/d0.24/';
 %runAll('REAL_AXISANGLES', vars);
 
-vars.radius = 5 + 1;
+vars.maxDistToCam = 5.77;
+vars.projectionRadius = vars.maxDistToCam + 1;        
 vars.inputDir = 'workshop/data/d5/';
 vars.saveDir = 'results/real/d5/';
 %runAll('REAL_AXISANGLES', vars);

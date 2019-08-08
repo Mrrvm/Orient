@@ -1,4 +1,4 @@
-function [plotAng, axisCount, eR, eT] = runReality(filepath, vars)
+function [plotAng, axisCount, eR, eT, ransacRes] = runReality(filepath, vars)
 %runReality Estimate transformation on real data
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Input
@@ -52,6 +52,7 @@ for z = 1:numel(dirs)
      end
     
      j = 1;
+     ransacRes = zeros(3, numel(rotations));
      for k = 1:numel(rotations)
         %% Extract matches from images
         img1 = undistortImage(data(rotations(k).indImg1).img, cameraParams);
@@ -63,18 +64,11 @@ for z = 1:numel(dirs)
         matches = matchFeatures(f1, f2, 'Method', 'Exhaustive',  'MatchThreshold', 100, 'Unique', true);
         m1a = vpts1(matches(:,1));
         m2a = vpts2(matches(:,2));
-        bestInds = ransacByProcrustes(m1a.Location', m2a.Location', vars.intrinsics, vars.projectionRadius, vars.ransac.maxErr, vars.ransac.minMatches, vars.ransac.maxMatches, vars.ransac.outlierPer);
-        m1Best = m1a(bestInds'>0,:);
-        m2Best = m2a(bestInds'>0,:);
-        if sum(bestInds'>0) <= round(vars.maxMatches*(1-vars.ransac.outlierPer))
-            continue;
-        end
-        if sum(bestInds'>0) >= vars.maxMatches
-            m1 = double(m1Best.Location(1:vars.maxMatches,:)');
-            m2 = double(m2Best.Location(1:vars.maxMatches,:)');
-        else
-            m1 = double(m1Best.Location(1:sum(bestInds'>0),:)');
-            m2 = double(m2Best.Location(1:sum(bestInds'>0),:)');
+        if vars.ransac.on
+            [m1, m2, err, ransacRes(i, j)] = ransacByProcrustes(m1a.Location', m2a.Location', vars.intrinsics, vars.projectionRadius, vars.ransac.maxErr, vars.ransac.minMatches, vars.ransac.maxMatches, vars.ransac.outlierPer);
+            if err == 1
+                continue;
+            end
         end
         %figure; showMatchedFeatures(img1, img2, m1Best', m2Best');  
 

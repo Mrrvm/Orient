@@ -10,7 +10,8 @@ function runAll(TYPE, vars)
 
 nMethods = size(vars.methods, 2);
 
-%% Test error in terms of the baseline size using simulated data
+%==========================================================================
+% Test error in terms of the baseline size using simulated data
 if strcmp(TYPE, 'SIM_BASELINES')
     angles = generateAngles(vars.nSaccades, vars.saccadeDistrSigma);
     iters = max(round((max(vars.baseline.max)-min(vars.baseline.min))/vars.baseline.inc));
@@ -21,7 +22,7 @@ if strcmp(TYPE, 'SIM_BASELINES')
     while i <= iters
         baselines(:, i+1) = baselines(:, i) + vars.baseline.inc;
         vars.baseline = baselines(:, i);
-         [eR, eT] =  runSimulation(angles, vars);
+         [~, ~, eR, eT, ransacRes] =  runSimulation(angles, vars);
         for j=1:nMethods
             meRAllAxis(j, i) = safeMean(safeMean( eR( (3*(j-1)+1):(3*(j-1)+3), :), 2), 1);
         end
@@ -32,7 +33,8 @@ if strcmp(TYPE, 'SIM_BASELINES')
 end
 
 
-%% Test error in terms of distance using simulated data
+%==========================================================================
+% Test error in terms of distance using simulated data
 if strcmp(TYPE, 'SIM_DISTANCES')
     angles = generateAngles(vars.nSaccades, vars.saccadeDistrSigma);
     iters = round((vars.distance.max-vars.distance.min)/vars.distance.inc);
@@ -44,7 +46,7 @@ if strcmp(TYPE, 'SIM_DISTANCES')
         distances(i+1) = distances(i) + vars.distance.inc;
         vars.distance.min = distance(i);
         vars.distance.max =  distances(i+1);
-         [eR, eT] =  runSimulation(angles, vars);
+         [~, ~, eR, eT, ransacRes] =  runSimulation(angles, vars);
         for j=1:nMethods
             meRAllAxis(j, i) = safeMean( safeMean( eR( (3*(j-1)+1):(3*(j-1)+3), :), 2), 1);
         end
@@ -54,8 +56,8 @@ if strcmp(TYPE, 'SIM_DISTANCES')
     clear meRAllAxis;
 end
 
-
-%% Test error in terms of noise using simulated data
+%==========================================================================
+% Test error in terms of noise using simulated data
 if strcmp(TYPE, 'SIM_NOISES')
     angles = generateAngles(vars.nSaccades, vars.saccadeDistrSigma);
     iters = round((vars.noise.max-vars.noise.min)/vars.noise.inc);
@@ -65,7 +67,7 @@ if strcmp(TYPE, 'SIM_NOISES')
     i = 1;
     while i <= iters
         vars.noise.min = noises(i);
-        [eR, eT] =  runSimulation(angles, vars);
+        [~, ~, eR, eT, ransacRes] =  runSimulation(angles, vars);
         for j=1:nMethods
             meRAllAxis(j, i) = safeMean( safeMean( eR( (3*(j-1)+1):(3*(j-1)+3), :), 2), 1);
         end
@@ -75,12 +77,12 @@ if strcmp(TYPE, 'SIM_NOISES')
     plotError(noises(1:iters), meRAllAxis, 'Noise (pixel)', 'Error per pixel noise  - Sim data', vars.saveDir, vars.methods, vars.colors);
 end
 
-
-%% Test error in terms of axis using simulated data CHANGE
+%==========================================================================
+% Test error in terms of axis using simulated data CHANGE
 if strcmp(TYPE, 'SIM_AXISANGLES')
     angles = generateAngles(vars.nSaccades, vars.saccadeDistrSigma);
     ang = angles(1:vars.nSaccades)*180/pi;
-    [ang, axisCount, eR, eT] =  runSimulation(angles, vars);
+    [ang, axisCount, eR, eT, ransacRes] =  runSimulation(angles, vars);
     
     fileID = fopen(strcat(vars.saveDir, vars.filename),'w');
     % Compute mean error and variance
@@ -120,25 +122,25 @@ if strcmp(TYPE, 'SIM_AXISANGLES')
     
 end
 
-
-%% Test error in terms of distance using real data 
+%==========================================================================
+% Test error in terms of distance using real data 
 if strcmp(TYPE, 'REAL_DISTANCES')
     [dirs, dists] = readDirs(vars.distance.inputDir);
     for i = 1:size(dirs,1)
-        [~, ~, eR, eT] =  runReality(strcat(vars.distance.inputDir, dirs(i).name, '/'), vars);
+        [~, ~, eR, eT, ransacRes] =  runReality(strcat(vars.distance.inputDir, dirs(i).name, '/'), vars);
         clear imgs1 imgs2 axisCount;
         for j=1:nMethods
             meRAllAxis(j, i) = safeMean( safeMean( eR( (3*(j-1)+1):(3*(j-1)+3), :) ) );
-        end
+        endransacRes
     end
     plotError(dists, meRAllAxis, 'Distance (m)', 'Error per distance  - Real data', vars.saveDir, vars.methods, vars.colors);
     clear meRAllAxis;
 end
 
-
-%% Test error in terms of angles using real data CHANGE
+%==========================================================================
+% Test error in terms of angles using real data CHANGE
 if strcmp(TYPE, 'REAL_AXISANGLES')
-    [ang, axisCount, eR] = runReality(vars);
+    [ang, axisCount, eR, eT, ransacRes] = runReality(vars);
     
     fileID = fopen(strcat(vars.saveDir, vars.filename),'w');
     % Compute mean error and variance
@@ -159,7 +161,7 @@ if strcmp(TYPE, 'REAL_AXISANGLES')
                 fprintf('\t | %f | %f |', meR(3, j), pveR(3, j)/axisCount(3));
                 fprintf(fileID, '\t | %f | %f |', meR(3, j), pveR(3, j)/axisCount(3));
             end
-    endplotA
+    end
         
     % Determine the method with least mean error
     [minerror, ind] = min(sum(meR, 1));
@@ -174,8 +176,10 @@ if strcmp(TYPE, 'REAL_AXISANGLES')
     
     plotError(ang(1,:), xerr, 'Angles (degrees)', 'Error per angle (x axis) - Real data', vars.saveDir, vars.methods, vars.colors);
     plotError(ang(2,:), yerr, 'Angles (degrees)', 'Error per angle (y axis) - Real data', vars.saveDir, vars.methods, vars.colors);
-    plotError(ang(3,:), zerr, 'Angles (degrees)', 'Error per angle (z axis) - Real data', vars.saveDir, vars.methods, vars.colors);
+    plotError(ang(3,:), zerr, 'ransacResAngles (degrees)', 'Error per angle (z axis) - Real data', vars.saveDir, vars.methods, vars.colors);
     end
 
 end
+
+fprintf('\nRansac detected a %f % of bad matches\n\n', safeMean( safeMean(ransacRes, 2), 1));
 
