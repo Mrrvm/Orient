@@ -19,7 +19,6 @@ function [plotAng, axisCount, eR, eT, ransacRes] = runSimulation(angles, vars)
 I = [1 0 0; 0 1 0; 0 0 1];
 axisCount = zeros(1,3);
 ransacRes = zeros(3, vars.nSaccades);
-plotAng = zeros(3, vars.nSaccades);
 
 % x-1, y-2, z-3 
 for i=1:3
@@ -39,10 +38,10 @@ for i=1:3
                 continue;
             end
         end
-        figure; plot(m1(1,:), m1(2,:), 'bx'); hold on; plot(m2(1,:), m2(2,:), 'rx');
+        %figure; plot(m1(1,:), m1(2,:), 'bx'); hold on; plot(m2(1,:), m2(2,:), 'rx');
         
         % Save angles for plot
-        plotAng(i, j) = angles(j);
+        plotAng(i, axisCount(i)+1) = angles(j)*180/pi;
         
         %% Estimate transformation error
         [eRi, eTi]= estimator(m1, m2, vars.projectionRadius, vars.intrinsics, vars.baseline, rotm2eul(R), T, vars.methods);

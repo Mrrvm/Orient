@@ -104,6 +104,8 @@ if strcmp(TYPE, 'SIM_AXISANGLES')
                 fprintf('\t | %f | %f |', meR(3, j), pveR(3, j)/axisCount(3));
                 fprintf(fileID, '\t | %f | %f |', meR(3, j), pveR(3, j)/axisCount(3));
             end 
+            fprintf('\n');
+            fprintf(fileID, '\n');
     end
     % Determine the method with least mean error
     [minerror,ind] = min(sum(meR, 1));
@@ -111,14 +113,14 @@ if strcmp(TYPE, 'SIM_AXISANGLES')
     fprintf(fileID, '\nBest method was %s with %f degrees of mean error.\n\n', vars.methods{ind}, minerror/3);
     
     for j=1:nMethods
-        xerr(j, :) = eR( (3*(j-1)+1), :);
-        yerr(j, :) = eR( (3*(j-1)+2), :);
-        zerr(j, :) = eR( (3*(j-1)+3), :);
+        xerr(j, :) = eR( (3*(j-1)+1), (eR( (3*(j-1)+1), :) ~= 0 ));
+        yerr(j, :) = eR( (3*(j-1)+2), (eR( (3*(j-1)+2), :) ~= 0));
+        zerr(j, :) = eR( (3*(j-1)+3), (eR( (3*(j-1)+3), :) ~= 0));
     end
     % Visualise error in terms of axis angle    
-    plotError(ang, xerr, 'Angles (degrees)', 'Error per angle (x axis)  - Sim data', vars.saveDir, vars.methods, vars.colors);
-    plotError(ang, yerr, 'Angles (degrees)', 'Error per angle (y axis)  - Sim data', vars.saveDir, vars.methods, vars.colors);
-    plotError(ang, zerr, 'Angles (degrees)', 'Error per angle (z axis)  - Sim data', vars.saveDir, vars.methods, vars.colors);
+    plotError(ang(1, ang(1,:) ~= 0), xerr, 'Angles (degrees)', 'Error per angle (x axis)  - Sim data', vars.saveDir, vars.methods, vars.colors);
+    plotError(ang(2, ang(2,:) ~= 0), yerr, 'Angles (degrees)', 'Error per angle (y axis)  - Sim data', vars.saveDir, vars.methods, vars.colors);
+    plotError(ang(3, ang(3,:) ~= 0), zerr, 'Angles (degrees)', 'Error per angle (z axis)  - Sim data', vars.saveDir, vars.methods, vars.colors);
     
 end
 
@@ -149,7 +151,8 @@ if strcmp(TYPE, 'REAL_AXISANGLES')
     for j=1:nMethods
             meR(:, j) = safeMean( eR( (3*(j-1)+1):(3*(j-1)+3), :), 2);
             pveR(:, j)  = sum( (eR( (3*(j-1)+1):(3*(j-1)+3), :) - meR(:, j)).^2, 2);
-            if axisCount(1)
+            if axisCount(1)    plotError(ang, xerr, 'Angles (degrees)', 'Error per angle (x axis)  - Sim data', vars.saveDir, vars.methods, vars.colors);
+
                 fprintf('%s \t | %f | %f |', vars.methods{j}, meR(1, j), pveR(1, j)/axisCount(1));
                 fprintf(fileID, '%s \t | %f | %f |', vars.methods{j}, meR(1, j), pveR(1, j)/axisCount(1));
             end
@@ -161,6 +164,8 @@ if strcmp(TYPE, 'REAL_AXISANGLES')
                 fprintf('\t | %f | %f |', meR(3, j), pveR(3, j)/axisCount(3));
                 fprintf(fileID, '\t | %f | %f |', meR(3, j), pveR(3, j)/axisCount(3));
             end
+            fprintf('\n');
+            fprintf(fileID, '\n');
     end
         
     % Determine the method with least mean error
@@ -169,14 +174,14 @@ if strcmp(TYPE, 'REAL_AXISANGLES')
     fprintf(fileID, '\nBest method was %s with %f degrees of mean error.\n\n', vars.methods{ind}, minerror/3);
 
     for j=1:nMethods
-        xerr(j, :) = eR( (3*(j-1)+1), :);
-        yerr(j, :) = eR( (3*(j-1)+2), :);
-        zerr(j, :) = eR( (3*(j-1)+3), :);
+        xerr(j, :) = eR( (3*(j-1)+1), (eR( (3*(j-1)+1), :) ~= 0 ));
+        yerr(j, :) = eR( (3*(j-1)+2), (eR( (3*(j-1)+2), :) ~= 0));
+        zerr(j, :) = eR( (3*(j-1)+3), (eR( (3*(j-1)+3), :) ~= 0));
     end
     
-    plotError(ang(1,:), xerr, 'Angles (degrees)', 'Error per angle (x axis) - Real data', vars.saveDir, vars.methods, vars.colors);
-    plotError(ang(2,:), yerr, 'Angles (degrees)', 'Error per angle (y axis) - Real data', vars.saveDir, vars.methods, vars.colors);
-    plotError(ang(3,:), zerr, 'ransacResAngles (degrees)', 'Error per angle (z axis) - Real data', vars.saveDir, vars.methods, vars.colors);
+    plotError(ang(1, ang(1,:) ~= 0), xerr, 'Angles (degrees)', 'Error per angle (x axis) - Real data', vars.saveDir, vars.methods, vars.colors);
+    plotError(ang(2, ang(2,:) ~= 0), yerr, 'Angles (degrees)', 'Error per angle (y axis) - Real data', vars.saveDir, vars.methods, vars.colors);
+    plotError(ang(3, ang(3,:) ~= 0), zerr, 'ransacResAngles (degrees)', 'Error per angle (z axis) - Real data', vars.saveDir, vars.methods, vars.colors);
     end
 
 end

@@ -13,7 +13,7 @@ function [mn1, mn2] = falseMatchesGen(m1, m2, nFalseMatches, imgDim)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 nMatches = size(m1, 2);
-which = round(nMatches.*rand(nFalseMatches, 1));
+which = round((nMatches-1).*rand(nFalseMatches, 1))+1;
 randx = round(imgDim(1).* rand(nFalseMatches,1));
 randy = round(imgDim(2).* rand(nFalseMatches,1));
 mn1 = m1;

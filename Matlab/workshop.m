@@ -2,7 +2,7 @@ close all;
 clear all;
 
 vars.methods = {'OPPR', 'MEEN', 'MBPE', 'GRAT'};
-vars.colors = {'b', 'y', 'r', 'c'};
+vars.colors = {'b', 'g', 'r', 'c'};
 vars.filename = 'results.txt';
 vars.baseline = [0.02 -0.055 0.055]';
 vars.intrinsics = [1.1573e+03 -3.3579         975.9459; 
@@ -20,17 +20,17 @@ vars.ransac.maxErr              = 0.005;   % in meters
 
 %==========================================================================
 % SIMULATION
-vars.nMatches = 50;
+vars.nMatches = 30;
 vars.nFalseMatches = 3;
 vars.saccadeDistrSigma = 10;
 vars.minDistToCam = 0.05;
-vars.nSaccades = 10;
+vars.nSaccades = 20;
 vars.nNoisePixels = 10;
 
 vars.maxDistToCam= 0.24;
 vars.projectionRadius = vars.maxDistToCam + 1;
 vars.saveDir = '../results/Matlab/sim/d0.24/';
-runAll('SIM_AXISANGLES', vars);
+%runAll('SIM_AXISANGLES', vars);
 
 vars.maxDistToCam = 5.77;
 vars.projectionRadius = vars.maxDistToCam + 1;        
