@@ -19,19 +19,22 @@ function [plotAng, axisCount, eR, eT, ransacRes] = runSimulation(angles, vars)
 I = [1 0 0; 0 1 0; 0 0 1];
 axisCount = zeros(1,3);
 ransacRes = zeros(3, vars.nSaccades);
+plotAng = zeros(3,1);
+eR = zeros(size(vars.methods,2)*3, 1);
+eT = zeros(size(vars.methods,2)*3, 1);
 
 % x-1, y-2, z-3 
 for i=1:3
     for j=1:vars.nSaccades
         %% Simulate points
         R = eul2rotm(-angles(j)*[(3-i)==0 (2-i)==0 (1-i)==0]);
-        T = (R-I)*vars.baseline;
-        [Mw, M1, M2, m1, m2, err] = simulator(vars.nMatches, R, T, vars.maxDistToCam, vars.minDistToCam, vars.baseline, vars.intrinsics, vars.imgDim);
+        T = (R-I)*vars.currBaseline;
+        [Mw, M1, M2, m1, m2, err] = simulator(vars.nMatches, R, T, vars.currDistToCam.max, vars.currDistToCam.min, vars.currBaseline, vars.intrinsics, vars.imgDim);
         if err == 1
             continue;
         end
         [m1, m2] = falseMatchesGen(m1, m2, vars.nFalseMatches, vars.imgDim);
-        [m1, m2] = noiseGen(m1, m2, vars.nNoisePixels, vars.imgDim);
+        [m1, m2] = noiseGen(m1, m2, vars.currNoisePixelsSigma, vars.imgDim);
         if vars.ransac.on
             [m1, m2, err, ransacRes(i, j)] = ransacByProcrustes(m1, m2, vars.intrinsics, vars.projectionRadius, vars.minMatches, vars.maxMatches, vars.ransac);
             if err == 1
@@ -44,7 +47,7 @@ for i=1:3
         plotAng(i, axisCount(i)+1) = angles(j)*180/pi;
         
         %% Estimate transformation error
-        [eRi, eTi]= estimator(m1, m2, vars.projectionRadius, vars.intrinsics, vars.baseline, rotm2eul(R), T, vars.methods);
+        [eRi, eTi]= estimator(m1, m2, vars.projectionRadius, vars.intrinsics, vars.currBaseline, rotm2eul(R), T, vars.methods);
         sizeeRi = size(eRi, 2);
         for n=1:sizeeRi
             eR(3*(n-1)+i, j) = eRi(n); 

@@ -17,24 +17,20 @@ label = strcat('error ', methods);
 fig = figure;
 
 for j=1:nMethods
-    nonzeros(j, :) = yvar(j,:) ~= 0;
+    nonzeros(j) = yvar(j,:) ~= 0;
 end
 for j=1:nMethods
-    if sum(nonzeros(j, :))
-        coeffs(j, :) = polyfit(var(nonzeros(j, :)), yvar(j, nonzeros(j, :)), 1);
-        fittedX(j, :) = linspace(min(var(nonzeros(j, :))), max(var(nonzeros(j, :))), 200);
+    if nonzeros(j)
+        coeffs(j, :) = polyfit(var(nonzeros(j)), yvar(j, nonzeros(j)), 1);
+        fittedX(j, :) = linspace(min(var(nonzeros(j))), max(var(nonzeros(j))), 200);
     end
 end
 
 for j=1:nMethods
-    if sum(nonzeros(j, :))
-        fittedY(j, :) =  polyval(coeffs(j, :), fittedX(j, :));
-        %plot(fittedX(j, :), fitedY(j, :), strcat(colors{j},'-'), 'LineWidth', 1);
-        plot(var(nonzeros(j, :)), yvar(j, nonzeros(j, :)), strcat(colors{j},'-'), 'LineWidth', 1);
-        hold on;
-    end
+    fittedY(j, :) =  polyval(coeffs(j, :), fittedX);
+    plot(fittedX, fittedY(j, :), strcat(colors{j},'-'), 'LineWidth', 1);
+    hold on;
 end
-
 title(pTitle);
 legend(label,'Location','northeast');
 xlabel(xLabel);

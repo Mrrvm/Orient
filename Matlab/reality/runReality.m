@@ -7,7 +7,7 @@ function [plotAng, axisCount, eR, eT, ransacRes] = runReality(filepath, vars)
 %   enoughPer     Percentage of the points set to accept the model
 %   maxErr           Maximum error allowed for a good model
 %   maxIters        Maximum number of iterations for ransac
-%   B                    Baseline
+%   B                    currBaseline
 %   radius            Sphere radius
 %   K                    Intrinsics matrix
 %   imgDir           Image directory to read from
@@ -76,7 +76,7 @@ for z = 1:numel(dirs)
         plotAng(i,j) = rotations(k).angle;
 
         %% Estimate transformation error
-        [eRi, eTi]= estimator(m1, m2, vars.projectionRadius, vars.intrinsics, vars.baseline, rotations(k).rot, rotations(k).tr, vars.methods);
+        [eRi, eTi]= estimator(m1, m2, vars.projectionRadius, vars.intrinsics, vars.currBaseline, rotations(k).rot, rotations(k).tr, vars.methods);
         sizeeRi = size(eRi, 2);
         for n=1:sizeeRi
             eR(3*(n-1)+i, j) = eRi(n); 
