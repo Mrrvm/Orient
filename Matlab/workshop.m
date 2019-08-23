@@ -1,8 +1,8 @@
 close all;
 clear all;
 
-vars.methods = {'OPPR', 'MEEN', 'MBPE', 'GRAT'};
-vars.colors = {'b', 'g', 'r', 'c'};
+vars.methods = {'OPPR', 'MEEN', 'MBPE', 'GRAT', 'MEE'};
+vars.colors = {'b', 'g', 'r', 'c', 'm'};
 vars.filename = 'results.txt';
 vars.currBaseline = [0.02 -0.055 0.055]';
 vars.intrinsics = [1.1573e+03 -3.3579         975.9459; 
@@ -13,10 +13,10 @@ vars.radialDist = [-0.3160 0.1699 -0.0569];
 vars.imgDim = [2056 1542];
 vars.minMatches = 3;
 vars.maxMatches = 20;
-vars.ransac.on = 1;
+vars.ransac.on = 0;
 vars.ransac.outlierPer          = 0.40; 
 vars.ransac.goodMatches    = round(vars.maxMatches*0.5);
-vars.ransac.maxErr              = 0.01;   % in meters
+vars.ransac.maxErr              = 0.05;   % in meters
 
 %==========================================================================
 % SIMULATION

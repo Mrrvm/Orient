@@ -21,13 +21,13 @@ function filterdataGrid(imgDir, axis, savePath)
 imgs = dir(fullfile(imgDir, '*'));
  
 if axis == 'x'
-    vector = [1 0 0];
+    vector = [0 0 1];
  end
  if axis == 'y'
      vector = [0 1 0];
  end
  if axis == 'z'
-     vector = [0 0 1];
+     vector = [1 0 0];
  end
         
 z = 1;
@@ -46,9 +46,9 @@ for i=1:numel(imgs)
                  [token remain] = strtok(imgName2(2:end), '.');
                  angle2 = str2double(token);
                  angle = angle2-angle1;
-                 rotations(z).indImg1 = i;
+                 rotations(z).indImg1 = j;
                  rotations(z).indImg2 = k;
-                 rotations(z).rot = vector*tan(angle/2);
+                 rotations(z).rot = eul2rotm(angle*vector);
                  rotations(z).angle = angle;   
                  z = z + 1;
             end       
@@ -58,6 +58,6 @@ end
 
 mkdir(savePath);
 save(strcat(savePath, 'data.mat') , 'data');
-save(strcat(savePath, 'rotatioins.mat') , 'rotations');
+save(strcat(savePath, 'rotations.mat') , 'rotations');
 
 end
