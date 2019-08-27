@@ -33,7 +33,7 @@ for j=1:nMethods
         [R, T] = minEpipolarError(m1, m2, B, K, rotm2eul(Roppr), N1, N2);
     end
     
-        if strcmp(methods(j), 'MBPE')  
+    if strcmp(methods(j), 'MBPE')  
         [Roppr, Toppr] = orthProcrustesProb(m1, m2, radius, K);
         [R, T] = minBackProject(m1, m2, B, rotm2eul(Roppr), radius, K);     
     end

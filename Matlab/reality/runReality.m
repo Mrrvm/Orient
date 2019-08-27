@@ -65,12 +65,12 @@ for z = 1:numel(dirs)
         m1a = vpts1(matches(:,1));
         m2a = vpts2(matches(:,2));
         if vars.ransac.on
-            [m1, m2, err, ransacRes(i, j)] = ransacByProcrustes(m1a.Location', m2a.Location', vars.intrinsics, vars.projectionRadius, vars.ransac.maxErr, vars.ransac.minMatches, vars.ransac.maxMatches, vars.ransac.outlierPer);
+            [m1, m2, err, ransacRes(i, j)] = ransacByProcrustes(m1a.Location', m2a.Location', vars.intrinsics, vars.projectionRadius, vars.minMatches, vars.maxMatches, vars.ransac);
             if err == 1
                 continue;
             end
         end
-        %figure; showMatchedFeatures(img1, img2, m1Best', m2Best');  
+        %figure; showMatchedFeatures(img1, img2, m1', m2');  
 
         % Save angles for plot
         plotAng(i,j) = rotations(k).angle;
