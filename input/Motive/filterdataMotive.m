@@ -1,20 +1,28 @@
 function filterdataMotive(imgDir, csvFilepath, savePath)
-%filterdataMotive Filter data from images and csv file. It produces
-% a structure data with all the images and the marker positions and 
-% a structure rotations describing all the rotations with the respective
-% indexes to address the data.img structure.
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%filterdataMotive Filter data from images and a csv file. 
+%
+% It produces a structure data with all the images and a 
+% structure rotations describing all the rotations with the 
+% respective indexes to address the imgs structure.
+%
+% Images should all be in a directory and each image file
+% should be named after its datetime (see 'converting.sh').
+%
+% The csv file is obtained using optitrack e.g.
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Input
-%   imgDir        Images directory (.jpg or .png)
+%   imgDir      Images directory (.jpg or .png)
 %   csvFilepath CSV motive file 
-%   savePath     Directory where to save the new structures
+%   savePath    Directory where to save the new structures
 % Output
-%   data            Structure with all the images and marker positions
-%   rotations     Structure with  all the possible rotations
-%                       contains the rotation vector (rot), 
-%                       the index to the first and second image 
-%                       (indImg1, inImg2) 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%   data        Structure with all the images and marker 
+%                   positions
+%   rotations   Structure with  all the possible rotations
+%                   contains the rotation vector (rot), 
+%                   the index to the first and second image 
+%                   (indImg1, inImg2) 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 imgs = dir(fullfile(imgDir, '*'));
 
@@ -51,7 +59,7 @@ for i=1:numel(imgs)
              data(j).marker(3,:) = csvData(closestIndex, 8:10);
              data(j).marker(4,:) = csvData(closestIndex, 11:13);       
              img = fullfile(imgDir, imgName);
-             data(j).img = rgb2gray(imread(img));
+             data(j).img = imread(img)';
              j = j+1;
          end
     end
