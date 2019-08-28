@@ -1,17 +1,13 @@
 #include "image.h"
 
-using namespace std;
-using namespace cv;
+Image::Image(Mat image_init) {
 
-Class Image(Mat image_init) {
+    detector = SURF::create(MINHESSIAN);
+    extractor = SURF::create();
 
-    Ptr<SURF> detector = SURF::create(MINHESSIAN);
-    Ptr<SURF> extractor = SURF::create();
+    image = Mat(HEIGHT, WIDTH, CVTYPE);
+    image = image_init;
 
-public:
-    Mat image(HEIGHT, WIDTH, CVTYPE) = image_init;
-    vector<KeyPoint> keypoints;
-    Mat descriptors;
 };
 
 void Image::Show() {

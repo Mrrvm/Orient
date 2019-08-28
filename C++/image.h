@@ -3,6 +3,8 @@
 
 #include "defs.h"
 
+using namespace xfeatures2d;
+
 class Image {
 
     Ptr<SURF> detector;
@@ -13,6 +15,7 @@ public:
     vector<KeyPoint> keypoints;
     Mat descriptors;
 
+    Image(Mat);
     void Show();
     int FindKeypoints();
 

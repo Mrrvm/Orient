@@ -1,19 +1,10 @@
 #include "camera.h"
 
-using namespace ueye;
-using namespace std;
-using namespace cv;
-
-class Camera::Camera(double *rotm_init[3], vector<double> tr_init) {
-
-    HIDS cameraHandle = 0;
-public:
-    double rotm[3][3] = rotm_init;
-    vector<double> eul = rotm2eul(rotm_init);
-    vector<double> tr = tr_init;
+Camera::Camera() {
+   cameraHandle = 0;
 };
 
-void Camera::SpawnCameraError(string where) {
+void Camera::SpawnCameraError(const string& where) {
     char *errDesc;
     int err = 0;
     is_GetError(cameraHandle, &err, &errDesc);
@@ -24,17 +15,17 @@ void Camera::SpawnCameraError(string where) {
 
 int Camera::ConnectCamera() {
 
-    int ret = is_InitCamera(cameraHandle, NULL);
+    int ret = is_InitCamera(reinterpret_cast<HIDS *>(cameraHandle), nullptr);
     if (ret != IS_SUCCESS) {
         //Check if GigE uEye SE needs a new starter firmware
         if (ret == IS_STARTER_FW_UPLOAD_NEEDED) {
             // Calculate time needed for updating the starter firmware for display
             int time = 0;
-            is_GetDuration(*cameraHandle, IS_SE_STARTER_FW_UPLOAD, &time);
+            is_GetDuration(cameraHandle, IS_SE_STARTER_FW_UPLOAD, &time);
             cout << "Updating for " << time << endl;
             // Upload new starter firmware during initialization
-            *cameraHandle = *cameraHandle | IS_ALLOW_STARTER_FW_UPLOAD;
-            ret = is_InitCamera(cameraHandle, NULL);
+            cameraHandle = cameraHandle | IS_ALLOW_STARTER_FW_UPLOAD;
+            ret = is_InitCamera(reinterpret_cast<HIDS *>(cameraHandle), NULL);
             if (ret == IS_SUCCESS)
                 return 1;
         }
@@ -68,22 +59,22 @@ Mat Camera::ConvertCharToMat(char *img)  {
     return imgMatrix;
 }
 
-int Camera::CaptureImage(Mat img) {
+int Camera::CaptureImage(Mat imgM) {
 
     char *img = NULL;
     int id = 0;
     Mat imgMatrix(HEIGHT, WIDTH, CVTYPE);
 
     if(is_AllocImageMem(cameraHandle, WIDTH, HEIGHT, BITSPIXEL, &img, &id) != IS_SUCCESS)
-        SpawnCameraError(cameraHandle, "is_AllocImageMem");
+        SpawnCameraError("is_AllocImageMem");
     if(is_SetImageMem(cameraHandle, img, id) != IS_SUCCESS)
-        SpawnCameraError(cameraHandle, "is_SetImageMem");
+        SpawnCameraError("is_SetImageMem");
     if(is_FreezeVideo(cameraHandle, IS_WAIT) != IS_SUCCESS)
-        SpawnCameraError(cameraHandle, "is_FreezeVideo");
+        SpawnCameraError("is_FreezeVideo");
     imgMatrix = ConvertCharToMat(img);
     if(is_FreeImageMem(cameraHandle, img, id) != IS_SUCCESS)
-        SpawnCameraError(cameraHandle, "is_FreeImageMem");
-    img = imgMatrix;
+        SpawnCameraError("is_FreeImageMem");
+    imgM = imgMatrix;
     return 1;
 }
 

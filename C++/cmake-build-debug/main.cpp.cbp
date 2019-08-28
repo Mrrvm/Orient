@@ -5,7 +5,7 @@
 		<Option title="main.cpp"/>
 		<Option makefile_is_custom="1"/>
 		<Option compiler="gcc"/>
-		<Option virtualFolders="CMake Files\;CMake Files\..\;CMake Files\..\..\;CMake Files\..\..\..\;CMake Files\..\..\..\..\;CMake Files\..\..\..\..\..\;CMake Files\..\..\..\..\..\..\;CMake Files\..\..\..\..\..\..\usr\;CMake Files\..\..\..\..\..\..\usr\local\;CMake Files\..\..\..\..\..\..\usr\local\share\;CMake Files\..\..\..\..\..\..\usr\local\share\OpenCV\;"/>
+		<Option virtualFolders="CMake Files\;CMake Files\..\;CMake Files\..\..\;CMake Files\..\..\..\;CMake Files\..\..\..\..\;CMake Files\..\..\..\..\installed\;CMake Files\..\..\..\..\installed\OpenCV4\;CMake Files\..\..\..\..\installed\OpenCV4\lib\;CMake Files\..\..\..\..\installed\OpenCV4\lib\cmake\;CMake Files\..\..\..\..\installed\OpenCV4\lib\cmake\opencv4\;"/>
 		<Build>
 			<Target title="all">
 				<Option working_dir="/home/imarcher/Dropbox/Tecnico/Orient/C++/cmake-build-debug"/>
@@ -34,7 +34,7 @@
 				<Option type="1"/>
 				<Option compiler="gcc"/>
 				<Compiler>
-					<Add directory="/usr/local/include/opencv"/>
+					<Add directory="/home/imarcher/installed/OpenCV4/include/opencv4"/>
 					<Add directory="/usr/lib/gcc/x86_64-pc-linux-gnu/9.1.0/../../../../include/c++/9.1.0"/>
 					<Add directory="/usr/lib/gcc/x86_64-pc-linux-gnu/9.1.0/../../../../include/c++/9.1.0/x86_64-pc-linux-gnu"/>
 					<Add directory="/usr/lib/gcc/x86_64-pc-linux-gnu/9.1.0/../../../../include/c++/9.1.0/backward"/>
@@ -57,7 +57,7 @@
 				<Option type="1"/>
 				<Option compiler="gcc"/>
 				<Compiler>
-					<Add directory="/usr/local/include/opencv"/>
+					<Add directory="/home/imarcher/installed/OpenCV4/include/opencv4"/>
 					<Add directory="/usr/lib/gcc/x86_64-pc-linux-gnu/9.1.0/../../../../include/c++/9.1.0"/>
 					<Add directory="/usr/lib/gcc/x86_64-pc-linux-gnu/9.1.0/../../../../include/c++/9.1.0/x86_64-pc-linux-gnu"/>
 					<Add directory="/usr/lib/gcc/x86_64-pc-linux-gnu/9.1.0/../../../../include/c++/9.1.0/backward"/>
@@ -114,17 +114,17 @@
 		<Unit filename="/home/imarcher/Dropbox/Tecnico/Orient/C++/CMakeLists.txt">
 			<Option virtualFolder="CMake Files\"/>
 		</Unit>
-		<Unit filename="/home/imarcher/Dropbox/Tecnico/Orient/C++/../../../../../../usr/local/share/OpenCV/OpenCVConfig-version.cmake">
-			<Option virtualFolder="CMake Files\..\..\..\..\..\..\usr\local\share\OpenCV\"/>
+		<Unit filename="/home/imarcher/Dropbox/Tecnico/Orient/C++/../../../../installed/OpenCV4/lib/cmake/opencv4/OpenCVConfig-version.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\installed\OpenCV4\lib\cmake\opencv4\"/>
 		</Unit>
-		<Unit filename="/home/imarcher/Dropbox/Tecnico/Orient/C++/../../../../../../usr/local/share/OpenCV/OpenCVConfig.cmake">
-			<Option virtualFolder="CMake Files\..\..\..\..\..\..\usr\local\share\OpenCV\"/>
+		<Unit filename="/home/imarcher/Dropbox/Tecnico/Orient/C++/../../../../installed/OpenCV4/lib/cmake/opencv4/OpenCVConfig.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\installed\OpenCV4\lib\cmake\opencv4\"/>
 		</Unit>
-		<Unit filename="/home/imarcher/Dropbox/Tecnico/Orient/C++/../../../../../../usr/local/share/OpenCV/OpenCVModules-release.cmake">
-			<Option virtualFolder="CMake Files\..\..\..\..\..\..\usr\local\share\OpenCV\"/>
+		<Unit filename="/home/imarcher/Dropbox/Tecnico/Orient/C++/../../../../installed/OpenCV4/lib/cmake/opencv4/OpenCVModules-release.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\installed\OpenCV4\lib\cmake\opencv4\"/>
 		</Unit>
-		<Unit filename="/home/imarcher/Dropbox/Tecnico/Orient/C++/../../../../../../usr/local/share/OpenCV/OpenCVModules.cmake">
-			<Option virtualFolder="CMake Files\..\..\..\..\..\..\usr\local\share\OpenCV\"/>
+		<Unit filename="/home/imarcher/Dropbox/Tecnico/Orient/C++/../../../../installed/OpenCV4/lib/cmake/opencv4/OpenCVModules.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\installed\OpenCV4\lib\cmake\opencv4\"/>
 		</Unit>
 	</Project>
 </CodeBlocks_project_file>

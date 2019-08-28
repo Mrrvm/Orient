@@ -29,6 +29,9 @@
 
 #define MINHESSIAN 300
 
+using namespace std;
+using namespace cv;
+
 void SpawnError(string where);
 double Eul2Rotm();
 vector<double> Rotm2Eul();

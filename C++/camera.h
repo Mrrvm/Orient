@@ -1,5 +1,5 @@
-#ifndef MAIN_CPP_CAPTURE_H
-#define MAIN_CPP_CAPTURE_H
+#ifndef MAIN_CPP_CAMERA_H
+#define MAIN_CPP_CAMERA_H
 
 #include "defs.h"
 #include <ueye.h>
@@ -10,14 +10,12 @@ class Camera {
     Mat ConvertCharToMat(char *img);
 
 public:
-    double rotm[3][3];
-    vector<double> eul;
-    vector<double> tr;
     double intrinsics[3][3];
     vector<double> rad_dist;
     vector<double> tan_dist;
 
-    void SpawnCameraError(string where);
+    Camera();
+    void SpawnCameraError(const string& where);
     int ConnectCamera();
     int CaptureImage(Mat img);
     int CalibrateCamera();

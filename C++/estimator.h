@@ -4,7 +4,5 @@
 #include "defs.h"
 #include "camera.h"
 
-class
-
 
 #endif
