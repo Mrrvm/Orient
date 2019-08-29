@@ -1,14 +1,23 @@
 #include "image.h"
 
-Image::Image(Mat image_init) {
+Image::Image() {
 
     detector = SURF::create(MINHESSIAN);
     extractor = SURF::create();
 
-    image = Mat(HEIGHT, WIDTH, CVTYPE);
-    image = image_init;
-
 };
+
+Image::Image(string imageName) {
+
+    //detector = SURF::create(MINHESSIAN);
+    //extractor = SURF::create();
+    name = imageName;
+};
+
+bool Image::Save(string path, string ext) {
+    cout << path+name+"."+ext << endl;
+    return imwrite(path+name+"."+ext, image);
+}
 
 void Image::Show() {
 

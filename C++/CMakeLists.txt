@@ -22,7 +22,11 @@ set(UEYE_INCLUDE_DIR /usr/include/)
 message(STATUS "ueye library status:")
 message(STATUS "    libraries: ${UEYE_LIBRARY}")
 
-include_directories(${OpenCV_INCLUDE_DIRS} ${UEYE_INCLUDE_DIR})
+# Find Ceres
+find_package(Ceres REQUIRED)
+message(STATUS "ceres library status:")
+message(STATUS "    libraries: ${CERES_LIBRARIES}")
 
+include_directories(${OpenCV_INCLUDE_DIRS} ${UEYE_INCLUDE_DIR} ${CERES_INCLUDE_DIRS})
 add_executable(main main.cpp defs.h camera.cpp camera.h defs.cpp estimator.cpp estimator.h image.cpp image.h)
-target_link_libraries(main ${OpenCV_LIBS} ${UEYE_LIBRARY})
+target_link_libraries(main ${OpenCV_LIBS} ${UEYE_LIBRARY} ${CERES_LIBRARIES})

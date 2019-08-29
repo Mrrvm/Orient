@@ -5,7 +5,7 @@ function filterdataChessboard(imgDir, axis, savePath, cameraParams, squareSize, 
 % structure rotations describing all the rotations with the 
 % respective indexes to address the imgs structure.
 %
-% Images should all be in a directory. 
+% Images should all be in a directory
 %
 % e.g. arguments
 % intrinsics = [1.1573e+03 -3.3579     975.9459; 

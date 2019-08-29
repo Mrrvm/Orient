@@ -14,18 +14,10 @@
 #include <opencv2/imgproc/imgproc.hpp>
 #include "opencv2/video/tracking.hpp"
 
-#define COLOR true
 #define HEIGHT 1542
 #define WIDTH 2056
-
-#if COLOR
 #define BITSPIXEL 32
 #define CVTYPE CV_8UC4
-#endif
-#if !(COLOR)
-#define BITSPIXEL 8
-#define CVTYPE CV_8UC1
-#endif
 
 #define MINHESSIAN 300
 

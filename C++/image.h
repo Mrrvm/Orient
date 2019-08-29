@@ -12,15 +12,18 @@ class Image {
 
 public:
     Mat image;
+    string name;
     vector<KeyPoint> keypoints;
     Mat descriptors;
 
-    Image(Mat);
+    Image();
+    Image(string);
+    bool Save(string, string);
     void Show();
     int FindKeypoints();
 
 };
 
-int findMatches(Image img1, Image img2, int *ind1, int *ind2);
+int findMatches(Image, Image, int*, int*);
 
 #endif

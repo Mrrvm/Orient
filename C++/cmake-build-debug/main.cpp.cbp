@@ -5,7 +5,7 @@
 		<Option title="main.cpp"/>
 		<Option makefile_is_custom="1"/>
 		<Option compiler="gcc"/>
-		<Option virtualFolders="CMake Files\;CMake Files\..\;CMake Files\..\..\;CMake Files\..\..\..\;CMake Files\..\..\..\..\;CMake Files\..\..\..\..\installed\;CMake Files\..\..\..\..\installed\OpenCV4\;CMake Files\..\..\..\..\installed\OpenCV4\lib\;CMake Files\..\..\..\..\installed\OpenCV4\lib\cmake\;CMake Files\..\..\..\..\installed\OpenCV4\lib\cmake\opencv4\;"/>
+		<Option virtualFolders="CMake Files\;CMake Files\..\;CMake Files\..\..\;CMake Files\..\..\..\;CMake Files\..\..\..\..\;CMake Files\..\..\..\..\installed\;CMake Files\..\..\..\..\installed\OpenCV4\;CMake Files\..\..\..\..\installed\OpenCV4\lib\;CMake Files\..\..\..\..\installed\OpenCV4\lib\cmake\;CMake Files\..\..\..\..\installed\OpenCV4\lib\cmake\opencv4\;CMake Files\..\..\..\..\..\;CMake Files\..\..\..\..\..\..\;CMake Files\..\..\..\..\..\..\usr\;CMake Files\..\..\..\..\..\..\usr\local\;CMake Files\..\..\..\..\..\..\usr\local\lib\;CMake Files\..\..\..\..\..\..\usr\local\lib\cmake\;CMake Files\..\..\..\..\..\..\usr\local\lib\cmake\Ceres\;CMake Files\..\..\..\..\..\..\usr\lib\;CMake Files\..\..\..\..\..\..\usr\lib\cmake\;CMake Files\..\..\..\..\..\..\usr\lib\cmake\eigen3\;CMake Files\..\..\..\..\..\..\usr\lib\x86_64-linux-gnu\;CMake Files\..\..\..\..\..\..\usr\lib\x86_64-linux-gnu\cmake\;CMake Files\..\..\..\..\..\..\usr\lib\x86_64-linux-gnu\cmake\gflags\;"/>
 		<Build>
 			<Target title="all">
 				<Option working_dir="/home/imarcher/Dropbox/Tecnico/Orient/C++/cmake-build-debug"/>
@@ -34,7 +34,9 @@
 				<Option type="1"/>
 				<Option compiler="gcc"/>
 				<Compiler>
+					<Add option="-DGFLAGS_IS_A_DLL=0"/>
 					<Add directory="/home/imarcher/installed/OpenCV4/include/opencv4"/>
+					<Add directory="/usr/include/eigen3"/>
 					<Add directory="/usr/lib/gcc/x86_64-pc-linux-gnu/9.1.0/../../../../include/c++/9.1.0"/>
 					<Add directory="/usr/lib/gcc/x86_64-pc-linux-gnu/9.1.0/../../../../include/c++/9.1.0/x86_64-pc-linux-gnu"/>
 					<Add directory="/usr/lib/gcc/x86_64-pc-linux-gnu/9.1.0/../../../../include/c++/9.1.0/backward"/>
@@ -57,7 +59,9 @@
 				<Option type="1"/>
 				<Option compiler="gcc"/>
 				<Compiler>
+					<Add option="-DGFLAGS_IS_A_DLL=0"/>
 					<Add directory="/home/imarcher/installed/OpenCV4/include/opencv4"/>
+					<Add directory="/usr/include/eigen3"/>
 					<Add directory="/usr/lib/gcc/x86_64-pc-linux-gnu/9.1.0/../../../../include/c++/9.1.0"/>
 					<Add directory="/usr/lib/gcc/x86_64-pc-linux-gnu/9.1.0/../../../../include/c++/9.1.0/x86_64-pc-linux-gnu"/>
 					<Add directory="/usr/lib/gcc/x86_64-pc-linux-gnu/9.1.0/../../../../include/c++/9.1.0/backward"/>
@@ -125,6 +129,48 @@
 		</Unit>
 		<Unit filename="/home/imarcher/Dropbox/Tecnico/Orient/C++/../../../../installed/OpenCV4/lib/cmake/opencv4/OpenCVModules.cmake">
 			<Option virtualFolder="CMake Files\..\..\..\..\installed\OpenCV4\lib\cmake\opencv4\"/>
+		</Unit>
+		<Unit filename="/home/imarcher/Dropbox/Tecnico/Orient/C++/../../../../../../usr/local/lib/cmake/Ceres/CeresConfig.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\..\..\usr\local\lib\cmake\Ceres\"/>
+		</Unit>
+		<Unit filename="/home/imarcher/Dropbox/Tecnico/Orient/C++/../../../../../../usr/local/lib/cmake/Ceres/CeresConfigVersion.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\..\..\usr\local\lib\cmake\Ceres\"/>
+		</Unit>
+		<Unit filename="/home/imarcher/Dropbox/Tecnico/Orient/C++/../../../../../../usr/local/lib/cmake/Ceres/CeresTargets-release.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\..\..\usr\local\lib\cmake\Ceres\"/>
+		</Unit>
+		<Unit filename="/home/imarcher/Dropbox/Tecnico/Orient/C++/../../../../../../usr/local/lib/cmake/Ceres/CeresTargets.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\..\..\usr\local\lib\cmake\Ceres\"/>
+		</Unit>
+		<Unit filename="/home/imarcher/Dropbox/Tecnico/Orient/C++/../../../../../../usr/local/lib/cmake/Ceres/FindEigen.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\..\..\usr\local\lib\cmake\Ceres\"/>
+		</Unit>
+		<Unit filename="/home/imarcher/Dropbox/Tecnico/Orient/C++/../../../../../../usr/local/lib/cmake/Ceres/FindGflags.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\..\..\usr\local\lib\cmake\Ceres\"/>
+		</Unit>
+		<Unit filename="/home/imarcher/Dropbox/Tecnico/Orient/C++/../../../../../../usr/local/lib/cmake/Ceres/FindGlog.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\..\..\usr\local\lib\cmake\Ceres\"/>
+		</Unit>
+		<Unit filename="/home/imarcher/Dropbox/Tecnico/Orient/C++/../../../../../../usr/lib/cmake/eigen3/Eigen3Config.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\..\..\usr\lib\cmake\eigen3\"/>
+		</Unit>
+		<Unit filename="/home/imarcher/Dropbox/Tecnico/Orient/C++/../../../../../../usr/lib/cmake/eigen3/Eigen3ConfigVersion.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\..\..\usr\lib\cmake\eigen3\"/>
+		</Unit>
+		<Unit filename="/home/imarcher/Dropbox/Tecnico/Orient/C++/../../../../../../usr/lib/cmake/eigen3/Eigen3Targets.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\..\..\usr\lib\cmake\eigen3\"/>
+		</Unit>
+		<Unit filename="/home/imarcher/Dropbox/Tecnico/Orient/C++/../../../../../../usr/lib/x86_64-linux-gnu/cmake/gflags/gflags-config-version.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\..\..\usr\lib\x86_64-linux-gnu\cmake\gflags\"/>
+		</Unit>
+		<Unit filename="/home/imarcher/Dropbox/Tecnico/Orient/C++/../../../../../../usr/lib/x86_64-linux-gnu/cmake/gflags/gflags-config.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\..\..\usr\lib\x86_64-linux-gnu\cmake\gflags\"/>
+		</Unit>
+		<Unit filename="/home/imarcher/Dropbox/Tecnico/Orient/C++/../../../../../../usr/lib/x86_64-linux-gnu/cmake/gflags/gflags-targets-release.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\..\..\usr\lib\x86_64-linux-gnu\cmake\gflags\"/>
+		</Unit>
+		<Unit filename="/home/imarcher/Dropbox/Tecnico/Orient/C++/../../../../../../usr/lib/x86_64-linux-gnu/cmake/gflags/gflags-targets.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\..\..\usr\lib\x86_64-linux-gnu\cmake\gflags\"/>
 		</Unit>
 	</Project>
 </CodeBlocks_project_file>
