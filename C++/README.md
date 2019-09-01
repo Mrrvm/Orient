@@ -168,7 +168,7 @@ where `?.?.?` is your ceres version.
 
 ### CLion
 
-1) Download CLion and unpack.
+1) Download [CLion](https://www.jetbrains.com/clion/) and unpack.
 
 2) On the downloaded directory `cd` into bin and run `./clion.sh`.
 
