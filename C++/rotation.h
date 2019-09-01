@@ -13,6 +13,10 @@ class Rotation {
     Mat baseline;
     Mat intrinsics;
 
+    bool Procrustes();
+    bool GRAT();
+    bool MBPE();
+
 public:
     Image img1;
     Image img2;
@@ -23,6 +27,7 @@ public:
     Rotation();
     Rotation(Mat, Mat);
     bool Estimate(Mat, Mat, string);
+    bool ProjectOnSphere(Mat, Mat, Mat, Mat);
 };
 
 

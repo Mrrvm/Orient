@@ -22,7 +22,10 @@ public:
     bool SavePNG(string);
     void Show();
     bool FindKeypoints();
-    static bool FindMatches(Image, Image, Mat, Mat);
+    static bool FindMatches(Image, Image, Mat&, Mat&, vector<DMatch>&);
+    static void ShowMatches(Image, Image, vector<DMatch>);
+    static bool RansacByProcrustes();
+    bool DetectChessboard(Image, Image, Mat&, Mat&, Mat&);
 };
 
 #endif

@@ -13,6 +13,7 @@ int main() {
     Mat ori1, ori2;
     Mat baseline, intrinsics, ranDist, tanDist;
     Mat m1, m2;
+    vector<DMatch> matches;
     bool ret;
 
     // Connect camera and sensor
@@ -46,19 +47,22 @@ int main() {
     if (!ret) cout << "ERROR: Image did not save" << endl;
     cout << "STATUS: Image saved" << endl;
 
-    // Get keypoints
+    // Get keypoints and matches
     img1.FindKeypoints();
     img2.FindKeypoints();
-    ret = Image::FindMatches(img1, img2, m1, m2);
+    ret = Image::FindMatches(img1, img2, m1, m2, matches);
+    Image::ShowMatches(img1, img2, matches);
 
     // Calculate rotation through
     // Procrustes
-    ret = myRot.Estimate(m1, m2, 'Procrustes');
+    ret = myRot.Estimate(m1, m2, "PROC");
+    cout << myRot.rotm;
     // Gradient
-
-
-    // Minimization of backprojection error
-
+    ret = myRot.Estimate(m1, m2, "GRAT");
+    cout << myRot.rotm;
+    // Minimization of back-projection error
+    ret = myRot.Estimate(m1, m2, "MBPE");
+    cout << myRot.rotm;
 
     // Disconnect camera and sensor
     ret = myCam.Disconnect();

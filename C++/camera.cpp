@@ -15,19 +15,19 @@ void Camera::SpawnCameraError(const string& where) {
 bool Camera::Connect() {
 
     int ret = is_InitCamera(&cameraHandle, nullptr);
-    if (ret != IS_SUCCESS) {
-        if (ret == IS_STARTER_FW_UPLOAD_NEEDED) {
-            int time = 0;
-            is_GetDuration(cameraHandle, IS_SE_STARTER_FW_UPLOAD, &time);
-            cameraHandle = cameraHandle | IS_ALLOW_STARTER_FW_UPLOAD;
-            ret = is_InitCamera(&cameraHandle, nullptr);
-            if (ret != IS_SUCCESS) {
-                SpawnCameraError("is_InitCamera");
-                return false;
-            }
-        }
+    if (ret == IS_SUCCESS)
+        return true;
+    if (ret == IS_STARTER_FW_UPLOAD_NEEDED) {
+        int time = 0;
+        is_GetDuration(cameraHandle, IS_SE_STARTER_FW_UPLOAD, &time);
+        cameraHandle = cameraHandle | IS_ALLOW_STARTER_FW_UPLOAD;
+        ret = is_InitCamera(&cameraHandle, nullptr);
+        if (ret == IS_SUCCESS)
+            return true;
     }
-    return true;
+    SpawnCameraError("is_InitCamera");
+    return false;
+
 }
 
 Mat Camera::ConvertCharToMat(char *img)  {
@@ -87,7 +87,9 @@ bool Camera::Capture(Image& imgobj) {
 }
 
 bool Camera::Calibrate() {
-
+    // Read all images
+    // Calibrate with chessboard
+    // Return intrinsics and distortion
 }
 
 bool Camera::Disconnect() {
