@@ -1,5 +1,5 @@
 ## Install
-There are a quite a few things to be installed,
+There are quite a few things to be installed,
 
   1) [IDS uEye camera software](#ids-ueye-camera-software)
   2) [LPMS-CU software](#lpms-cu-software)
