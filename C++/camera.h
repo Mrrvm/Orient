@@ -12,16 +12,16 @@ class Camera {
     Mat ConvertCharToMat(char *img);
 
 public:
-    double intrinsics[3][3];
-    vector<double> rad_dist;
-    vector<double> tan_dist;
+    Mat intrinsics;
+    Mat radDist;
+    Mat tanDist;
 
     Camera();
-    bool ConnectCamera();
-    bool CaptureImage(Mat& img);
-    bool CaptureImage(Image&);
-    bool CalibrateCamera();
-    bool DisconnectCamera();
+    bool Connect();
+    bool Capture(Mat& img);
+    bool Capture(Image&);
+    bool Calibrate();
+    bool Disconnect();
 };
 
 void ShowImage(Mat imgMatrix);

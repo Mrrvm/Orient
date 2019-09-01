@@ -28,5 +28,5 @@ message(STATUS "ceres library status:")
 message(STATUS "    libraries: ${CERES_LIBRARIES}")
 
 include_directories(${OpenCV_INCLUDE_DIRS} ${UEYE_INCLUDE_DIR} ${CERES_INCLUDE_DIRS})
-add_executable(main main.cpp defs.h camera.cpp camera.h defs.cpp estimator.cpp estimator.h image.cpp image.h)
+add_executable(main main.cpp defs.h camera.cpp camera.h rotation.cpp rotation.h image.cpp image.h sensor.cpp sensor.h)
 target_link_libraries(main ${OpenCV_LIBS} ${UEYE_LIBRARY} ${CERES_LIBRARIES})

@@ -94,16 +94,7 @@
 		<Unit filename="/home/imarcher/Dropbox/Tecnico/Orient/C++/camera.h">
 			<Option target="main"/>
 		</Unit>
-		<Unit filename="/home/imarcher/Dropbox/Tecnico/Orient/C++/defs.cpp">
-			<Option target="main"/>
-		</Unit>
 		<Unit filename="/home/imarcher/Dropbox/Tecnico/Orient/C++/defs.h">
-			<Option target="main"/>
-		</Unit>
-		<Unit filename="/home/imarcher/Dropbox/Tecnico/Orient/C++/estimator.cpp">
-			<Option target="main"/>
-		</Unit>
-		<Unit filename="/home/imarcher/Dropbox/Tecnico/Orient/C++/estimator.h">
 			<Option target="main"/>
 		</Unit>
 		<Unit filename="/home/imarcher/Dropbox/Tecnico/Orient/C++/image.cpp">
@@ -113,6 +104,18 @@
 			<Option target="main"/>
 		</Unit>
 		<Unit filename="/home/imarcher/Dropbox/Tecnico/Orient/C++/main.cpp">
+			<Option target="main"/>
+		</Unit>
+		<Unit filename="/home/imarcher/Dropbox/Tecnico/Orient/C++/rotation.cpp">
+			<Option target="main"/>
+		</Unit>
+		<Unit filename="/home/imarcher/Dropbox/Tecnico/Orient/C++/rotation.h">
+			<Option target="main"/>
+		</Unit>
+		<Unit filename="/home/imarcher/Dropbox/Tecnico/Orient/C++/sensor.cpp">
+			<Option target="main"/>
+		</Unit>
+		<Unit filename="/home/imarcher/Dropbox/Tecnico/Orient/C++/sensor.h">
 			<Option target="main"/>
 		</Unit>
 		<Unit filename="/home/imarcher/Dropbox/Tecnico/Orient/C++/CMakeLists.txt">

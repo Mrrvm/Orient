@@ -12,17 +12,21 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1b2254cd-5c97-43f5-ae2c-68714e152f63" name="Default Changelist" comment="\">
+      <change afterPath="$PROJECT_DIR$/sensor.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sensor.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/CMakeLists.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/camera.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/camera.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/camera.h" beforeDir="false" afterPath="$PROJECT_DIR$/camera.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/Makefile" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/Makefile" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/main.cpp.cbp" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/main.cpp.cbp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/defs.cpp" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/defs.h" beforeDir="false" afterPath="$PROJECT_DIR$/defs.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/estimator.h" beforeDir="false" afterPath="$PROJECT_DIR$/estimator.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/estimator.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/rotation.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/estimator.h" beforeDir="false" afterPath="$PROJECT_DIR$/rotation.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/image.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/image.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/image.h" beforeDir="false" afterPath="$PROJECT_DIR$/image.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/main.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../input/Chessboard/filterdataChessboard.m" beforeDir="false" afterPath="$PROJECT_DIR$/../input/Chessboard/filterdataChessboard.m" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -86,7 +90,8 @@
       <workItem from="1561386333279" duration="6803000" />
       <workItem from="1562184431124" duration="26000" />
       <workItem from="1566923451641" duration="50000" />
-      <workItem from="1566982261282" duration="16551000" />
+      <workItem from="1566982261282" duration="17229000" />
+      <workItem from="1567158388343" duration="17191000" />
     </task>
     <servers />
   </component>

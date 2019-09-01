@@ -3,6 +3,7 @@
 
 #include <stdio.h>
 #include <iostream>
+#include <chrono>
 #include "opencv2/opencv.hpp"
 #include "opencv2/core.hpp"
 #include "opencv2/features2d.hpp"
@@ -23,10 +24,5 @@
 
 using namespace std;
 using namespace cv;
-
-void SpawnError(string where);
-double Eul2Rotm();
-vector<double> Rotm2Eul();
-
 
 #endif

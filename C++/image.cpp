@@ -7,16 +7,23 @@ Image::Image() {
 
 };
 
-Image::Image(string imageName) {
+Image::Image(string _name) {
 
-    //detector = SURF::create(MINHESSIAN);
-    //extractor = SURF::create();
-    name = imageName;
+    detector = SURF::create(MINHESSIAN);
+    extractor = SURF::create();
+    name = _name;
 };
 
-bool Image::Save(string path, string ext) {
-    cout << path+name+"."+ext << endl;
-    return imwrite(path+name+"."+ext, image);
+Image::Image(string _name, int hessian) {
+
+    detector = SURF::create(hessian);
+    extractor = SURF::create();
+    name = move(_name);
+};
+
+
+bool Image::SavePNG(string path) {
+    return imwrite(path+name+".png", image);
 }
 
 void Image::Show() {
@@ -26,13 +33,13 @@ void Image::Show() {
     waitKey();
 }
 
-int Image::FindKeypoints() {
+bool Image::FindKeypoints() {
 
     detector->detect(image, keypoints);
     extractor->compute(image, keypoints, descriptors);
 }
 
-int findMatches(Image img1, Image img2, int *ind1, int *ind2) {
+bool Image::FindMatches(Image img1, Image img2, Mat m1, Mat m2) {
 
     FlannBasedMatcher matcher;
     vector<DMatch> matches, good_matches;

@@ -12,7 +12,7 @@ void Camera::SpawnCameraError(const string& where) {
     is_ExitCamera(cameraHandle);
 }
 
-bool Camera::ConnectCamera() {
+bool Camera::Connect() {
 
     int ret = is_InitCamera(&cameraHandle, nullptr);
     if (ret != IS_SUCCESS) {
@@ -31,15 +31,15 @@ bool Camera::ConnectCamera() {
 }
 
 Mat Camera::ConvertCharToMat(char *img)  {
-    Mat imgMatrix(HEIGHT, WIDTH, CVTYPE);
+    Mat imgMat(HEIGHT, WIDTH, CVTYPE);
     int j = 0, i = 0, m = 0;
     while (j < HEIGHT) {
         while (i < WIDTH * 4) {
             if (i % 4 != 3) {
-                imgMatrix.ptr(j)[i] = img[j * WIDTH * 4 + m];
+                imgMat.ptr(j)[i] = img[j * WIDTH * 4 + m];
                 ++m;
             } else {
-                imgMatrix.ptr(j)[i] = img[j * WIDTH * 4 + i + WIDTH * 3];
+                imgMat.ptr(j)[i] = img[j * WIDTH * 4 + i + WIDTH * 3];
             }
             ++i;
         }
@@ -47,10 +47,10 @@ Mat Camera::ConvertCharToMat(char *img)  {
         j++;
         m = 0;
     }
-    return imgMatrix;
+    return imgMat;
 }
 
-bool Camera::CaptureImage(Mat& imgM) {
+bool Camera::Capture(Mat& imgMat) {
 
     char *img = nullptr;
     int id = 0;
@@ -67,7 +67,7 @@ bool Camera::CaptureImage(Mat& imgM) {
         SpawnCameraError("is_FreezeVideo");
         return false;
     }
-    imgM = ConvertCharToMat(img);
+    imgMat = ConvertCharToMat(img);
     if(is_FreeImageMem(cameraHandle, img, id) != IS_SUCCESS) {
         SpawnCameraError("is_FreeImageMem");
         return false;
@@ -75,22 +75,22 @@ bool Camera::CaptureImage(Mat& imgM) {
     return true;
 }
 
-bool Camera::CaptureImage(Image& imgobj) {
+bool Camera::Capture(Image& imgobj) {
 
-    Mat imgM;
+    Mat imgMat;
     bool ret;
-    ret = CaptureImage(imgM);
+    ret = Capture(imgMat);
     if(!ret)
         return false;
-    imgobj.image = imgM;
+    imgobj.image = imgMat;
     return true;
 }
 
-bool Camera::CalibrateCamera() {
+bool Camera::Calibrate() {
 
 }
 
-bool Camera::DisconnectCamera() {
+bool Camera::Disconnect() {
     int ret = is_ExitCamera(cameraHandle);
     if(ret != IS_SUCCESS) {
         SpawnCameraError("is_ExitCamera");

@@ -1,30 +1,70 @@
 #include "camera.h"
 #include "image.h"
+#include "sensor.h"
+#include "rotation.h"
 #include "defs.h"
 
 int main() {
 
+    Sensor mySensor;
     Camera myCam;
-    Image myImage("test");
+    Image img1("img1"), img2("img2");
+    Rotation myRot;
+    Mat ori1, ori2;
+    Mat baseline, intrinsics, ranDist, tanDist;
+    Mat m1, m2;
     bool ret;
 
-    ret = myCam.ConnectCamera();
+    // Connect camera and sensor
+    ret = myCam.Connect();
     if (!ret) cout << "ERROR: Camera not connected" << endl;
     cout << "STATUS: Camera connected" << endl;
+    ret = mySensor.Connect("A5014194", DEVICE_LPMS_U);
+    if (!ret) cout << "ERROR: Sensor not connected" << endl;
+    cout << "STATUS: Sensor connected" << endl;
 
-    ret = myCam.CaptureImage(myImage);
+    // Get data
+    ret = myCam.Capture(img1);
     if (!ret) cout << "ERROR: Camera did not capture image" << endl;
     cout << "STATUS: Camera captured image" << endl;
+    ret = mySensor.GetOrientation();
+    ori1 = mySensor.rotm;
+    waitKey();
+    ret = myCam.Capture(img2);
+    if (!ret) cout << "ERROR: Camera did not capture image" << endl;
+    cout << "STATUS: Camera captured image" << endl;
+    ret = mySensor.GetOrientation();
+    ori2 = mySensor.rotm;
 
-    //myImage.Show();
-
-    ret = myImage.Save("~/", "png");
+    // Show and save data
+    img1.Show();
+    img2.Show();
+    ret = img1.SavePNG("~/");
+    if (!ret) cout << "ERROR: Image did not save" << endl;
+    cout << "STATUS: Image saved" << endl;
+    ret = img2.SavePNG("~/");
     if (!ret) cout << "ERROR: Image did not save" << endl;
     cout << "STATUS: Image saved" << endl;
 
-    ret = myCam.DisconnectCamera();
-    if (!ret)cout << "ERROR: Camera did not disconnect" << endl;
+    // Get keypoints
+    img1.FindKeypoints();
+    img2.FindKeypoints();
+    ret = Image::FindMatches(img1, img2, m1, m2);
+
+    // Calculate rotation through
+    // Procrustes
+    ret = myRot.Estimate(m1, m2, 'Procrustes');
+    // Gradient
+
+
+    // Minimization of backprojection error
+
+
+    // Disconnect camera and sensor
+    ret = myCam.Disconnect();
+    if (!ret) cout << "ERROR: Camera not disconnect" << endl;
     cout << "STATUS: Camera disconnected" << endl;
+    mySensor.Disconnect();
 
     return 0;
 }

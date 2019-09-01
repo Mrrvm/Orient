@@ -150,60 +150,6 @@ camera.cpp.s:
 	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/camera.cpp.s
 .PHONY : camera.cpp.s
 
-defs.o: defs.cpp.o
-
-.PHONY : defs.o
-
-# target to build an object file
-defs.cpp.o:
-	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/defs.cpp.o
-.PHONY : defs.cpp.o
-
-defs.i: defs.cpp.i
-
-.PHONY : defs.i
-
-# target to preprocess a source file
-defs.cpp.i:
-	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/defs.cpp.i
-.PHONY : defs.cpp.i
-
-defs.s: defs.cpp.s
-
-.PHONY : defs.s
-
-# target to generate assembly for a file
-defs.cpp.s:
-	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/defs.cpp.s
-.PHONY : defs.cpp.s
-
-estimator.o: estimator.cpp.o
-
-.PHONY : estimator.o
-
-# target to build an object file
-estimator.cpp.o:
-	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/estimator.cpp.o
-.PHONY : estimator.cpp.o
-
-estimator.i: estimator.cpp.i
-
-.PHONY : estimator.i
-
-# target to preprocess a source file
-estimator.cpp.i:
-	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/estimator.cpp.i
-.PHONY : estimator.cpp.i
-
-estimator.s: estimator.cpp.s
-
-.PHONY : estimator.s
-
-# target to generate assembly for a file
-estimator.cpp.s:
-	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/estimator.cpp.s
-.PHONY : estimator.cpp.s
-
 image.o: image.cpp.o
 
 .PHONY : image.o
@@ -258,6 +204,60 @@ main.cpp.s:
 	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/main.cpp.s
 .PHONY : main.cpp.s
 
+rotation.o: rotation.cpp.o
+
+.PHONY : rotation.o
+
+# target to build an object file
+rotation.cpp.o:
+	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/rotation.cpp.o
+.PHONY : rotation.cpp.o
+
+rotation.i: rotation.cpp.i
+
+.PHONY : rotation.i
+
+# target to preprocess a source file
+rotation.cpp.i:
+	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/rotation.cpp.i
+.PHONY : rotation.cpp.i
+
+rotation.s: rotation.cpp.s
+
+.PHONY : rotation.s
+
+# target to generate assembly for a file
+rotation.cpp.s:
+	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/rotation.cpp.s
+.PHONY : rotation.cpp.s
+
+sensor.o: sensor.cpp.o
+
+.PHONY : sensor.o
+
+# target to build an object file
+sensor.cpp.o:
+	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/sensor.cpp.o
+.PHONY : sensor.cpp.o
+
+sensor.i: sensor.cpp.i
+
+.PHONY : sensor.i
+
+# target to preprocess a source file
+sensor.cpp.i:
+	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/sensor.cpp.i
+.PHONY : sensor.cpp.i
+
+sensor.s: sensor.cpp.s
+
+.PHONY : sensor.s
+
+# target to generate assembly for a file
+sensor.cpp.s:
+	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/sensor.cpp.s
+.PHONY : sensor.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -270,18 +270,18 @@ help:
 	@echo "... camera.o"
 	@echo "... camera.i"
 	@echo "... camera.s"
-	@echo "... defs.o"
-	@echo "... defs.i"
-	@echo "... defs.s"
-	@echo "... estimator.o"
-	@echo "... estimator.i"
-	@echo "... estimator.s"
 	@echo "... image.o"
 	@echo "... image.i"
 	@echo "... image.s"
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"
+	@echo "... rotation.o"
+	@echo "... rotation.i"
+	@echo "... rotation.s"
+	@echo "... sensor.o"
+	@echo "... sensor.i"
+	@echo "... sensor.s"
 .PHONY : help
 
 

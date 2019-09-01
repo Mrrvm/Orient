@@ -18,12 +18,11 @@ public:
 
     Image();
     Image(string);
-    bool Save(string, string);
+    Image(string, int);
+    bool SavePNG(string);
     void Show();
-    int FindKeypoints();
-
+    bool FindKeypoints();
+    static bool FindMatches(Image, Image, Mat, Mat);
 };
-
-int findMatches(Image, Image, int*, int*);
 
 #endif
