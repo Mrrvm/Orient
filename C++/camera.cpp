@@ -7,9 +7,14 @@ Camera::Camera() {
 void Camera::SpawnCameraError(const string& where) {
     char *errDesc;
     int err = 0;
-    is_GetError(cameraHandle, &err, &errDesc);
-    cout << "ERROR AT " << where << " : " << errDesc << endl;
-    is_ExitCamera(cameraHandle);
+    int ret = is_GetError(cameraHandle, &err, &errDesc);
+    if(ret == IS_SUCCESS) {
+        cout << RED << "(camera.cpp) ERROR AT " << RESET << where << RED << " : " << RESET << errDesc << endl;
+        errDesc = 0;
+    }
+    else {
+        cout << RED << "(camera.cpp) ERROR AT " << RESET << where << RED << " : " << RESET << "unknown" << endl;
+    }
 }
 
 bool Camera::Connect() {

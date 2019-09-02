@@ -4,6 +4,11 @@
 #include "rotation.h"
 #include "defs.h"
 
+void ThrowError(string what) {
+    cout << RED << "(main.cpp) ERROR : " << RESET << what << endl;
+    exit(EXIT_FAILURE);
+}
+
 int main() {
 
     Sensor mySensor;
@@ -18,21 +23,21 @@ int main() {
 
     // Connect camera and sensor
     ret = myCam.Connect();
-    if (!ret) cout << "ERROR: Camera not connected" << endl;
+    if (!ret) ThrowError("Camera not connected");
     cout << "STATUS: Camera connected" << endl;
     ret = mySensor.Connect("A5014194", DEVICE_LPMS_U);
-    if (!ret) cout << "ERROR: Sensor not connected" << endl;
+    if (!ret) ThrowError("Sensor not connected");
     cout << "STATUS: Sensor connected" << endl;
 
     // Get data
     ret = myCam.Capture(img1);
-    if (!ret) cout << "ERROR: Camera did not capture image" << endl;
+    if (!ret) ThrowError("Camera did not capture image");
     cout << "STATUS: Camera captured image" << endl;
     ret = mySensor.GetOrientation();
     ori1 = mySensor.rotm;
     waitKey();
     ret = myCam.Capture(img2);
-    if (!ret) cout << "ERROR: Camera did not capture image" << endl;
+    if (!ret) ThrowError("Camera did not capture image");
     cout << "STATUS: Camera captured image" << endl;
     ret = mySensor.GetOrientation();
     ori2 = mySensor.rotm;
@@ -41,10 +46,10 @@ int main() {
     img1.Show();
     img2.Show();
     ret = img1.SavePNG("~/");
-    if (!ret) cout << "ERROR: Image did not save" << endl;
+    if (!ret) ThrowError("Image did not save");
     cout << "STATUS: Image saved" << endl;
     ret = img2.SavePNG("~/");
-    if (!ret) cout << "ERROR: Image did not save" << endl;
+    if (!ret) ThrowError("Image did not save");
     cout << "STATUS: Image saved" << endl;
 
     // Get keypoints and matches
@@ -66,7 +71,7 @@ int main() {
 
     // Disconnect camera and sensor
     ret = myCam.Disconnect();
-    if (!ret) cout << "ERROR: Camera not disconnect" << endl;
+    if (!ret) ThrowError("Camera not disconnect");
     cout << "STATUS: Camera disconnected" << endl;
     mySensor.Disconnect();
 

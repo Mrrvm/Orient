@@ -1,7 +1,7 @@
 #include "sensor.h"
 
 Sensor::Sensor() {
-    //manager = LpmsSensorManagerFactory();
+    manager = LpmsSensorManagerFactory();
     rotm = Mat::zeros(cv::Size(3,3), DataType<double>::type);
     quat = Mat::zeros(cv::Size(3,1), DataType<double>::type);
     eul = Mat::zeros(cv::Size(4,3), DataType<double>::type);

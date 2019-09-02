@@ -27,6 +27,9 @@ find_package(Ceres REQUIRED)
 message(STATUS "ceres library status:")
 message(STATUS "    libraries: ${CERES_LIBRARIES}")
 
+# Find LpSensor
+find_library(LPSENSOR_LIBRARY LpSensor)
+
 include_directories(${OpenCV_INCLUDE_DIRS} ${UEYE_INCLUDE_DIR} ${CERES_INCLUDE_DIRS})
 add_executable(main main.cpp defs.h camera.cpp camera.h rotation.cpp rotation.h image.cpp image.h sensor.cpp sensor.h)
-target_link_libraries(main ${OpenCV_LIBS} ${UEYE_LIBRARY} ${CERES_LIBRARIES})
+target_link_libraries(main ${OpenCV_LIBS} ${UEYE_LIBRARY} ${CERES_LIBRARIES} ${LPSENSOR_LIBRARY} pthread dl rt)
