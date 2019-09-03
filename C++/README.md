@@ -56,11 +56,13 @@ might require other packages or different installation manners.
       - Through the [SensorDiscovery program](https://www.ftdichip.com/Support/Documents/AppNotes/AN_220_FTDI_Drivers_Installation_Guide_for_Linux.pdf).
       - Or by running FTDI `read` sample. (Section 3.1 of the [FTDI manual](https://www.ftdichip.com/Support/Documents/AppNotes/AN_220_FTDI_Drivers_Installation_Guide_for_Linux.pdf)).
   4) and build the example 
-    - `mkdir build`
-    - `cd build`
-    - `cmake ..`
-    - `make`
-    - `sudo ./LpmsSimpleExample`
+```
+    mkdir build
+    cd build
+    cmake ..
+    make
+    sudo ./LpmsSimpleExample
+```
   5) Check if the sensor connected and is producing results (this might take a bit).
  
  If it's not working, you might be missing dependencies `libqwt-dev`, `libqt5-dev`, `libftdi-dev`, `libice-dev` or `libboost-all-dev`.
