@@ -94,6 +94,9 @@
 		<Unit filename="/home/imarcher/Dropbox/Tecnico/Orient/C++/camera.h">
 			<Option target="main"/>
 		</Unit>
+		<Unit filename="/home/imarcher/Dropbox/Tecnico/Orient/C++/defs.cpp">
+			<Option target="main"/>
+		</Unit>
 		<Unit filename="/home/imarcher/Dropbox/Tecnico/Orient/C++/defs.h">
 			<Option target="main"/>
 		</Unit>

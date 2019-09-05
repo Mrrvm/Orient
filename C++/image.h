@@ -19,7 +19,7 @@ public:
     Image();
     Image(string);
     Image(string, int);
-    bool SavePNG(string);
+    bool Save(string, string);
     void Show();
     bool FindKeypoints();
     static bool FindMatches(Image, Image, Mat&, Mat&, vector<DMatch>&);

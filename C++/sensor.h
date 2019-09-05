@@ -16,6 +16,7 @@ public:
     Mat rotm;
     Mat eul;
     Mat quat;
+    Mat angaxis;
     chrono::high_resolution_clock::time_point timestamp;
 
     Sensor();

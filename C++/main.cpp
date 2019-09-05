@@ -13,66 +13,87 @@ int main() {
 
     Sensor mySensor;
     Camera myCam;
-    Image img1("img1"), img2("img2");
-    Rotation myRot;
+    Image img1("img1", 900), img2("img2", 900);
     Mat ori1, ori2;
-    Mat baseline, intrinsics, ranDist, tanDist;
     Mat m1, m2;
+    Mat eulinit = (Mat_<double>(1,3) << 0, 0, 0);
     vector<DMatch> matches;
+    Mat intrinsics = (Mat_<double>(3,3) <<   1.1573e+03, -3.3579,     975.9459,
+                                                        0,          1.1584e+03,  798.4888,
+                                                        0,          0,           1       );
+    double baseline[3] = {0.02, -0.055, 0.055};
+    double tanDist[2] = {3.0406e-04, 7.1815e-04};
+    double radDist[3] = {-0.3160, 0.1699, -0.0569};
+    int radius = 1;
+    Rotation myRot(baseline, intrinsics, radius);
     bool ret;
 
     // Connect camera and sensor
     ret = myCam.Connect();
     if (!ret) ThrowError("Camera not connected");
-    cout << "STATUS: Camera connected" << endl;
+    cout << YELLOW << "STATUS : " << RESET << "Camera connected" << endl;
+/*
     ret = mySensor.Connect("A5014194", DEVICE_LPMS_U);
     if (!ret) ThrowError("Sensor not connected");
-    cout << "STATUS: Sensor connected" << endl;
+    cout << YELLOW << "STATUS : " << RESET << "Sensor connected" << endl;
+*/
 
-    // Get data
+    // Get image 1
     ret = myCam.Capture(img1);
     if (!ret) ThrowError("Camera did not capture image");
-    cout << "STATUS: Camera captured image" << endl;
-    ret = mySensor.GetOrientation();
+    cout << YELLOW << "STATUS : " << RESET << "Camera captured image" << endl;
+    img1.Show();
+    waitKey(0);
+    ret = img1.Save("/home/imarcher/", "jpg");
+    if (!ret) ThrowError("Image did not save");
+    cout << YELLOW << "STATUS : " << RESET << "Image saved" << endl;
+
+    // Get orientation 1
+/*    ret = mySensor.GetOrientation();
     ori1 = mySensor.rotm;
-    waitKey();
+    cout << ori1 << endl;*/
+
+
+    // Get image 2
     ret = myCam.Capture(img2);
     if (!ret) ThrowError("Camera did not capture image");
-    cout << "STATUS: Camera captured image" << endl;
-    ret = mySensor.GetOrientation();
-    ori2 = mySensor.rotm;
-
-    // Show and save data
-    img1.Show();
+    cout << YELLOW << "STATUS : " << RESET << "Camera captured image" << endl;
     img2.Show();
-    ret = img1.SavePNG("~/");
+    waitKey(0);
+    ret = img2.Save("/home/imarcher/", "jpg");
     if (!ret) ThrowError("Image did not save");
-    cout << "STATUS: Image saved" << endl;
-    ret = img2.SavePNG("~/");
-    if (!ret) ThrowError("Image did not save");
-    cout << "STATUS: Image saved" << endl;
+    cout << YELLOW << "STATUS : " << RESET << "Image saved" << endl;
+
+    // Get orientation 2
+/*    ret = mySensor.GetOrientation();
+    ori2 = mySensor.rotm;
+    cout << ori2 << endl;*/
 
     // Get keypoints and matches
     img1.FindKeypoints();
     img2.FindKeypoints();
     ret = Image::FindMatches(img1, img2, m1, m2, matches);
+    if (!ret) ThrowError("Could not obtain matches");
+    cout << YELLOW << "STATUS : " << RESET << "Matches obtained" << endl;
     Image::ShowMatches(img1, img2, matches);
+    waitKey(0);
 
     // Calculate rotation through
     // Procrustes
-    ret = myRot.Estimate(m1, m2, "PROC");
-    cout << myRot.rotm;
+    ret = myRot.Estimate(m1, m2, eulinit, "PROC");
+    cout << myRot.rotm << endl;
+    exit(0);
     // Gradient
-    ret = myRot.Estimate(m1, m2, "GRAT");
+    ret = myRot.Estimate(m1, m2, eulinit, "GRAT");
     cout << myRot.rotm;
     // Minimization of back-projection error
-    ret = myRot.Estimate(m1, m2, "MBPE");
+    ret = myRot.Estimate(m1, m2, eulinit, "MBPE");
     cout << myRot.rotm;
 
     // Disconnect camera and sensor
     ret = myCam.Disconnect();
     if (!ret) ThrowError("Camera not disconnect");
-    cout << "STATUS: Camera disconnected" << endl;
+    cout << YELLOW << "STATUS :" << RESET << "Camera disconnected" << endl;
     mySensor.Disconnect();
 
     return 0;

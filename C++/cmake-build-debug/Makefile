@@ -150,6 +150,33 @@ camera.cpp.s:
 	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/camera.cpp.s
 .PHONY : camera.cpp.s
 
+defs.o: defs.cpp.o
+
+.PHONY : defs.o
+
+# target to build an object file
+defs.cpp.o:
+	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/defs.cpp.o
+.PHONY : defs.cpp.o
+
+defs.i: defs.cpp.i
+
+.PHONY : defs.i
+
+# target to preprocess a source file
+defs.cpp.i:
+	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/defs.cpp.i
+.PHONY : defs.cpp.i
+
+defs.s: defs.cpp.s
+
+.PHONY : defs.s
+
+# target to generate assembly for a file
+defs.cpp.s:
+	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/defs.cpp.s
+.PHONY : defs.cpp.s
+
 image.o: image.cpp.o
 
 .PHONY : image.o
@@ -270,6 +297,9 @@ help:
 	@echo "... camera.o"
 	@echo "... camera.i"
 	@echo "... camera.s"
+	@echo "... defs.o"
+	@echo "... defs.i"
+	@echo "... defs.s"
 	@echo "... image.o"
 	@echo "... image.i"
 	@echo "... image.s"

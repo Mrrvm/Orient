@@ -8,8 +8,18 @@ Sensor::Sensor() {
 }
 
 bool Sensor::Connect(const char* _id, int _type) {
+    int count = 0;
     sensor = manager->addSensor(_type, _id);
-    return sensor->getConnectionStatus() == SENSOR_CONNECTION_CONNECTED;
+    while(1) {
+        cout << YELLOW << "STATUS : " << RESET << "Sensor is connecting ..." << endl;
+        if(count > 5)
+            return false;
+        if(sensor->getConnectionStatus() == SENSOR_CONNECTION_CONNECTED) {
+            return true;
+        }
+        this_thread::sleep_for(std::chrono::seconds(5));
+        count ++;
+    }
 }
 
 bool Sensor::GetOrientation() {
@@ -29,9 +39,9 @@ bool Sensor::GetOrientation() {
     for(int i = 1; i < 4; i++) {
         quat.at<double>(i) = data.q[i];
     }
-    for(int i = 1; i < 3; i++) {
-        eul.at<double>(i) = data.r[i];
-    }
+    eul.at<double>(0) = data.r[2];
+    eul.at<double>(1) = data.r[1];
+    eul.at<double>(2) = data.r[0];
     timestamp = chrono::high_resolution_clock::now();
     return true;
 }

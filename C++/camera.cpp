@@ -1,7 +1,7 @@
 #include "camera.h"
 
 Camera::Camera() {
-   cameraHandle = (HIDS)0;
+    cameraHandle = (HIDS)0;
 };
 
 void Camera::SpawnCameraError(const string& where) {
@@ -72,6 +72,8 @@ bool Camera::Capture(Mat& imgMat) {
         SpawnCameraError("is_FreezeVideo");
         return false;
     }
+    if(img == nullptr)
+        return false;
     imgMat = ConvertCharToMat(img);
     if(is_FreeImageMem(cameraHandle, img, id) != IS_SUCCESS) {
         SpawnCameraError("is_FreeImageMem");

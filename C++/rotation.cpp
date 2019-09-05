@@ -1,86 +1,94 @@
 #include "rotation.h"
 
-Rotation::Rotation() {}
+struct GRATCostFunctor {
+    template <typename T>
+    bool operator()(const T* const eul, T* residual) const {
+        cout << eul[0];
+        return true;
+    }
+};
 
-
-Rotation::Rotation(Mat cvbaseline, Mat cvintrinsics, int _radius) {
-    cv2eigen(cvbaseline, baseline);
-    cv2eigen(cvintrinsics, intrinsics);
+Rotation::Rotation(double* _baseline, Mat _intrinsics, int _radius) {
+    baseline = _baseline;
     radius = _radius;
+    intrinsics = _intrinsics;
 }
 
-Mat Rotation::ProjectToSphere(Mat cvm) {
-    MatrixXd m, M;
-    Mat cvM;
-    cv2eigen(cvm, m);
-    M = ProjectToSphere(m);
-    eigen2cv(M, cvM);
-    return cvM;
-}
+Mat Rotation::ProjectToSphere(Mat m) {
 
-MatrixXd Rotation::ProjectToSphere(MatrixXd m) {
+    Mat mh, mhk;
+    double lambda;
+    Mat M = Mat(m.rows, m.cols, DataType<double>::type);
 
-    MatrixXd mh;
-    mh << m, MatrixXd::Ones(m.rows(), 1);
+    Mat ones = Mat::ones(m.rows, 1, DataType<double>::type);
+    hconcat(m, ones, mh);
 
-    MatrixXd mhk = intrinsics.inverse()*mh;
-    ArrayXd aux = mhk.row(1)*mhk.row(1) + mhk.row(2)*mhk.row(2) + MatrixXd::Ones(m.rows(), 1);
-    MatrixXd lambda = radius*aux.rsqrt();
-    MatrixXd M = lambda*mhk;
+    mhk = intrinsics.inv()*mh;
+    cout << intrinsics;
+    for(int i = 0; i < m.rows; i ++) {
+        lambda = radius/sqrt(mhk.at<double>(i,0)*mhk.at<double>(i,0) +
+                mhk.at<double>(i,1)*mhk.at<double>(i,1) + mhk.at<double>(i,2)*mhk.at<double>(i,2));
+        M.at<double>(i, 0) = mhk.at<double>(i,0)*lambda;
+        M.at<double>(i, 1) = mhk.at<double>(i,1)*lambda;
+        M.at<double>(i, 2) = mhk.at<double>(i,2)*lambda;
+    }
     return M;
 }
 
 
-bool Rotation::Procrustes(Mat cvm1, Mat cvm2) {
-    MatrixXd m1, m2;
-    cv2eigen(cvm1, m1);
-    cv2eigen(cvm2, m2);
-    return Procrustes(m1, m2);
-}
+bool Rotation::Procrustes(Mat m1, Mat m2) {
 
-
-bool Rotation::Procrustes(MatrixXd m1, MatrixXd m2) {
-    MatrixXd M1 = ProjectToSphere(m1);
-    MatrixXd M2 = ProjectToSphere(m2);
-
-    if(m1.rows() < 3)
+    if(m1.rows < 3) {
         return false;
+    }
+    Mat M1 = ProjectToSphere(m1);
+    Mat M2 = ProjectToSphere(m2);
+    cout << M1 << endl;
 
-    Matrix3d A = M1*M2.transpose();
-    JacobiSVD<MatrixXd> svd(A, ComputeFullV | ComputeFullU );
-    rotm = svd.matrixV()*svd.matrixU().transpose();
-    quat = rotm;
-    eul = rotm.eulerAngles(2, 1, 0);
+    Mat A = M1.t()*M2;
+    Mat U, s, Vt;
+    SVDecomp(A, s, U, Vt);
+    rotm = U * Vt;
+    eul = rotm2eul(rotm);
+    // TODO
     return true;
 }
 
-bool Rotation::GRAT() {
+bool Rotation::GRAT(Mat m1, Mat m2, Mat eulinit) {
+
+    double eulvar[3] = {eulinit.at<double>(0, 0),  eulinit.at<double>(0, 1), eulinit.at<double>(0, 2)};
+    Problem problem;
+
+    CostFunction* costF = new AutoDiffCostFunction<GRATCostFunctor, 1, 1>(new GRATCostFunctor);
+    problem.AddResidualBlock(costF, nullptr, eulvar);
+    Solver::Options options;
+    options.linear_solver_type = ceres::DENSE_QR;
+    options.minimizer_progress_to_stdout = true;
+    Solver::Summary summary;
+    ceres::Solve(options, &problem, &summary);
+
+    std::cout << summary.BriefReport() << "\n";
+    std::cout << "x : " << eulinit
+              << " -> " << eulvar << "\n";
     return true;
 }
 
-bool Rotation::MBPE() {
+bool Rotation::MBPE(Mat m1, Mat m2, Mat eulinit) {
     return true;
 }
 
-bool Rotation::Estimate(Mat _m1, Mat _m2, string method) {
-    MatrixXd m1, m2;
-    cv2eigen(_m1, m1);
-    cv2eigen(_m2, m2);
-    return Estimate(m1, m2, method);
-}
 
+bool Rotation::Estimate(Mat m1, Mat m2, Mat eulinit, string method) {
 
-bool Rotation::Estimate(MatrixXd m1, MatrixXd m2, string method) {
-
+    bool ret = false;
     if (method == "PROC") {
-        Procrustes(m1, m2);
+        ret = Procrustes(m1, m2);
     }
     else if(method == "GRAT") {
-
+        ret = GRAT(m1, m2, eulinit);
     }
     else if(method == "MBPE") {
-
+        ret = MBPE(m1, m2, eulinit);
     }
-
-    return true;
+    return ret;
 }

@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <iostream>
 #include <chrono>
+#include <thread>
 #include "opencv2/opencv.hpp"
 #include "opencv2/core.hpp"
 #include "opencv2/features2d.hpp"
@@ -34,5 +35,13 @@
 
 using namespace std;
 using namespace cv;
+
+Mat eul2rotm(Mat eul);
+bool isRotm(Mat rotm);
+Mat rotm2eul(Mat rotm);
+Mat rotm2quat(Mat rotm);
+Mat quat2rotm(Mat quat);
+Mat angax2rotm(Mat angax);
+Mat rotm2angax(Mat rotm);
 
 #endif
