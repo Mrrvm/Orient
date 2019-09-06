@@ -24,14 +24,12 @@ bool isRotm(Mat rotm) {
     transpose(rotm, Rt);
     Mat shouldBeIdentity = Rt * rotm;
     Mat I = Mat::eye(3,3, shouldBeIdentity.type());
-    cout << shouldBeIdentity;
     return norm(I, shouldBeIdentity) < 1e-6;
 }
 
 Mat rotm2eul(Mat rotm) {
 
     Mat eul;
-    assert(isRotm(rotm)); //TODO
 
     float sy = sqrt(rotm.at<double>(0,0)*rotm.at<double>(0,0) +  rotm.at<double>(1,0)*rotm.at<double>(1,0));
     bool singular = sy < 1e-6; // If

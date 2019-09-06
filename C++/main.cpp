@@ -13,7 +13,7 @@ int main() {
 
     Sensor mySensor;
     Camera myCam;
-    Image img1("img1", 900), img2("img2", 900);
+    Image img1("img1", 1000), img2("img2", 1000);
     Mat ori1, ori2;
     Mat m1, m2;
     Mat eulinit = (Mat_<double>(1,3) << 0, 0, 0);
@@ -81,8 +81,7 @@ int main() {
     // Calculate rotation through
     // Procrustes
     ret = myRot.Estimate(m1, m2, eulinit, "PROC");
-    cout << myRot.rotm << endl;
-    exit(0);
+    cout << myRot.eul << endl;
     // Gradient
     ret = myRot.Estimate(m1, m2, eulinit, "GRAT");
     cout << myRot.rotm;

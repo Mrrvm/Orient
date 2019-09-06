@@ -16,21 +16,19 @@ Rotation::Rotation(double* _baseline, Mat _intrinsics, int _radius) {
 
 Mat Rotation::ProjectToSphere(Mat m) {
 
-    Mat mh, mhk;
     double lambda;
-    Mat M = Mat(m.rows, m.cols, DataType<double>::type);
+    Mat hm = Mat(3, 1, DataType<double>::type);
+    Mat km = Mat(3, 1, DataType<double>::type);
+    Mat M = Mat(m.rows, 3, DataType<double>::type);
+    Mat Ki = intrinsics.inv();
+    hm.at<double>(2) = 1;
 
-    Mat ones = Mat::ones(m.rows, 1, DataType<double>::type);
-    hconcat(m, ones, mh);
-
-    mhk = intrinsics.inv()*mh;
-    cout << intrinsics;
     for(int i = 0; i < m.rows; i ++) {
-        lambda = radius/sqrt(mhk.at<double>(i,0)*mhk.at<double>(i,0) +
-                mhk.at<double>(i,1)*mhk.at<double>(i,1) + mhk.at<double>(i,2)*mhk.at<double>(i,2));
-        M.at<double>(i, 0) = mhk.at<double>(i,0)*lambda;
-        M.at<double>(i, 1) = mhk.at<double>(i,1)*lambda;
-        M.at<double>(i, 2) = mhk.at<double>(i,2)*lambda;
+        hm.at<double>(0) = m.at<double>(i,0);
+        hm.at<double>(1) = m.at<double>(i,1);
+        km = Ki*hm;
+        lambda = radius/sqrt(km.dot(km));
+        M.row(i) = lambda*km.t();
     }
     return M;
 }
@@ -38,12 +36,11 @@ Mat Rotation::ProjectToSphere(Mat m) {
 
 bool Rotation::Procrustes(Mat m1, Mat m2) {
 
-    if(m1.rows < 3) {
+    if(m1.rows < 3)
         return false;
-    }
+
     Mat M1 = ProjectToSphere(m1);
     Mat M2 = ProjectToSphere(m2);
-    cout << M1 << endl;
 
     Mat A = M1.t()*M2;
     Mat U, s, Vt;

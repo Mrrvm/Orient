@@ -36,13 +36,13 @@ bool Image::FindKeypoints() {
     if(keypoints.empty())
         return false;
     extractor->compute(image, keypoints, descriptors);
-    return descriptors.rows != 0;
-
+        return descriptors.rows != 0;
 }
 
 bool Image::FindMatches(Image img1, Image img2, Mat& m1, Mat& m2, vector<DMatch>& matches) {
 
     FlannBasedMatcher matcher;
+    vector<Point2d> p1, p2;
     double maxDist = 0, minDist = 100, dist = 0;
 
     matcher.match(img1.descriptors, img2.descriptors, matches);
@@ -55,16 +55,23 @@ bool Image::FindMatches(Image img1, Image img2, Mat& m1, Mat& m2, vector<DMatch>
         if(dist < minDist) minDist = dist;
         if(dist > maxDist) maxDist = dist;
     }
-    m1 = Mat(matches.size(), 2, DataType<double>::type);
-    m2 = Mat(matches.size(), 2, DataType<double>::type);
-    for(int i = 0; i < int(matches.size()); i++) {
-        if(matches[i].distance <= max(2*minDist, 0.02)) {
-            m1.at<double>(i, 0) = img1.keypoints[matches[i].queryIdx].pt.x;
-            m1.at<double>(i, 1) = img1.keypoints[matches[i].queryIdx].pt.y;
-            m2.at<double>(i, 0) = img2.keypoints[matches[i].queryIdx].pt.x;
-            m2.at<double>(i, 1) = img2.keypoints[matches[i].queryIdx].pt.y;
+
+    double x1, x2, y1, y2;
+    for(auto & match : matches) {
+        if(match.distance <= max(2*minDist, 0.02)) {
+            x1 = img1.keypoints[match.queryIdx].pt.x;
+            y1 = img1.keypoints[match.queryIdx].pt.y;
+            x2 = img2.keypoints[match.trainIdx].pt.x;
+            y2 = img2.keypoints[match.trainIdx].pt.y;
+            if(abs(x1) > 1e-2 && abs(x2) > 1e-2 && abs(y1) > 1e-2 && abs(y2) > 1e-2) {
+                p1.emplace_back(x1, y1);
+                p2.emplace_back(x2, y2);
+            }
         }
     }
+    m1 = Mat(p1, DataType<double>::type);
+    m2 = Mat(p2, DataType<double>::type);
+
     return m1.rows >= 3;
 }
 

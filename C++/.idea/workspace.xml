@@ -12,20 +12,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1b2254cd-5c97-43f5-ae2c-68714e152f63" name="Default Changelist" comment="\">
-      <change afterPath="$PROJECT_DIR$/defs.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/CMakeLists.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/camera.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/camera.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/Makefile" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/Makefile" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/main.cpp.cbp" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/main.cpp.cbp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/defs.h" beforeDir="false" afterPath="$PROJECT_DIR$/defs.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/defs.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/defs.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/image.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/image.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/image.h" beforeDir="false" afterPath="$PROJECT_DIR$/image.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/main.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/rotation.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/rotation.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rotation.h" beforeDir="false" afterPath="$PROJECT_DIR$/rotation.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sensor.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/sensor.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sensor.h" beforeDir="false" afterPath="$PROJECT_DIR$/sensor.h" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -100,7 +91,8 @@
       <workItem from="1567524374630" duration="117000" />
       <workItem from="1567524528952" duration="84000" />
       <workItem from="1567524813577" duration="6812000" />
-      <workItem from="1567679608204" duration="9713000" />
+      <workItem from="1567679608204" duration="9778000" />
+      <workItem from="1567763397054" duration="10234000" />
     </task>
     <servers />
   </component>
