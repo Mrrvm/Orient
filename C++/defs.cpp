@@ -1,6 +1,14 @@
 #include "defs.h"
 
-Mat eul2rotm(Mat eul) {
+bool IsRotm(Mat rotm) {
+    Mat Rt;
+    transpose(rotm, Rt);
+    Mat shouldBeIdentity = Rt * rotm;
+    Mat I = Mat::eye(3,3, shouldBeIdentity.type());
+    return norm(I, shouldBeIdentity) < 1e-6;
+}
+
+Mat Eul2Rotm(Mat eul) {
     Mat Rx = (Mat_<double>(3,3) <<
             1,       0,              0,
             0,       cos(eul.at<double>(0)),  -sin(eul.at<double>(0)),
@@ -19,15 +27,7 @@ Mat eul2rotm(Mat eul) {
     return rotm;
 }
 
-bool isRotm(Mat rotm) {
-    Mat Rt;
-    transpose(rotm, Rt);
-    Mat shouldBeIdentity = Rt * rotm;
-    Mat I = Mat::eye(3,3, shouldBeIdentity.type());
-    return norm(I, shouldBeIdentity) < 1e-6;
-}
-
-Mat rotm2eul(Mat rotm) {
+Mat Rotm2Eul(Mat rotm) {
 
     Mat eul;
 
@@ -47,3 +47,4 @@ Mat rotm2eul(Mat rotm) {
     eul = (Mat_<double>(1,3) << x, y, z);
     return eul;
 }
+

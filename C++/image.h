@@ -13,13 +13,16 @@ class Image {
 public:
     Mat image;
     string name;
+    string path;
+    string ext;
     vector<KeyPoint> keypoints;
     Mat descriptors;
 
     Image();
-    Image(string);
-    Image(string, int);
-    bool Save(string, string);
+    Image(string, string, string);
+    Image(string, string, string, int);
+    bool Load();
+    bool Save();
     void Show();
     bool FindKeypoints();
     static bool FindMatches(Image, Image, Mat&, Mat&, vector<DMatch>&);

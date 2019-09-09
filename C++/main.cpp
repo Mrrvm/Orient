@@ -13,30 +13,30 @@ int main() {
 
     Sensor mySensor;
     Camera myCam;
-    Image img1("img1", 1000), img2("img2", 1000);
+    Image img1("img1", "/home/imarcher/", "jpg", 1000), img2("img2", "/home/imarcher/", "jpg", 1000);
     Mat ori1, ori2;
     Mat m1, m2;
-    Mat eulinit = (Mat_<double>(1,3) << 0, 0, 0);
+    Mat eulinit = (Mat_<double>(3,1) << 0, 0, 0);
     vector<DMatch> matches;
     Mat intrinsics = (Mat_<double>(3,3) <<   1.1573e+03, -3.3579,     975.9459,
                                                         0,          1.1584e+03,  798.4888,
                                                         0,          0,           1       );
-    double baseline[3] = {0.02, -0.055, 0.055};
-    double tanDist[2] = {3.0406e-04, 7.1815e-04};
-    double radDist[3] = {-0.3160, 0.1699, -0.0569};
+    Mat baseline = (Mat_<double>(3,1) << 0.02, -0.055, 0.055);
+    Mat tanDist = (Mat_<double>(3,1) << 3.0406e-04, 7.1815e-04);
+    Mat radDist = (Mat_<double>(3,1) << -0.3160, 0.1699, -0.0569);
     int radius = 1;
     Rotation myRot(baseline, intrinsics, radius);
     bool ret;
-
+/*
     // Connect camera and sensor
     ret = myCam.Connect();
     if (!ret) ThrowError("Camera not connected");
     cout << YELLOW << "STATUS : " << RESET << "Camera connected" << endl;
-/*
+
     ret = mySensor.Connect("A5014194", DEVICE_LPMS_U);
     if (!ret) ThrowError("Sensor not connected");
     cout << YELLOW << "STATUS : " << RESET << "Sensor connected" << endl;
-*/
+
 
     // Get image 1
     ret = myCam.Capture(img1);
@@ -49,10 +49,9 @@ int main() {
     cout << YELLOW << "STATUS : " << RESET << "Image saved" << endl;
 
     // Get orientation 1
-/*    ret = mySensor.GetOrientation();
+    ret = mySensor.GetOrientation();
     ori1 = mySensor.rotm;
-    cout << ori1 << endl;*/
-
+    cout << ori1 << endl;
 
     // Get image 2
     ret = myCam.Capture(img2);
@@ -65,9 +64,14 @@ int main() {
     cout << YELLOW << "STATUS : " << RESET << "Image saved" << endl;
 
     // Get orientation 2
-/*    ret = mySensor.GetOrientation();
+    ret = mySensor.GetOrientation();
     ori2 = mySensor.rotm;
-    cout << ori2 << endl;*/
+    cout << ori2 << endl
+*/
+
+    // Read image 1 & 2
+    img1.Load();
+    img2.Load();
 
     // Get keypoints and matches
     img1.FindKeypoints();
@@ -80,11 +84,12 @@ int main() {
 
     // Calculate rotation through
     // Procrustes
-    ret = myRot.Estimate(m1, m2, eulinit, "PROC");
-    cout << myRot.eul << endl;
+    //ret = myRot.Estimate(m1, m2, eulinit, "PROC");
+    //cout << myRot.eul << endl;
     // Gradient
     ret = myRot.Estimate(m1, m2, eulinit, "GRAT");
-    cout << myRot.rotm;
+    //cout << myRot.rotm;
+    exit(0);
     // Minimization of back-projection error
     ret = myRot.Estimate(m1, m2, eulinit, "MBPE");
     cout << myRot.rotm;

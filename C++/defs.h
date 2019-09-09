@@ -36,12 +36,12 @@
 using namespace std;
 using namespace cv;
 
-Mat eul2rotm(Mat eul);
-bool isRotm(Mat rotm);
-Mat rotm2eul(Mat rotm);
-Mat rotm2quat(Mat rotm);
-Mat quat2rotm(Mat quat);
-Mat angax2rotm(Mat angax);
-Mat rotm2angax(Mat rotm);
+bool IsRotm(Mat rotm);
+Mat Eul2Rotm(Mat);
+Mat Rotm2Eul(Mat rotm);
+Mat Rotm2Quat(Mat rotm);
+Mat Quat2Rotm(Mat quat);
+Mat Angax2Rotm(Mat angax);
+Mat Rotm2Angax(Mat rotm);
 
 #endif

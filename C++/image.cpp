@@ -7,21 +7,33 @@ Image::Image() {
 
 };
 
-Image::Image(string _name) {
+Image::Image(string _name, string _path, string _ext) {
 
     detector = SURF::create(MINHESSIAN);
     extractor = SURF::create();
     name = _name;
+    path = _path;
+    ext = _ext;
 };
 
-Image::Image(string _name, int hessian) {
+Image::Image(string _name, string _path, string _ext, int hessian) {
 
     detector = SURF::create(hessian);
     extractor = SURF::create();
-    name = move(_name);
+    name = _name;
+    path = _path;
+    ext = _ext;
 };
 
-bool Image::Save(string path, string ext) {
+
+bool Image::Load() {
+    image = imread(path + name + "." + ext, IMREAD_GRAYSCALE);
+    if(image.empty())
+        return false;
+    return true;
+}
+
+bool Image::Save() {
     return imwrite(path + name + "." + ext, image);
 }
 
