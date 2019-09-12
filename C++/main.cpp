@@ -16,7 +16,7 @@ int main() {
     Image img1("img1", "/home/imarcher/", "jpg", 1000), img2("img2", "/home/imarcher/", "jpg", 1000);
     Mat ori1, ori2;
     Mat m1, m2;
-    Mat eulinit = (Mat_<double>(3,1) << 0, 0, 0);
+    Mat eulinit = (Mat_<double>(3,1) << 1.04, 0, 0);
     vector<DMatch> matches;
     Mat intrinsics = (Mat_<double>(3,3) <<   1.1573e+03, -3.3579,     975.9459,
                                                         0,          1.1584e+03,  798.4888,
@@ -79,8 +79,8 @@ int main() {
     ret = Image::FindMatches(img1, img2, m1, m2, matches);
     if (!ret) ThrowError("Could not obtain matches");
     cout << YELLOW << "STATUS : " << RESET << "Matches obtained" << endl;
-    Image::ShowMatches(img1, img2, matches);
-    waitKey(0);
+    //Image::ShowMatches(img1, img2, matches);
+    //waitKey(0);
 
     // Calculate rotation through
     // Procrustes

@@ -9,25 +9,38 @@ struct GRATCostFunctor {
 
         Eigen::Matrix<double, 3, 3> I;
         I << 1, 0, 0, 0, 1, 0, 0, 0, 1;
+
         Eigen::Matrix<double, 3, 1> b;
         b << baseline.at<double>(0), baseline.at<double>(1), baseline.at<double>(2);
+
         Eigen::Matrix<double, 3, 3> K, Ki, Kit;
-        K << intrinsics.at<double>(0,0), intrinsics.at<double>(0,1), intrinsics.at<double>(0,2),
+        K <<    intrinsics.at<double>(0,0), intrinsics.at<double>(0,1), intrinsics.at<double>(0,2),
                 intrinsics.at<double>(1,0), intrinsics.at<double>(1,1), intrinsics.at<double>(1,2),
                 intrinsics.at<double>(2,0), intrinsics.at<double>(2,1), intrinsics.at<double>(2,2);
         Ki = K.inverse();
         Kit = Ki.transpose();
 
-        T* _R = nullptr;
-        cout << b << endl;
-        cout << eul[0] << eul[1] << eul[2] << endl;
-        exit(0);
-        EulerAnglesToRotationMatrix(eul, 3, _R);
-        Eigen::Matrix<T, 3, 3> R(_R);
+        const T eulx = eul[0];
+        const T euly = eul[1];
+        const T eulz = eul[2];
+
+        Eigen::Matrix<T, 3, 3> Rx, Ry, Rz;
+        Rx <<   T(1),       T(0),       T(0),
+                T(0),       cos(eulx),  -sin(eulx),
+                T(0),       sin(eulx),  cos(eulx);
+        Ry <<   cos(euly),   T(0),      sin(euly),
+                T(0),        T(1),      T(0),
+                -sin(euly),  T(0),      cos(euly);
+        Rz <<   cos(eulz),    -sin(eulz),  T(0),
+                sin(eulz),    cos(eulz),   T(0),
+                T(0),         T(0),        T(1);
+        Eigen::Matrix<T, 3, 3> R;
+        R = Rz * Ry * Rx;
+
         Eigen::Matrix<T, 3, 1> t;
         Eigen::Matrix<T, 3, 3> Tx;
         t = (R-I)*b;
-        Tx << T(0), -t(3), t(2), t(3), T(0), t(1), -t(2), t(1), T(0);
+        Tx << T(0), -t(2), t(1), t(2), T(0), t(0), -t(1), t(0), T(0);
         Eigen::Matrix<T, 3, 3> F, Ft;
         F = Kit*Tx*R*Ki;
         Ft = F.transpose();
@@ -35,6 +48,8 @@ struct GRATCostFunctor {
         Eigen::Matrix<T, 3, 1> l1, l2;
         Eigen::Matrix<double, 3, 1> em1, em2;
         T ep;
+        residual[0] = T(0);
+
         for(int i=0; i<cols; i++) {
             em1 << mh1.at<double>(0, i), mh1.at<double>(1, i), mh1.at<double>(2, i);
             em2 << mh2.at<double>(0, i), mh2.at<double>(1, i), mh2.at<double>(2, i);
@@ -53,7 +68,6 @@ struct GRATCostFunctor {
     Mat mh2;
     int cols;
 };
-
 
 Rotation::Rotation(Mat _baseline, Mat _intrinsics, int _radius) {
     baseline = _baseline;
@@ -112,13 +126,13 @@ bool Rotation::Procrustes(Mat m1, Mat m2) {
 bool Rotation::GRAT(Mat mh1, Mat mh2, Mat eulinit) {
 
     Problem problem;
-    double eulx, euly, eulz;
+    double eulv[3];
     eulv[0] = eulinit.at<double>(0);
     eulv[1] = eulinit.at<double>(1);
     eulv[2] = eulinit.at<double>(2);
-    cout << eulinit << endl;
 
-    CostFunction* costF = new AutoDiffCostFunction<GRATCostFunctor, 1, 1>(new GRATCostFunctor(baseline, intrinsics, intrinsics.inv(), mh1, mh2, mh1.rows));
+    CostFunction* costF = new AutoDiffCostFunction<GRATCostFunctor, 1, 3>(
+            new GRATCostFunctor(baseline, intrinsics, intrinsics.inv(), mh1, mh2, mh1.rows));
     problem.AddResidualBlock(costF, nullptr, eulv);
     Solver::Options options;
     options.linear_solver_type = ceres::DENSE_QR;
