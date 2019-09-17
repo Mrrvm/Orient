@@ -16,7 +16,7 @@ int main() {
     Image img1("img1", "/home/imarcher/", "jpg", 1000), img2("img2", "/home/imarcher/", "jpg", 1000);
     Mat ori1, ori2;
     Mat m1, m2;
-    Mat eulinit = (Mat_<double>(3,1) << 1.04, 0, 0);
+    Mat eulinit = (Mat_<double>(3,1) << 0, 0, 0);
     vector<DMatch> matches;
     Mat intrinsics = (Mat_<double>(3,3) <<   1.1573e+03, -3.3579,     975.9459,
                                                         0,          1.1584e+03,  798.4888,
@@ -27,6 +27,7 @@ int main() {
     int radius = 1;
     Rotation myRot(baseline, intrinsics, radius);
     bool ret;
+    Mat proc, mbpe, grat;
 /*
     // Connect camera and sensor
     ret = myCam.Connect();
@@ -84,21 +85,26 @@ int main() {
 
     // Calculate rotation through
     // Procrustes
-    //ret = myRot.Estimate(m1, m2, eulinit, "PROC");
-    //cout << myRot.eul << endl;
+    ret = myRot.Estimate(m1, m2, "PROC");
+    eulinit = myRot.eul;
+    proc =  myRot.eul;
     // Gradient
-    ret = myRot.Estimate(m1, m2, eulinit, "GRAT");
-    //cout << myRot.rotm;
-    exit(0);
+    ret = myRot.Estimate(m1, m2, "GRAT", eulinit);
+    grat = myRot.eul;
     // Minimization of back-projection error
-    ret = myRot.Estimate(m1, m2, eulinit, "MBPE");
-    cout << myRot.rotm;
+    Mat M1 = myRot.ProjectToSphere(m1);
+    ret = myRot.Estimate(m1, m2, "MBPE", eulinit, M1.row(2));
+    mbpe = myRot.eul;
+
+    cout << "Procrustes est:" << proc << endl;
+    cout << "GRAT est:" << grat << endl;
+    cout << "MBPE est:" << mbpe << endl;
 
     // Disconnect camera and sensor
-    ret = myCam.Disconnect();
-    if (!ret) ThrowError("Camera not disconnect");
-    cout << YELLOW << "STATUS :" << RESET << "Camera disconnected" << endl;
-    mySensor.Disconnect();
+    //ret = myCam.Disconnect();
+    //if (!ret) ThrowError("Camera not disconnect");
+    //cout << YELLOW << "STATUS :" << RESET << "Camera disconnected" << endl;
+    //mySensor.Disconnect();
 
     return 0;
 }

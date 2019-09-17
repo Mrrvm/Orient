@@ -52,10 +52,11 @@ bool Image::FindKeypoints() {
 }
 
 bool Image::FindMatches(Image img1, Image img2, Mat& m1, Mat& m2, vector<DMatch>& matches) {
-
+// TODO: allow optional matches argument
     FlannBasedMatcher matcher;
     vector<Point2d> p1, p2;
     double maxDist = 0, minDist = 100, dist = 0;
+    Mat pm1, pm2;
 
     matcher.match(img1.descriptors, img2.descriptors, matches);
     if(matches.empty())
@@ -75,16 +76,24 @@ bool Image::FindMatches(Image img1, Image img2, Mat& m1, Mat& m2, vector<DMatch>
             y1 = img1.keypoints[match.queryIdx].pt.y;
             x2 = img2.keypoints[match.trainIdx].pt.x;
             y2 = img2.keypoints[match.trainIdx].pt.y;
-            if(abs(x1) > 1e-2 && abs(x2) > 1e-2 && abs(y1) > 1e-2 && abs(y2) > 1e-2) {
-                p1.emplace_back(x1, y1);
-                p2.emplace_back(x2, y2);
-            }
+            p1.emplace_back(x1, y1);
+            p2.emplace_back(x2, y2);
         }
     }
-    m1 = Mat(p1, DataType<double>::type);
-    m2 = Mat(p2, DataType<double>::type);
 
-    return m1.rows >= 3;
+    pm1 = pm2 = Mat(2, p1.size(), DataType<double>::type);
+
+    for(int i=0; i < p1.size(); i++) {
+        pm1.at<double>(0, i) = p1.at(i).x;
+        pm1.at<double>(1, i) = p1.at(i).y;
+        pm1.at<double>(0, i) = p1.at(i).x;
+        pm1.at<double>(1, i) = p1.at(i).y;
+    }
+
+    m1 = pm1;
+    m2 = pm2;
+
+    return pm1.cols >= 3;
 }
 
 void Image::ShowMatches(Image img1, Image img2, vector<DMatch> matches) {
