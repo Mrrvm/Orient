@@ -16,7 +16,6 @@ int main() {
     Image img1("img1", "/home/imarcher/", "jpg", 1000), img2("img2", "/home/imarcher/", "jpg", 1000);
     Mat ori1, ori2;
     Mat m1, m2;
-    Mat eulinit = (Mat_<double>(3,1) << 0, 0, 0);
     vector<DMatch> matches;
     Mat intrinsics = (Mat_<double>(3,3) <<   1.1573e+03, -3.3579,     975.9459,
                                                         0,          1.1584e+03,  798.4888,
@@ -83,22 +82,31 @@ int main() {
     //Image::ShowMatches(img1, img2, matches);
     //waitKey(0);
 
-    // Calculate rotation through
+    cout << m1 << endl;
+
+    // Calculate rotation through:
     // Procrustes
     ret = myRot.Estimate(m1, m2, "PROC");
-    eulinit = myRot.eul;
+    if (!ret) ThrowError("Could not obtain estimate through Procrustes");
+    cout << YELLOW << "STATUS : " << RESET << "Procrustes estimate obtained" << endl;
     proc =  myRot.eul;
-    // Gradient
-    ret = myRot.Estimate(m1, m2, "GRAT", eulinit);
+
+    // Gradient-Based Technique
+    ret = myRot.Estimate(m1, m2, "GRAT", proc);
+    if (!ret) ThrowError("Could not obtain estimate through Gradient-Based Technique");
+    cout << YELLOW << "STATUS : " << RESET << "Gradient-Based Technique estimate obtained" << endl;
     grat = myRot.eul;
+
     // Minimization of back-projection error
     Mat M1 = myRot.ProjectToSphere(m1);
-    ret = myRot.Estimate(m1, m2, "MBPE", eulinit, M1.row(2));
+    ret = myRot.Estimate(m1, m2, "MBPE", proc, M1.row(2));
+    if (!ret) ThrowError("Could not obtain estimate through MBPE");
+    cout << YELLOW << "STATUS : " << RESET << "MBPE estimate obtained" << endl;
     mbpe = myRot.eul;
 
-    cout << "Procrustes est:" << proc << endl;
-    cout << "GRAT est:" << grat << endl;
-    cout << "MBPE est:" << mbpe << endl;
+    cout << BLUE << "PROC (degrees)" << RESET << proc*180/M_PI << endl;
+    cout << BLUE << "GRAT (degrees)" << RESET << grat*180/M_PI << endl;
+    cout << BLUE << "MBPE (degrees)" << RESET << mbpe*180/M_PI << endl;
 
     // Disconnect camera and sensor
     //ret = myCam.Disconnect();

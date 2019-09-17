@@ -116,6 +116,8 @@ struct MBPECostFunctor {
         T z1, z2, u1, v1, u2, v2;
         residual[0] = T(0);
 
+        cout << mh1 << endl;
+        cout << mh2 << endl;
         for(int i=0; i<cols; i++) {
             rm1 << mh1.at<double>(0, i), mh1.at<double>(1, i), mh1.at<double>(2, i);
             rm2 << mh2.at<double>(0, i), mh2.at<double>(1, i), mh2.at<double>(2, i);
@@ -175,7 +177,7 @@ Mat Rotation::ProjectToSphere(Mat m) {
         hm.at<double>(1) = m.at<double>(1, i);
         km = Ki*hm;
         lambda = radius/sqrt(km.dot(km));
-        M.col(i) = lambda*km.t();
+        M.col(i) = lambda*km;
     }
     return M;
 }
