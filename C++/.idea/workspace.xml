@@ -13,8 +13,12 @@
   <component name="ChangeListManager">
     <list default="true" id="1b2254cd-5c97-43f5-ae2c-68714e152f63" name="Default Changelist" comment="\">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/defs.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/defs.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/image.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/image.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/image.h" beforeDir="false" afterPath="$PROJECT_DIR$/image.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/main.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/rotation.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/rotation.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rotation.h" beforeDir="false" afterPath="$PROJECT_DIR$/rotation.h" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -97,6 +101,7 @@
       <workItem from="1568287888599" duration="1529000" />
       <workItem from="1568289652697" duration="13668000" />
       <workItem from="1568385632033" duration="16298000" />
+      <workItem from="1568728334864" duration="14078000" />
     </task>
     <servers />
   </component>
@@ -120,5 +125,16 @@
     <ignored-roots>
       <path value="$PROJECT_DIR$/../../.." />
     </ignored-roots>
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
+          <url>file://$PROJECT_DIR$/rotation.h</url>
+          <line>12</line>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>

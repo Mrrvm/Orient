@@ -48,3 +48,4 @@ Mat Rotm2Eul(Mat rotm) {
     return eul;
 }
 
+// TODO: implement rest of functions according to efficiency of conversion

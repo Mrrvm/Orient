@@ -1,39 +1,15 @@
 #include "image.h"
 
-Image::Image() {
+Image::Image() {};
 
-    detector = SURF::create(MINHESSIAN);
-    extractor = SURF::create();
-
-};
-
-Image::Image(string _name, string _path, string _ext) {
-
-    detector = SURF::create(MINHESSIAN);
-    extractor = SURF::create();
-    name = _name;
-    path = _path;
-    ext = _ext;
-};
-
-Image::Image(string _name, string _path, string _ext, int hessian) {
-
-    detector = SURF::create(hessian);
-    extractor = SURF::create();
-    name = _name;
-    path = _path;
-    ext = _ext;
-};
-
-
-bool Image::Load() {
+bool Image::Load(string name, string path, string ext, ) {
     image = imread(path + name + "." + ext, IMREAD_GRAYSCALE);
     if(image.empty())
         return false;
     return true;
 }
 
-bool Image::Save() {
+bool Image::Save(string name, string path, string ext) {
     return imwrite(path + name + "." + ext, image);
 }
 
@@ -42,8 +18,15 @@ void Image::Show() {
     imshow("Image", image);
 }
 
-bool Image::FindKeypoints() {
+void Image::Undistort(Mat intrinsics, Mat distcoeff) {
+    Mat previmg = image;
+    undistort(previmg, image, intrinsics, distcoeff);
+};
 
+bool Image::FindKeypoints(int hessian) {
+
+    detector = SURF::create(hessian);
+    extractor = SURF::create();
     detector->detect(image, keypoints);
     if(keypoints.empty())
         return false;
@@ -101,13 +84,34 @@ void Image::ShowMatches(Image img1, Image img2, vector<DMatch> matches) {
     drawMatches(img1.image, img1.keypoints, img2.image, img2.keypoints,
                 matches, imgOutput, Scalar::all(-1), Scalar::all(-1),
                 vector<char>(), DrawMatchesFlags::NOT_DRAW_SINGLE_POINTS );
-    imshow(img1.name+" and "+img2.name+" keypoint matches", imgOutput);
+    imshow("Keypoint matches", imgOutput);
 }
 
 bool Image::RansacByProcrustes() {
 //TODO
 }
 
-bool Image::DetectChessboard(Image img1, Image img2, Mat& m1, Mat& m2, Mat& rot) {
-//TODO
+bool Image::DetectChessboardRotation(int hcorners, int vcorners, int sqlen, Mat intrinsics, Mat distcoeff, Mat& R) {
+
+    vector<Point2f> corners;
+    vector<vector<Point3f>> objpts;
+    vector<vector<Point2f>> imgpts;
+    vector<Point3f> obj;
+    Mat tr;
+    Size boardsz = Size(hcorners, vcorners);
+    int numSquares = hcorners*vcorners;
+    int ret;
+
+    for(int j=0; j<numSquares; j++)
+        obj.push_back(Point3f(j/hcorners, j%hcorners, 0.0f));
+    ret = findChessboardCorners(image, boardsz, corners, CALIB_CB_ADAPTIVE_THRESH | CALIB_CB_FILTER_QUADS);
+    if(!ret)
+        return false;
+    cornerSubPix(image, corners, Size(11, 11), Size(-1, -1), TermCriteria(TermCriteria::EPS | TermCriteria::MAX_ITER, sqlen, 0.1));
+    imgpts.push_back(corners);
+    objpts.push_back(obj);
+    ret = solvePnPRansac(objpts, imgpts, intrinsics, distcoeff, R, tr);
+    if(!ret)
+        return false;
+
 }

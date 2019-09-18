@@ -12,23 +12,21 @@ class Image {
 
 public:
     Mat image;
-    string name;
-    string path;
-    string ext;
     vector<KeyPoint> keypoints;
     Mat descriptors;
 
     Image();
     Image(string, string, string);
     Image(string, string, string, int);
-    bool Load();
-    bool Save();
+    bool Load(string, string, string);
+    bool Save(string, string, string);
     void Show();
-    bool FindKeypoints();
+    void Undistort(Mat, Mat);
+    bool FindKeypoints(int hessian = MINHESSIAN);
     static bool FindMatches(Image, Image, Mat&, Mat&, vector<DMatch>&);
     static void ShowMatches(Image, Image, vector<DMatch>);
     static bool RansacByProcrustes();
-    bool DetectChessboard(Image, Image, Mat&, Mat&, Mat&);
+    bool DetectChessboardRotation(int, int, int, Mat, Mat, Mat&);
 };
 
 #endif

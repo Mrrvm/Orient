@@ -11,16 +11,13 @@
 using namespace ceres;
 using namespace Eigen;
 
-
 class Rotation {
 
     Mat MakeHomogeneous(Mat);
-    bool GRAT(Mat, Mat, Mat);
-    bool MBPE(Mat, Mat, Mat, Mat depthinit);
+    bool GRAT(Mat, Mat, Mat, bool);
+    bool MBPE(Mat, Mat, Mat, Mat depthinit, bool);
 
 public:
-    Image img1;
-    Image img2;
     Mat baseline;
     Mat intrinsics;
     int radius;
@@ -32,7 +29,9 @@ public:
     Mat ProjectToSphere(Mat);
     Mat ProjectToPlane(Mat);
     bool Procrustes(Mat, Mat);
-    bool Estimate(Mat, Mat, string, Mat eulinit = Mat(1,1, DataType<double>::type), Mat depthinit = Mat(1,1, DataType<double>::type));
+    bool Estimate(Mat, Mat, string, Mat eulinit = Mat(1,1, DataType<double>::type), bool info = false);
+    double ComputeError(Mat);
+
 };
 
 #endif

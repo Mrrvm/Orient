@@ -116,8 +116,6 @@ struct MBPECostFunctor {
         T z1, z2, u1, v1, u2, v2;
         residual[0] = T(0);
 
-        cout << mh1 << endl;
-        cout << mh2 << endl;
         for(int i=0; i<cols; i++) {
             rm1 << mh1.at<double>(0, i), mh1.at<double>(1, i), mh1.at<double>(2, i);
             rm2 << mh2.at<double>(0, i), mh2.at<double>(1, i), mh2.at<double>(2, i);
@@ -214,7 +212,7 @@ bool Rotation::Procrustes(Mat m1, Mat m2) {
     return true;
 }
 
-bool Rotation::GRAT(Mat mh1, Mat mh2, Mat eulinit) {
+bool Rotation::GRAT(Mat mh1, Mat mh2, Mat eulinit, bool info) {
 
     double eul[3];
     eul[0] = eulinit.at<double>(0);
@@ -227,16 +225,17 @@ bool Rotation::GRAT(Mat mh1, Mat mh2, Mat eulinit) {
     problem.AddResidualBlock(costF, nullptr, eul);
     Solver::Options options;
     options.linear_solver_type = ceres::DENSE_QR;
-    options.minimizer_progress_to_stdout = true;
-    Solver::Summary summary;
-    ceres::Solve(options, &problem, &summary);
+    options.minimizer_progress_to_stdout = info;
+    Solver::Summary solverSummary;
+    ceres::Solve(options, &problem, &solverSummary);
 
-    cout << summary.BriefReport() << "\n";
+    if(info)
+        cout << solverSummary.BriefReport() << "\n";
     return true;
     // TODO : frees
 }
 
-bool Rotation::MBPE(Mat mh1, Mat mh2, Mat eulinit, Mat depthinit) {
+bool Rotation::MBPE(Mat mh1, Mat mh2, Mat eulinit, Mat depthinit, bool info) {
 
     vector<double*> parameters(2);
     parameters.at(0) = new double[3];
@@ -258,16 +257,17 @@ bool Rotation::MBPE(Mat mh1, Mat mh2, Mat eulinit, Mat depthinit) {
     problem.AddResidualBlock(costF, nullptr, parameters);
     Solver::Options options;
     options.linear_solver_type = ceres::DENSE_QR;
-    options.minimizer_progress_to_stdout = true;
-    Solver::Summary summary;
-    ceres::Solve(options, &problem, &summary);
+    options.minimizer_progress_to_stdout = info;
+    Solver::Summary solverSummary;
+    ceres::Solve(options, &problem, &solverSummary);
 
-    cout << summary.BriefReport() << "\n";
+    if(info)
+        cout << solverSummary.BriefReport() << "\n";
     return true;
     // TODO : frees
 }
 
-bool Rotation::Estimate(Mat m1, Mat m2, string method, Mat eulinit, Mat depthinit) {
+bool Rotation::Estimate(Mat m1, Mat m2, string method, Mat eulinit, bool info) {
 
     bool ret = false;
     if (method == "PROC") {
@@ -276,13 +276,18 @@ bool Rotation::Estimate(Mat m1, Mat m2, string method, Mat eulinit, Mat depthini
     else if(method == "GRAT") {
         Mat mh1 = MakeHomogeneous(m1);
         Mat mh2 = MakeHomogeneous(m2);
-        ret = GRAT(mh1, mh2, eulinit);
+        ret = GRAT(mh1, mh2, eulinit, info);
     }
     else if(method == "MBPE") {
         Mat mh1 = MakeHomogeneous(m1);
         Mat mh2 = MakeHomogeneous(m2);
-        ret = MBPE(mh1, mh2, eulinit, depthinit);
+        Mat M1 = ProjectToSphere(m1);
+        ret = MBPE(mh1, mh2, eulinit, M1.row(2), info);
     }
     return ret;
 }
 
+double Rotation::ComputeError(Mat rgt) {
+    Mat diff = rgt-eul;
+    return sqrt(diff.dot(diff));
+}
