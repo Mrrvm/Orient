@@ -143,8 +143,6 @@ struct MBPECostFunctor {
     int cols;
 };
 
-Rotation::Rotation() {}
-
 Rotation::Rotation(Mat _baseline, Mat _intrinsics, int _radius) {
     baseline = _baseline;
     radius = _radius;

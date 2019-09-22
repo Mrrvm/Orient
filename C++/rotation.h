@@ -25,7 +25,6 @@ public:
     Mat eul;
     Mat quat;
 
-    Rotation();
     Rotation(Mat, Mat, int);
     Mat ProjectToSphere(Mat);
     Mat ProjectToPlane(Mat);

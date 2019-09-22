@@ -11,23 +11,25 @@ void ThrowError(string what) {
 
 int main() {
 
+    // Setup Parameters
     Mat intrinsics = (Mat_<double>(3,3) <<   1.1573e+03, -3.3579,     975.9459,
-            0,          1.1584e+03,  798.4888,
-            0,          0,           1       );
+                                                        0,          1.1584e+03,  798.4888,
+                                                        0,          0,           1       );
     Mat baseline = (Mat_<double>(3,1) << 0.02, -0.055, 0.055);
     Mat distcoeff = (Mat_<double>(5,1) << -0.3160, 0.1699, 3.0406e-04, 7.1815e-04, -0.0569);
     int radius = 1;
-    int hcorners = 10, vcorners = 8, sqlen = 21;
+    int hcorners = 9, vcorners = 7, sqlen = 21;
 
+    // Variables
     Sensor mySensor;
     Camera myCam;
     Image img1, img2;
     Image chessimg1, chessimg2;
+    Rotation myRot(baseline, intrinsics, radius);
+    vector<DMatch> matches;
+    Mat Rgt1, Rgt2, rgt;
     Mat ori1, ori2;
     Mat m1, m2;
-    vector<DMatch> matches;
-    Mat Rgt1, Rgt2, Rgt;
-    Rotation myRot(baseline, intrinsics, radius);
     Mat proc, mbpe, grat;
     double error;
     bool ret;
@@ -90,7 +92,7 @@ int main() {
     ori2 = mySensor.eul;
     cout << BLUE << "IMU (degrees)" << RESET << ori2 << endl;
 */
-    // Read image 1 & 2
+    // Read image 1 & 2 (TO REMOVE)
     img1.Load("img1", "/home/imarcher/", "jpg");
     img2.Load("img2", "/home/imarcher/", "jpg");
 
@@ -106,24 +108,25 @@ int main() {
     ret = Image::FindMatches(img1, img2, m1, m2, matches);
     if (!ret) ThrowError("Could not obtain matches");
     cout << YELLOW << "STATUS : " << RESET << "Matches obtained" << endl;
-
-    Image::ShowMatches(img1, img2, matches);
+    //Image::ShowMatches(img1, img2, matches);
 
     // Determine ground truth
-    /*
+
+    // Read image 1 & 2 (TO REMOVE)
+    chessimg1.Load("0", "/home/imarcher/", "png");
+    chessimg2.Load("0", "/home/imarcher/", "png");
     ret = chessimg1.DetectChessboardRotation(hcorners, vcorners, sqlen, intrinsics, distcoeff, Rgt1);
     if(!ret) ThrowError("Could not detect chessboard rotation");
     cout << YELLOW << "STATUS : " << RESET << "Chessboard rotation obtained" << endl;
     ret = chessimg2.DetectChessboardRotation(hcorners, vcorners, sqlen, intrinsics, distcoeff, Rgt2);
     if(!ret) ThrowError("Could not detect chessboard rotation");
     cout << YELLOW << "STATUS : " << RESET << "Chessboard rotation obtained" << endl;
-    Rgt = Rgt2.t()*Rgt1;
-    */
+    rgt = Rotm2Eul(Rgt2.t()*Rgt1);
+    cout << BLUE << "GT (degrees)" << RESET << rgt*180/M_PI << endl;
 
     // Run RANSAC to filter outliers
     ret = myRot.RansacByProcrustes(m1, m2, matches);
     Image::ShowMatches(img1, img2, matches);
-    cout << myRot.rotm;
 
     // Calculate rotation through
     // Procrustes
@@ -148,7 +151,7 @@ int main() {
     cout << BLUE << "GRAT (degrees)" << RESET << grat*180/M_PI << endl;
     cout << BLUE << "MBPE (degrees)" << RESET << mbpe*180/M_PI << endl;
 
-    error = myRot.ComputeError(Rotm2Eul(Rgt));
+    error = myRot.ComputeError(rgt);
 
     // Disconnect camera and sensor
     ret = myCam.Disconnect();

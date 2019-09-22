@@ -101,24 +101,29 @@ void Image::ShowMatches(Image img1, Image img2, vector<DMatch> matches) {
 bool Image::DetectChessboardRotation(int hcorners, int vcorners, int sqlen, Mat intrinsics, Mat distcoeff, Mat& R) {
 
     vector<Point2f> corners;
-    vector<vector<Point3f>> objpts;
-    vector<vector<Point2f>> imgpts;
-    vector<Point3f> obj;
-    Mat tr;
+    vector<Point3f> realpts;
+    Mat tr, rot;
     Size boardsz = Size(hcorners, vcorners);
     int numSquares = hcorners*vcorners;
     int ret;
 
     for(int j=0; j<numSquares; j++)
-        obj.push_back(Point3f(j/hcorners, j%hcorners, 0.0f));
-    ret = findChessboardCorners(image, boardsz, corners, CALIB_CB_ADAPTIVE_THRESH | CALIB_CB_FILTER_QUADS);
-    if(!ret)
-        return false;
-    cornerSubPix(image, corners, Size(11, 11), Size(-1, -1), TermCriteria(TermCriteria::EPS | TermCriteria::MAX_ITER, sqlen, 0.1));
-    imgpts.push_back(corners);
-    objpts.push_back(obj);
-    ret = solvePnPRansac(objpts, imgpts, intrinsics, distcoeff, R, tr);
-    if(!ret)
-        return false;
+        realpts.push_back(Point3f(j/hcorners, j%hcorners, 0.0f));
 
+    ret = findChessboardCorners(image, boardsz, corners, CALIB_CB_ADAPTIVE_THRESH | CALIB_CB_FILTER_QUADS);
+    if(!ret) return false;
+    cornerSubPix(image, corners, Size(11, 11), Size(-1, -1), TermCriteria(TermCriteria::EPS | TermCriteria::MAX_ITER, sqlen, 0.1));
+
+    drawChessboardCorners(image, boardsz, Mat(corners), ret);
+    namedWindow("window");
+    imshow("window", image);
+    waitKey(0);
+
+    ret = solvePnPRansac(realpts, corners, intrinsics, distcoeff, rot, tr);
+    if(!ret) return false;
+
+    realpts.clear();
+    corners.clear();
+    Rodrigues(rot, R);
+    return true;
 }
