@@ -2,7 +2,6 @@
 #define MAIN_CPP_ROTATION_H
 
 #include "defs.h"
-#include "image.h"
 #include "Eigen/Core"
 #include "ceres/ceres.h"
 #include "ceres/rotation.h"
@@ -16,6 +15,7 @@ class Rotation {
     Mat MakeHomogeneous(Mat);
     bool GRAT(Mat, Mat, Mat, bool);
     bool MBPE(Mat, Mat, Mat, Mat depthinit, bool);
+    int TestR(vector<int>&, vector<Point3d>&, vector<Point3d>&, vector<Point3d>, vector<Point3d>, double);
 
 public:
     Mat baseline;
@@ -25,12 +25,15 @@ public:
     Mat eul;
     Mat quat;
 
+    Rotation();
     Rotation(Mat, Mat, int);
     Mat ProjectToSphere(Mat);
     Mat ProjectToPlane(Mat);
     bool Procrustes(Mat, Mat);
     bool Estimate(Mat, Mat, string, Mat eulinit = Mat(1,1, DataType<double>::type), bool info = false);
     double ComputeError(Mat);
+    bool RansacByProcrustes(Mat&, Mat&, int maxIter = MAXITER, int minMatches = MINMATCHES, double maxErr = MAXERROR, int goodMatches = GOODMATCHES);
+    bool RansacByProcrustes(Mat&, Mat&, vector<DMatch>&, int maxIter = MAXITER, int minMatches = MINMATCHES, double maxErr = MAXERROR, int goodMatches = GOODMATCHES);
 
 };
 

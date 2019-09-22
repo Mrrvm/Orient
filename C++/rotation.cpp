@@ -143,6 +143,7 @@ struct MBPECostFunctor {
     int cols;
 };
 
+Rotation::Rotation() {}
 
 Rotation::Rotation(Mat _baseline, Mat _intrinsics, int _radius) {
     baseline = _baseline;
@@ -195,14 +196,11 @@ Mat Rotation::ProjectToPlane(Mat M) {
     return m;
 }
 
-bool Rotation::Procrustes(Mat m1, Mat m2) {
+bool Rotation::Procrustes(Mat M1, Mat M2) {
 
-    if(m1.cols < 3)
+    if(M1.cols < 3) {
         return false;
-
-    Mat M1 = ProjectToSphere(m1);
-    Mat M2 = ProjectToSphere(m2);
-
+    }
     Mat A = M1*M2.t();
     Mat U, s, Vt;
     SVDecomp(A, s, U, Vt);
@@ -211,6 +209,7 @@ bool Rotation::Procrustes(Mat m1, Mat m2) {
     // TODO
     return true;
 }
+
 
 bool Rotation::GRAT(Mat mh1, Mat mh2, Mat eulinit, bool info) {
 
@@ -271,7 +270,9 @@ bool Rotation::Estimate(Mat m1, Mat m2, string method, Mat eulinit, bool info) {
 
     bool ret = false;
     if (method == "PROC") {
-        ret = Procrustes(m1, m2);
+        Mat M1 = ProjectToSphere(m1);
+        Mat M2 = ProjectToSphere(m2);
+        ret = Procrustes(M1, M2);
     }
     else if(method == "GRAT") {
         Mat mh1 = MakeHomogeneous(m1);
@@ -291,3 +292,116 @@ double Rotation::ComputeError(Mat rgt) {
     Mat diff = rgt-eul;
     return sqrt(diff.dot(diff));
 }
+
+int Rotation::TestR(vector<int>& inliers, vector<Point3d>& M1i, vector<Point3d>& M2i, vector<Point3d> M1r, vector<Point3d> M2r, double maxErr) {
+
+    int cols = M1r.size();
+    int j = 0;
+    int score = 0;
+    double err, min;
+    Mat V1, V2, diff;
+
+    for(int i = 0; i < cols; i++) {
+        V1 = Mat(M1r.at(i)).reshape(1, 3);
+        V2 = Mat(M2r.at(i)).reshape(1, 3);
+        diff = abs(rotm*V1 - V2);
+        minMaxLoc(diff, &min, &err);
+        while(inliers.at(j) != 0) j++;
+        if(err < maxErr) {
+            inliers.at(j) = 1;
+            M1i.push_back(M1r.at(i));
+            M2i.push_back(M2r.at(i));
+            score++;
+        }
+        j++;
+    }
+    return score;
+}
+
+bool Rotation::RansacByProcrustes(Mat& m1, Mat& m2, int maxIter, int minMatches, double maxErr, int goodMatches) {
+    vector<DMatch> matches;
+    return RansacByProcrustes(m1, m2, matches, maxIter, minMatches, maxErr, goodMatches);
+}
+
+bool Rotation::RansacByProcrustes(Mat& m1, Mat& m2, vector<DMatch>& matches, int maxIter, int minMatches, double maxErr, int goodMatches) {
+    int i = 0, j = 0;
+    Mat M1, M2;
+    vector<Point3d> M1i, M2i, M1r, M2r;
+    Mat bestR, maybeR;
+    int score = 0, bestScore = 0;
+    vector<int> inliers(m1.cols, 0), bestInliers(m1.cols, 0);
+    int done = 0;
+    Mat A, U, s, Vt;
+    bool ret;
+
+    if(m1.cols < minMatches)
+        return false;
+
+    M1 = ProjectToSphere(m1);
+    M2 = ProjectToSphere(m2);
+
+    srand(time(0));
+
+    for(i = 0; i < maxIter; i++) {
+
+        done = 0;
+        while(done != minMatches){
+            inliers.at(rand()%(m1.cols)) = 1;
+            done = 0;
+            for(j = 0; j < m1.cols; j++) done += inliers.at(j);
+        }
+
+        for(j = 0; j < m1.cols; j++){
+            if(inliers.at(j)) {
+                M1i.push_back(Point3d(M1.at<double>(0, j), M1.at<double>(1, j), M1.at<double>(2, j)));
+                M2i.push_back(Point3d(M2.at<double>(0, j), M2.at<double>(1, j), M2.at<double>(2, j)));
+            }
+            else {
+                M1r.push_back(Point3d(M1.at<double>(0, j), M1.at<double>(1, j), M1.at<double>(2, j)));
+                M2r.push_back(Point3d(M2.at<double>(0, j), M2.at<double>(1, j), M2.at<double>(2, j)));
+            }
+        }
+        ret = Procrustes(Mat(3, minMatches, DataType<double>::type, M1i.data()), Mat(3, minMatches, DataType<double>::type, M2i.data()));
+        if(!ret)
+            return false;
+        score = TestR(inliers, M1i, M2i, M1r, M2r, maxErr) + minMatches;
+
+        if(score > goodMatches) {
+            if(score > bestScore) {
+                bestR = rotm;
+                bestScore = score;
+                bestInliers = inliers;
+            }
+        }
+        M1i.clear();
+        M2i.clear();
+        M1r.clear();
+        M2r.clear();
+        fill(inliers.begin(), inliers.end(), 0);
+
+    }
+
+    if(bestR.empty())
+        return false;
+
+    Mat m1p, m2p;
+    vector<DMatch> posmatches;
+    i = 0;
+    m1p.create(3, bestScore, DataType<double>::type);
+    m2p.create(3, bestScore, DataType<double>::type);
+
+    for(j = 0; j < m1.cols; j++){
+        if(bestInliers.at(j)) {
+            m1p.col(i) = m1.col(j);
+            m2p.col(i) = m2.col(j);
+            posmatches.push_back(matches.at(j));
+            i++;
+        }
+    }
+    m1.release(); m2.release();
+    m1 = m1p; m2 = m2p;
+    matches.clear();
+    matches = posmatches;
+    return true;
+}
+

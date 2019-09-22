@@ -15,7 +15,7 @@ int main() {
             0,          1.1584e+03,  798.4888,
             0,          0,           1       );
     Mat baseline = (Mat_<double>(3,1) << 0.02, -0.055, 0.055);
-    Mat distcoeff = (Mat_<double>(3,1) << -0.3160, 0.1699, 3.0406e-04, 7.1815e-04, -0.0569);
+    Mat distcoeff = (Mat_<double>(5,1) << -0.3160, 0.1699, 3.0406e-04, 7.1815e-04, -0.0569);
     int radius = 1;
     int hcorners = 10, vcorners = 8, sqlen = 21;
 
@@ -31,7 +31,7 @@ int main() {
     Mat proc, mbpe, grat;
     double error;
     bool ret;
-
+/*
     // Connect camera and sensor
     ret = myCam.Connect();
     if (!ret) ThrowError("Camera not connected");
@@ -45,7 +45,6 @@ int main() {
     if (!ret) ThrowError("Camera did not capture image");
     cout << YELLOW << "STATUS : " << RESET << "Camera captured image" << endl;
     img1.Show();
-    waitKey(0);
     ret = img1.Save("img1", "/home/imarcher/", "jpg");
     if (!ret) ThrowError("Image did not save");
     cout << YELLOW << "STATUS : " << RESET << "Image saved" << endl;
@@ -55,7 +54,6 @@ int main() {
     if (!ret) ThrowError("Camera did not capture image");
     cout << YELLOW << "STATUS : " << RESET << "Camera captured image" << endl;
     chessimg1.Show();
-    waitKey(0);
     ret = img1.Save("chessimg1", "/home/imarcher/", "jpg");
     if (!ret) ThrowError("Image did not save");
     cout << YELLOW << "STATUS : " << RESET << "Image saved" << endl;
@@ -72,17 +70,15 @@ int main() {
     if (!ret) ThrowError("Camera did not capture image");
     cout << YELLOW << "STATUS : " << RESET << "Camera captured image" << endl;
     img2.Show();
-    waitKey(0);
     ret = img2.Save("img2", "/home/imarcher/", "jpg");
     if (!ret) ThrowError("Image did not save");
     cout << YELLOW << "STATUS : " << RESET << "Image saved" << endl;
 
-     // Get chessboard image 2
+    // Get chessboard image 2
     ret = myCam.Capture(chessimg2);
     if (!ret) ThrowError("Camera did not capture image");
     cout << YELLOW << "STATUS : " << RESET << "Camera captured image" << endl;
     chessimg2.Show();
-    waitKey(0);
     ret = img1.Save("chessimg2", "/home/imarcher/", "jpg");
     if (!ret) ThrowError("Image did not save");
     cout << YELLOW << "STATUS : " << RESET << "Image saved" << endl;
@@ -93,14 +89,18 @@ int main() {
     cout << YELLOW << "STATUS : " << RESET << "Orientation obtained" << endl;
     ori2 = mySensor.eul;
     cout << BLUE << "IMU (degrees)" << RESET << ori2 << endl;
+*/
+    // Read image 1 & 2
+    img1.Load("img1", "/home/imarcher/", "jpg");
+    img2.Load("img2", "/home/imarcher/", "jpg");
 
     // Get keypoints and matches
     img1.Undistort(intrinsics, distcoeff);
     img2.Undistort(intrinsics, distcoeff);
-    img1.FindKeypoints(1000);
+    ret = img1.FindKeypoints(1000);
     if (!ret) ThrowError("No keypoints detected");
     cout << YELLOW << "STATUS : " << RESET << "Keypoints obtained" << endl;
-    img2.FindKeypoints(1000);
+    ret = img2.FindKeypoints(1000);
     if (!ret) ThrowError("No keypoints detected");
     cout << YELLOW << "STATUS : " << RESET << "Keypoints obtained" << endl;
     ret = Image::FindMatches(img1, img2, m1, m2, matches);
@@ -108,9 +108,9 @@ int main() {
     cout << YELLOW << "STATUS : " << RESET << "Matches obtained" << endl;
 
     Image::ShowMatches(img1, img2, matches);
-    waitKey(0);
 
     // Determine ground truth
+    /*
     ret = chessimg1.DetectChessboardRotation(hcorners, vcorners, sqlen, intrinsics, distcoeff, Rgt1);
     if(!ret) ThrowError("Could not detect chessboard rotation");
     cout << YELLOW << "STATUS : " << RESET << "Chessboard rotation obtained" << endl;
@@ -118,6 +118,12 @@ int main() {
     if(!ret) ThrowError("Could not detect chessboard rotation");
     cout << YELLOW << "STATUS : " << RESET << "Chessboard rotation obtained" << endl;
     Rgt = Rgt2.t()*Rgt1;
+    */
+
+    // Run RANSAC to filter outliers
+    ret = myRot.RansacByProcrustes(m1, m2, matches);
+    Image::ShowMatches(img1, img2, matches);
+    cout << myRot.rotm;
 
     // Calculate rotation through
     // Procrustes
@@ -125,11 +131,13 @@ int main() {
     if (!ret) ThrowError("Could not obtain estimate through Procrustes");
     cout << YELLOW << "STATUS : " << RESET << "Procrustes estimate obtained" << endl;
     proc =  myRot.eul;
+
     // Gradient-Based Technique
     ret = myRot.Estimate(m1, m2, "GRAT", proc, true);
     if (!ret) ThrowError("Could not obtain estimate through Gradient-Based Technique");
     cout << YELLOW << "STATUS : " << RESET << "Gradient-Based Technique estimate obtained" << endl;
     grat = myRot.eul;
+
     // Minimization of back-projection error
     ret = myRot.Estimate(m1, m2, "MBPE", proc, true);
     if (!ret) ThrowError("Could not obtain estimate through MBPE");

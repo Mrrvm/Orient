@@ -22,6 +22,10 @@
 #define CVTYPE CV_8UC4
 
 #define MINHESSIAN 300
+#define MAXERROR 0.0001
+#define MAXITER 20
+#define MINMATCHES 5
+#define GOODMATCHES 20
 
 #define RESET   "\033[0m"
 #define BLACK   "\033[30m"      /* Black */
