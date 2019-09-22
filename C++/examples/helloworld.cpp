@@ -34,10 +34,12 @@ int main() {
     double error;
     bool ret;
 
-    // Connect camera and sensor
+    // Connect camera 
     ret = myCam.Connect();
     if (!ret) ThrowError("Camera not connected");
     cout << YELLOW << "STATUS : " << RESET << "Camera connected" << endl;
+
+    // Connect sensor
     ret = mySensor.Connect("A5014194", DEVICE_LPMS_U);
     if (!ret) ThrowError("Sensor not connected");
     cout << YELLOW << "STATUS : " << RESET << "Sensor connected" << endl;
@@ -46,7 +48,9 @@ int main() {
     ret = myCam.Capture(img1);
     if (!ret) ThrowError("Camera did not capture image");
     cout << YELLOW << "STATUS : " << RESET << "Camera captured image" << endl;
+    // Show image 1
     img1.Show();
+    // Save image 1
     ret = img1.Save("img1", "/home/imarcher/", "jpg");
     if (!ret) ThrowError("Image did not save");
     cout << YELLOW << "STATUS : " << RESET << "Image saved" << endl;
@@ -92,32 +96,39 @@ int main() {
     ori2 = mySensor.eul;
     cout << BLUE << "IMU (degrees)" << RESET << ori2 << endl;
 
-    // Get keypoints and matches
+    // Undistort images
     img1.Undistort(intrinsics, distcoeff);
     img2.Undistort(intrinsics, distcoeff);
+
+    // Find keypoints in images with hessian 1000
     ret = img1.FindKeypoints(1000);
     if (!ret) ThrowError("No keypoints detected");
     cout << YELLOW << "STATUS : " << RESET << "Keypoints obtained" << endl;
     ret = img2.FindKeypoints(1000);
     if (!ret) ThrowError("No keypoints detected");
     cout << YELLOW << "STATUS : " << RESET << "Keypoints obtained" << endl;
+
+    // Find matches between the images
     ret = Image::FindMatches(img1, img2, m1, m2, matches);
     if (!ret) ThrowError("Could not obtain matches");
     cout << YELLOW << "STATUS : " << RESET << "Matches obtained" << endl;
+    // Show matches
+    Image::ShowMatches(img1, img2, matches);
+    // Run RANSAC to filter outliers
+    ret = myRot.RansacByProcrustes(m1, m2, matches);
     Image::ShowMatches(img1, img2, matches);
 
+    // Detect Chessboard in chessboard images
     ret = chessimg1.DetectChessboardRotation(hcorners, vcorners, sqlen, intrinsics, distcoeff, Rgt1);
     if(!ret) ThrowError("Could not detect chessboard rotation");
     cout << YELLOW << "STATUS : " << RESET << "Chessboard rotation obtained" << endl;
     ret = chessimg2.DetectChessboardRotation(hcorners, vcorners, sqlen, intrinsics, distcoeff, Rgt2);
     if(!ret) ThrowError("Could not detect chessboard rotation");
     cout << YELLOW << "STATUS : " << RESET << "Chessboard rotation obtained" << endl;
+    // Find ground truth
     rgt = Rotm2Eul(Rgt2.t()*Rgt1);
     cout << BLUE << "GT (degrees)" << RESET << rgt*180/M_PI << endl;
 
-    // Run RANSAC to filter outliers
-    ret = myRot.RansacByProcrustes(m1, m2, matches);
-    Image::ShowMatches(img1, img2, matches);
 
     // Calculate rotation through
     // Procrustes
@@ -125,19 +136,18 @@ int main() {
     if (!ret) ThrowError("Could not obtain estimate through Procrustes");
     cout << YELLOW << "STATUS : " << RESET << "Procrustes estimate obtained" << endl;
     proc =  myRot.eul;
-
     // Gradient-Based Technique
     ret = myRot.Estimate(m1, m2, "GRAT", proc, true);
     if (!ret) ThrowError("Could not obtain estimate through Gradient-Based Technique");
     cout << YELLOW << "STATUS : " << RESET << "Gradient-Based Technique estimate obtained" << endl;
     grat = myRot.eul;
-
     // Minimization of back-projection error
     ret = myRot.Estimate(m1, m2, "MBPE", proc, true);
     if (!ret) ThrowError("Could not obtain estimate through MBPE");
     cout << YELLOW << "STATUS : " << RESET << "MBPE estimate obtained" << endl;
     mbpe = myRot.eul;
 
+    // Present results
     cout << BLUE << "PROC (degrees)" << RESET << proc*180/M_PI << endl;
     cout << BLUE << "GRAT (degrees)" << RESET << grat*180/M_PI << endl;
     cout << BLUE << "MBPE (degrees)" << RESET << mbpe*180/M_PI << endl;
