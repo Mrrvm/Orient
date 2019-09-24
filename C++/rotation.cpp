@@ -33,7 +33,7 @@ struct GRATCostFunctor {
         Eigen::Matrix<T, 3, 1> t;
         Eigen::Matrix<T, 3, 3> Tx;
         t = (R-I)*b;
-        Tx << T(0), -t(2), t(1), t(2), T(0), t(0), -t(1), t(0), T(0);
+        Tx << T(0), -t(2), t(1), t(2), T(0), -t(0), -t(1), t(0), T(0);
         Eigen::Matrix<T, 3, 3> F, Ft;
         F = Kit*Tx*R*Ki;
         Ft = F.transpose();
