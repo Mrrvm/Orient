@@ -108,7 +108,7 @@ int main() {
     ret = Image::FindMatches(img1, img2, m1, m2, matches);
     if (!ret) ThrowError("Could not obtain matches");
     cout << YELLOW << "STATUS : " << RESET << "Matches obtained" << endl;
-    //Image::ShowMatches(img1, img2, matches);
+    Image::ShowMatches(img1, img2, matches);
 
     // Run RANSAC to filter outliers
     ret = myRot.RansacByProcrustes(m1, m2, matches);

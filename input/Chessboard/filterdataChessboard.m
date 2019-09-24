@@ -22,6 +22,7 @@ function filterdataChessboard(imgDir, axis, savePath, cameraParams, squareSize, 
 % Input
 %   imgDir       Images directory (.jpg or .png)
 %   axis         Axis being processed ('x', 'y', 'z', or 'all')
+%   cameraParams Parameters of the camera used 
 %   savePath     Directory where to save the new structures
 % Output
 %   data         Structure with all the images
@@ -54,9 +55,9 @@ for i=1:numel(imgs)
     if(imgs(i).bytes ~= 0 && (~isempty(strfind(imgs(i).name, '.jpg')) || ~isempty(strfind(imgs(i).name, '.png'))))
         imgName1= imgs(i).name;
         imgFile1 = fullfile(imgDir, imgName1);
-        data(j).img = imread(imgFile1)';
+        data(j).img = imread(imgFile1);
         data(j).path = imgName1;
-        [imgUn1, newOrigin] = undistortImage(data(j).img,cameraParams,'OutputView','full');
+        [imgUn1, newOrigin] = undistortImage(data(j).img, cameraParams,'OutputView','full');
         [imgPts1, boardSize] = detectCheckerboardPoints(imgUn1);
         if (size(imgPts1, 1) == size(worldPoints, 1)) 
             [R1, t1] = extrinsics(imgPts1, worldPoints, cameraParams);
@@ -65,7 +66,7 @@ for i=1:numel(imgs)
                 if(imgs(k).bytes ~= 0 && (~isempty(strfind(imgs(k).name, '.jpg')) || ~isempty(strfind(imgs(k).name, '.png'))))
                     imgName2= imgs(k).name;
                     imgFile2 = fullfile(imgDir, imgName2);
-                    [imgUn2, newOrigin] = undistortImage(imread(imgFile2)', cameraParams,'OutputView','full');
+                    [imgUn2, newOrigin] = undistortImage(imread(imgFile2), cameraParams,'OutputView','full');
                     [imgPts2, boardSize] = detectCheckerboardPoints(imgUn2);
                     if (size(imgPts2, 1) == size(worldPoints, 1)) 
                         [R2, t2] = extrinsics(imgPts2, worldPoints, cameraParams);
