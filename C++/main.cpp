@@ -33,7 +33,7 @@ int main() {
     Mat ori1, ori2;
     Mat m1, m2;
     Mat proc, mbpe, grat;
-    double error;
+    double eproc, embpe, egrat;
     bool ret;
 
 #if online
@@ -111,17 +111,17 @@ int main() {
     //Image::ShowMatches(img1, img2, matches);
 
     // Run RANSAC to filter outliers
-    //ret = myRot.RansacByProcrustes(m1, m2, matches);
+    ret = myRot.RansacByProcrustes(m1, m2, matches);
     //Image::ShowMatches(img1, img2, matches);
 
+    // Determine ground truth
     ret = chessimg1.DetectChessboardRotation(hcorners, vcorners, sqlen, intrinsics, distcoeff, Rgt1);
     if(!ret) ThrowError("Could not detect chessboard rotation");
     cout << YELLOW << "STATUS : " << RESET << "Chessboard rotation obtained" << endl;
     ret = chessimg2.DetectChessboardRotation(hcorners, vcorners, sqlen, intrinsics, distcoeff, Rgt2);
     if(!ret) ThrowError("Could not detect chessboard rotation");
     cout << YELLOW << "STATUS : " << RESET << "Chessboard rotation obtained" << endl;
-    rgt = Rotm2Eul(Rgt2.t()*Rgt1);
-    cout << BLUE << "GT (degrees)" << RESET << rgt*180/M_PI << endl;
+    rgt = Rotm2Eul(Rgt2*Rgt1.t());
 
     // Calculate rotation through
     // Procrustes
@@ -129,25 +129,29 @@ int main() {
     if (!ret) ThrowError("Could not obtain estimate through Procrustes");
     cout << YELLOW << "STATUS : " << RESET << "Procrustes estimate obtained" << endl;
     myRot.eul.copyTo(proc);
+    eproc = myRot.ComputeError(rgt);
 
     // Gradient-Based Technique
-    ret = myRot.Estimate(m1, m2, "GRAT", proc, true);
+    ret = myRot.Estimate(m1, m2, "GRAT", proc, false);
     if (!ret) ThrowError("Could not obtain estimate through Gradient-Based Technique");
     cout << YELLOW << "STATUS : " << RESET << "Gradient-Based Technique estimate obtained" << endl;
     myRot.eul.copyTo(grat);
+    egrat = myRot.ComputeError(rgt);
 
     // Minimization of back-projection error
     ret = myRot.Estimate(m1, m2, "MBPE", proc, false);
     if (!ret) ThrowError("Could not obtain estimate through MBPE");
     cout << YELLOW << "STATUS : " << RESET << "MBPE estimate obtained" << endl;
     myRot.eul.copyTo(mbpe);
+    embpe = myRot.ComputeError(rgt);
 
-    cout << BLUE << "PROC (degrees)" << RESET << proc*180/M_PI << endl;
-    cout << BLUE << "GRAT (degrees)" << RESET << grat*180/M_PI << endl;
-    cout << BLUE << "MBPE (degrees)" << RESET << mbpe*180/M_PI << endl;
-
-    error = myRot.ComputeError(rgt);
-    cout << BLUE << "Error (degrees)" << RESET << error*180/M_PI << endl;
+    cout << BLUE << "Rotation GT \t(deg)\t"   << RESET << rgt*180/M_PI << endl;
+    cout << BLUE << "Rotation PROC \t(deg)\t" << RESET << proc*180/M_PI << endl;
+    cout << BLUE << "Rotation GRAT \t(deg)\t" << RESET << grat*180/M_PI << endl;
+    cout << BLUE << "Rotation MBPE \t(deg)\t" << RESET << mbpe*180/M_PI << endl;
+    cout << BLUE << "Error PROC \t(deg)\t" << RESET << eproc*180/M_PI << endl;
+    cout << BLUE << "Error GRAT \t(deg)\t" << RESET << egrat*180/M_PI << endl;
+    cout << BLUE << "Error MBPE \t(deg)\t" << RESET << embpe*180/M_PI << endl;
 
 #if online
     // Disconnect camera and sensor
@@ -155,6 +159,5 @@ int main() {
     if (!ret) ThrowError("Camera not disconnect");
     cout << YELLOW << "STATUS :" << RESET << "Camera disconnected" << endl;
 #endif
-
     return 0;
 }

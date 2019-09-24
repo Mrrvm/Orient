@@ -100,6 +100,9 @@
 		<Unit filename="/home/imarcher/Dropbox/Tecnico/Orient/C++/defs.h">
 			<Option target="main"/>
 		</Unit>
+		<Unit filename="/home/imarcher/Dropbox/Tecnico/Orient/C++/examples/calibratecamera.cpp">
+			<Option target="main"/>
+		</Unit>
 		<Unit filename="/home/imarcher/Dropbox/Tecnico/Orient/C++/image.cpp">
 			<Option target="main"/>
 		</Unit>

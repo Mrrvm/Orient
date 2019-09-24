@@ -113,6 +113,7 @@ bool Image::DetectChessboardRotation(int hcorners, int vcorners, int sqlen, Mat 
 
     ret = findChessboardCorners(image, boardsz, corners, CALIB_CB_ADAPTIVE_THRESH | CALIB_CB_FILTER_QUADS);
     if(!ret) return false;
+    // TODO : solve this shit
     //cornerSubPix(image, corners, Size(11, 11), Size(-1, -1), TermCriteria(TermCriteria::EPS | TermCriteria::MAX_ITER, sqlen, 0.1));
 
     ret = solvePnPRansac(realpts, corners, intrinsics, distcoeff, rot, tr);
