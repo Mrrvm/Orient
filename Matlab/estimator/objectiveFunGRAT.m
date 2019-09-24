@@ -31,6 +31,8 @@ aux2 = [1 0 0; 0 1 0]*l2;
 var = aux2(1, :).*aux2(1, :) + aux2(2, :).*aux2(2, :) + ...
     aux1(1, :).*aux1(1, :) + aux1(2, :).*aux1(2, :);
 
-f = sum((epiEq.^2)/var.^2);
+
+f = sum((epiEq.^2)/var);
+
 
 end

@@ -9,21 +9,17 @@ bool IsRotm(Mat rotm) {
 }
 
 Mat Eul2Rotm(Mat eul) {
-    Mat Rx = (Mat_<double>(3,3) <<
-            1,       0,              0,
-            0,       cos(eul.at<double>(0)),  -sin(eul.at<double>(0)),
-            0,       sin(eul.at<double>(0)),   cos(eul.at<double>(0))
-    );
-    Mat Ry = (Mat_<double>(3,3) <<
-             cos(eul.at<double>(1)),  0,      sin(eul.at<double>(1)),
-             0,                          1,      0,
-            -sin(eul.at<double>(1)),  0,      cos(eul.at<double>(1))
-    );
-    Mat Rz = (Mat_<double>(3,3) <<
-            cos(eul.at<double>(2)),    -sin(eul.at<double>(2)),   0,
-            sin(eul.at<double>(2)),     cos(eul.at<double>(2)),   0,
-            0,                              0,                         1);
-    Mat rotm = Rz * Ry * Rx;
+
+    double eulx = eul.at<double>(2);
+    double euly = eul.at<double>(1);
+    double eulz = eul.at<double>(0);
+
+    double cx = cos(eulx), cy = cos(euly), cz = cos(eulz);
+    double sx = sin(eulx), sy = sin(euly), sz = sin(eulz);
+    Mat rotm;
+    rotm = (Mat_<double>(3,3) << cy*cz, sy*sx*cz-sz*cx, sy*cx*cz+sz*sx,
+                                            cy*sz, sy*sx*sz+cz*cx, sy*cx*sz-cz*sx,
+                                            -sy,          cy*sx,          cy*cx);
     return rotm;
 }
 
@@ -44,7 +40,7 @@ Mat Rotm2Eul(Mat rotm) {
         y = atan2(-rotm.at<double>(2,0), sy);
         z = 0;
     }
-    eul = (Mat_<double>(1,3) << x, y, z);
+    eul = (Mat_<double>(1,3) << z, y, x);
     return eul;
 }
 

@@ -4,6 +4,8 @@
 #include "rotation.h"
 #include "defs.h"
 
+#define online 0
+
 void ThrowError(string what) {
     cout << RED << "(main.cpp) ERROR : " << RESET << what << endl;
     exit(EXIT_FAILURE);
@@ -34,13 +36,13 @@ int main() {
     double error;
     bool ret;
 
+#if online
     // Connect camera and sensor
     ret = myCam.Connect();
     if (!ret) ThrowError("Camera not connected");
     cout << YELLOW << "STATUS : " << RESET << "Camera connected" << endl;
-    ret = mySensor.Connect("A5014194", DEVICE_LPMS_U);
-    if (!ret) ThrowError("Sensor not connected");
-    cout << YELLOW << "STATUS : " << RESET << "Sensor connected" << endl;
+
+    getchar();
 
     // Get image 1
     ret = myCam.Capture(img1);
@@ -51,21 +53,18 @@ int main() {
     if (!ret) ThrowError("Image did not save");
     cout << YELLOW << "STATUS : " << RESET << "Image saved" << endl;
 
+    getchar();
+
     // Get chessboard image 1
     ret = myCam.Capture(chessimg1);
     if (!ret) ThrowError("Camera did not capture image");
     cout << YELLOW << "STATUS : " << RESET << "Camera captured image" << endl;
     chessimg1.Show();
-    ret = img1.Save("chessimg1", "/home/imarcher/", "jpg");
+    ret = chessimg1.Save("chessimg1", "/home/imarcher/", "jpg");
     if (!ret) ThrowError("Image did not save");
     cout << YELLOW << "STATUS : " << RESET << "Image saved" << endl;
 
-    // Get orientation 1
-    ret = mySensor.GetOrientation();
-    if (!ret) ThrowError("Sensor was not able to get orientation");
-    cout << YELLOW << "STATUS : " << RESET << "Orientation obtained" << endl;
-    ori1 = mySensor.eul;
-    cout << BLUE << "IMU (degrees)" << RESET << ori1 << endl;
+    getchar();
 
     // Get image 2
     ret = myCam.Capture(img2);
@@ -76,35 +75,44 @@ int main() {
     if (!ret) ThrowError("Image did not save");
     cout << YELLOW << "STATUS : " << RESET << "Image saved" << endl;
 
+    getchar();
+
     // Get chessboard image 2
     ret = myCam.Capture(chessimg2);
     if (!ret) ThrowError("Camera did not capture image");
     cout << YELLOW << "STATUS : " << RESET << "Camera captured image" << endl;
     chessimg2.Show();
-    ret = img1.Save("chessimg2", "/home/imarcher/", "jpg");
+    ret = chessimg2.Save("chessimg2", "/home/imarcher/", "jpg");
     if (!ret) ThrowError("Image did not save");
     cout << YELLOW << "STATUS : " << RESET << "Image saved" << endl;
 
-    // Get orientation 2
-    ret = mySensor.GetOrientation();
-    if (!ret) ThrowError("Sensor was not able to get orientation");
-    cout << YELLOW << "STATUS : " << RESET << "Orientation obtained" << endl;
-    ori2 = mySensor.eul;
-    cout << BLUE << "IMU (degrees)" << RESET << ori2 << endl;
+    getchar();
+#endif
+
+#if not online
+    img1.Load("img1", "/home/imarcher/", "jpg");
+    img2.Load("img2", "/home/imarcher/", "jpg");
+    chessimg1.Load("chessimg1", "/home/imarcher/", "jpg");
+    chessimg2.Load("chessimg2", "/home/imarcher/", "jpg");
+#endif
 
     // Get keypoints and matches
     img1.Undistort(intrinsics, distcoeff);
     img2.Undistort(intrinsics, distcoeff);
-    ret = img1.FindKeypoints(1000);
+    ret = img1.FindKeypoints();
     if (!ret) ThrowError("No keypoints detected");
     cout << YELLOW << "STATUS : " << RESET << "Keypoints obtained" << endl;
-    ret = img2.FindKeypoints(1000);
+    ret = img2.FindKeypoints();
     if (!ret) ThrowError("No keypoints detected");
     cout << YELLOW << "STATUS : " << RESET << "Keypoints obtained" << endl;
     ret = Image::FindMatches(img1, img2, m1, m2, matches);
     if (!ret) ThrowError("Could not obtain matches");
     cout << YELLOW << "STATUS : " << RESET << "Matches obtained" << endl;
-    Image::ShowMatches(img1, img2, matches);
+    //Image::ShowMatches(img1, img2, matches);
+
+    // Run RANSAC to filter outliers
+    //ret = myRot.RansacByProcrustes(m1, m2, matches);
+    //Image::ShowMatches(img1, img2, matches);
 
     ret = chessimg1.DetectChessboardRotation(hcorners, vcorners, sqlen, intrinsics, distcoeff, Rgt1);
     if(!ret) ThrowError("Could not detect chessboard rotation");
@@ -115,28 +123,24 @@ int main() {
     rgt = Rotm2Eul(Rgt2.t()*Rgt1);
     cout << BLUE << "GT (degrees)" << RESET << rgt*180/M_PI << endl;
 
-    // Run RANSAC to filter outliers
-    ret = myRot.RansacByProcrustes(m1, m2, matches);
-    Image::ShowMatches(img1, img2, matches);
-
     // Calculate rotation through
     // Procrustes
     ret = myRot.Estimate(m1, m2, "PROC");
     if (!ret) ThrowError("Could not obtain estimate through Procrustes");
     cout << YELLOW << "STATUS : " << RESET << "Procrustes estimate obtained" << endl;
-    proc =  myRot.eul;
+    myRot.eul.copyTo(proc);
 
     // Gradient-Based Technique
     ret = myRot.Estimate(m1, m2, "GRAT", proc, true);
     if (!ret) ThrowError("Could not obtain estimate through Gradient-Based Technique");
     cout << YELLOW << "STATUS : " << RESET << "Gradient-Based Technique estimate obtained" << endl;
-    grat = myRot.eul;
+    myRot.eul.copyTo(grat);
 
     // Minimization of back-projection error
-    ret = myRot.Estimate(m1, m2, "MBPE", proc, true);
+    ret = myRot.Estimate(m1, m2, "MBPE", proc, false);
     if (!ret) ThrowError("Could not obtain estimate through MBPE");
     cout << YELLOW << "STATUS : " << RESET << "MBPE estimate obtained" << endl;
-    mbpe = myRot.eul;
+    myRot.eul.copyTo(mbpe);
 
     cout << BLUE << "PROC (degrees)" << RESET << proc*180/M_PI << endl;
     cout << BLUE << "GRAT (degrees)" << RESET << grat*180/M_PI << endl;
@@ -145,11 +149,12 @@ int main() {
     error = myRot.ComputeError(rgt);
     cout << BLUE << "Error (degrees)" << RESET << error*180/M_PI << endl;
 
+#if online
     // Disconnect camera and sensor
     ret = myCam.Disconnect();
     if (!ret) ThrowError("Camera not disconnect");
     cout << YELLOW << "STATUS :" << RESET << "Camera disconnected" << endl;
-    mySensor.Disconnect();
+#endif
 
     return 0;
 }

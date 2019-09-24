@@ -21,11 +21,11 @@
 #define BITSPIXEL 32
 #define CVTYPE CV_8UC4
 
-#define MINHESSIAN 300
+#define MINHESSIAN 200
 #define MAXERROR 0.0001
 #define MAXITER 20
-#define MINMATCHES 5
-#define GOODMATCHES 20
+#define MINMATCHES 3
+#define GOODMATCHES 10
 
 #define RESET   "\033[0m"
 #define BLACK   "\033[30m"      /* Black */

@@ -1,8 +1,8 @@
 #include "rotation.h"
 
 struct GRATCostFunctor {
-    GRATCostFunctor(Mat baseline, Mat intrinsics, Mat intrinsicsI, Mat mh1, Mat mh2, const int cols)
-            : baseline(baseline), intrinsics(intrinsics), intrinsicsI(intrinsicsI), mh1(mh1), mh2(mh2), cols(cols) {}
+    GRATCostFunctor(Mat baseline, Mat intrinsics, Mat mh1, Mat mh2, const int cols)
+            : baseline(baseline), intrinsics(intrinsics), mh1(mh1), mh2(mh2), cols(cols) {}
 
     template <typename T>
     bool operator()(const T* const eul, T* residual) const {
@@ -20,22 +20,15 @@ struct GRATCostFunctor {
         Ki = K.inverse();
         Kit = Ki.transpose();
 
-        const T eulx = eul[0];
+        const T eulx = eul[2];
         const T euly = eul[1];
-        const T eulz = eul[2];
-
-        Eigen::Matrix<T, 3, 3> Rx, Ry, Rz;
-        Rx <<   T(1),       T(0),       T(0),
-                T(0),       cos(eulx),  -sin(eulx),
-                T(0),       sin(eulx),  cos(eulx);
-        Ry <<   cos(euly),   T(0),      sin(euly),
-                T(0),        T(1),      T(0),
-                -sin(euly),  T(0),      cos(euly);
-        Rz <<   cos(eulz),    -sin(eulz),  T(0),
-                sin(eulz),    cos(eulz),   T(0),
-                T(0),         T(0),        T(1);
+        const T eulz = eul[0];
+        T cx = cos(eulx), cy = cos(euly), cz = cos(eulz);
+        T sx = sin(eulx), sy = sin(euly), sz = sin(eulz);
         Eigen::Matrix<T, 3, 3> R;
-        R = Rz * Ry * Rx;
+        R << cy*cz, sy*sx*cz-sz*cx, sy*cx*cz+sz*sx,
+             cy*sz, sy*sx*sz+cz*cx, sy*cx*sz-cz*sx,
+               -sy,          cy*sx,          cy*cx;
 
         Eigen::Matrix<T, 3, 1> t;
         Eigen::Matrix<T, 3, 3> Tx;
@@ -63,15 +56,14 @@ struct GRATCostFunctor {
 
     Mat baseline;
     Mat intrinsics;
-    Mat intrinsicsI;
     Mat mh1;
     Mat mh2;
     int cols;
 };
 
 struct MBPECostFunctor {
-    MBPECostFunctor(Mat baseline, Mat intrinsics, Mat intrinsicsI, Mat mh1, Mat mh2, const int cols)
-            : baseline(baseline), intrinsics(intrinsics), intrinsicsI(intrinsicsI), mh1(mh1), mh2(mh2), cols(cols) {}
+    MBPECostFunctor(Mat baseline, Mat intrinsics, Mat mh1, Mat mh2, const int cols)
+            : baseline(baseline), intrinsics(intrinsics), mh1(mh1), mh2(mh2), cols(cols) {}
 
     template <typename T>
     bool operator()(T const* const* parameters, T* residual) const {
@@ -89,22 +81,16 @@ struct MBPECostFunctor {
         Ki = K.inverse();
         Kit = Ki.transpose();
 
-        const T eulx = parameters[0][0];
+        const T eulx = parameters[0][2];
         const T euly = parameters[0][1];
-        const T eulz = parameters[0][2];
+        const T eulz = parameters[0][0];
 
-        Eigen::Matrix<T, 3, 3> Rx, Ry, Rz;
-        Rx <<   T(1),       T(0),       T(0),
-                T(0),       cos(eulx),  -sin(eulx),
-                T(0),       sin(eulx),  cos(eulx);
-        Ry <<   cos(euly),   T(0),      sin(euly),
-                T(0),        T(1),      T(0),
-                -sin(euly),  T(0),      cos(euly);
-        Rz <<   cos(eulz),    -sin(eulz),  T(0),
-                sin(eulz),    cos(eulz),   T(0),
-                T(0),         T(0),        T(1);
+        T cx = cos(eulx), cy = cos(euly), cz = cos(eulz);
+        T sx = sin(eulx), sy = sin(euly), sz = sin(eulz);
         Eigen::Matrix<T, 3, 3> R, Rt;
-        R = Rz * Ry * Rx;
+        R << cy*cz, sy*sx*cz-sz*cx, sy*cx*cz+sz*sx,
+                cy*sz, sy*sx*sz+cz*cx, sy*cx*sz-cz*sx,
+                -sy,          cy*sx,          cy*cx;
         Rt = R.transpose();
 
         Eigen::Matrix<T, 3, 1> t;
@@ -137,11 +123,11 @@ struct MBPECostFunctor {
 
     Mat baseline;
     Mat intrinsics;
-    Mat intrinsicsI;
     Mat mh1;
     Mat mh2;
     int cols;
 };
+
 
 Rotation::Rotation(Mat _baseline, Mat _intrinsics, int _radius) {
     baseline = _baseline;
@@ -202,7 +188,7 @@ bool Rotation::Procrustes(Mat M1, Mat M2) {
     Mat A = M1*M2.t();
     Mat U, s, Vt;
     SVDecomp(A, s, U, Vt);
-    rotm = U * Vt;
+    rotm = Vt.t()*U.t();
     eul = Rotm2Eul(rotm);
     // TODO
     return true;
@@ -211,15 +197,15 @@ bool Rotation::Procrustes(Mat M1, Mat M2) {
 
 bool Rotation::GRAT(Mat mh1, Mat mh2, Mat eulinit, bool info) {
 
-    double eul[3];
-    eul[0] = eulinit.at<double>(0);
-    eul[1] = eulinit.at<double>(1);
-    eul[2] = eulinit.at<double>(2);
+    double eulv[3];
+    eulv[0] = eulinit.at<double>(0);
+    eulv[1] = eulinit.at<double>(1);
+    eulv[2] = eulinit.at<double>(2);
 
     Problem problem;
     CostFunction* costF = new AutoDiffCostFunction<GRATCostFunctor, 1, 3>(
-            new GRATCostFunctor(baseline, intrinsics, intrinsics.inv(), mh1, mh2, mh1.cols));
-    problem.AddResidualBlock(costF, nullptr, eul);
+            new GRATCostFunctor(baseline, intrinsics, mh1, mh2, mh1.cols));
+    problem.AddResidualBlock(costF, nullptr, eulv);
     Solver::Options options;
     options.linear_solver_type = ceres::DENSE_QR;
     options.minimizer_progress_to_stdout = info;
@@ -228,6 +214,11 @@ bool Rotation::GRAT(Mat mh1, Mat mh2, Mat eulinit, bool info) {
 
     if(info)
         cout << solverSummary.BriefReport() << "\n";
+
+    eul.at<double>(0) = eulv[0];
+    eul.at<double>(1) = eulv[1];
+    eul.at<double>(2) = eulv[2];
+
     return true;
     // TODO : frees
 }
@@ -238,7 +229,7 @@ bool Rotation::MBPE(Mat mh1, Mat mh2, Mat eulinit, Mat depthinit, bool info) {
     parameters.at(0) = new double[3];
     parameters.at(1) = new double[depthinit.cols];
     parameters.at(0)[0] = eulinit.at<double>(0);
-    parameters.at(0)[1]= eulinit.at<double>(1);
+    parameters.at(0)[1] = eulinit.at<double>(1);
     parameters.at(0)[2] = eulinit.at<double>(2);
     for(int i = 0; i < depthinit.cols; i++) {
         parameters.at(1)[i] = depthinit.at<double>(i);
@@ -247,7 +238,7 @@ bool Rotation::MBPE(Mat mh1, Mat mh2, Mat eulinit, Mat depthinit, bool info) {
     Problem problem;
     DynamicAutoDiffCostFunction<MBPECostFunctor, 4>* costF =
             new DynamicAutoDiffCostFunction<MBPECostFunctor, 4>(
-                new MBPECostFunctor(baseline, intrinsics, intrinsics.inv(), mh1, mh2, mh1.cols));
+                new MBPECostFunctor(baseline, intrinsics, mh1, mh2, mh1.cols));
     costF->AddParameterBlock(3);
     costF->AddParameterBlock(depthinit.cols);
     costF->SetNumResiduals(1);
@@ -260,6 +251,11 @@ bool Rotation::MBPE(Mat mh1, Mat mh2, Mat eulinit, Mat depthinit, bool info) {
 
     if(info)
         cout << solverSummary.BriefReport() << "\n";
+
+    eul.at<double>(0) = parameters.at(0)[0];
+    eul.at<double>(1) = parameters.at(0)[1];
+    eul.at<double>(2) = parameters.at(0)[2];
+
     return true;
     // TODO : frees
 }
