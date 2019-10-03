@@ -9,6 +9,7 @@ class Image {
 
     Ptr<SURF> detector;
     Ptr<SURF> extractor;
+    Mat rgbimage;
 
 public:
     Mat image;

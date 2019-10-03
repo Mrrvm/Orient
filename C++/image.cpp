@@ -3,7 +3,9 @@
 Image::Image() {};
 
 bool Image::Load(string name, string path, string ext) {
-    image = imread(path + name + "." + ext);
+    //Mat rgbimage;
+    rgbimage = imread(path + name + "." + ext);
+    cvtColor(rgbimage, image, COLOR_BGR2GRAY);
     if(image.empty())
         return false;
     return true;
@@ -45,7 +47,6 @@ bool Image::FindMatches(Image img1, Image img2, Mat& m1, Mat& m2, vector<DMatch>
 
     FlannBasedMatcher matcher;
     vector<Point2d> p1, p2;
-    double maxDist = 0, minDist = 100, dist = 0;
     Mat pm1, pm2;
     vector<DMatch> pmatches;
 
@@ -53,25 +54,16 @@ bool Image::FindMatches(Image img1, Image img2, Mat& m1, Mat& m2, vector<DMatch>
     if(matches.empty())
         return false;
 
-    // Ensure a small euclidean distance between matching descriptors
-    for(auto & match : matches) {
-        dist = match.distance;
-        if(dist < minDist) minDist = dist;
-        if(dist > maxDist) maxDist = dist;
-    }
     double x1, x2, y1, y2;
     for(auto & match : matches) {
-        if(match.distance <= max(2*minDist, 0.02)) {
-            x1 = img1.keypoints[match.queryIdx].pt.x;
-            y1 = img1.keypoints[match.queryIdx].pt.y;
-            x2 = img2.keypoints[match.trainIdx].pt.x;
-            y2 = img2.keypoints[match.trainIdx].pt.y;
-            p1.emplace_back(x1, y1);
-            p2.emplace_back(x2, y2);
-            pmatches.push_back(match);
-        }
+        x1 = img1.keypoints[match.queryIdx].pt.x;
+        y1 = img1.keypoints[match.queryIdx].pt.y;
+        x2 = img2.keypoints[match.trainIdx].pt.x;
+        y2 = img2.keypoints[match.trainIdx].pt.y;
+        p1.emplace_back(x1, y1);
+        p2.emplace_back(x2, y2);
+        pmatches.push_back(match);
     }
-
     pm1 = Mat(2, p1.size(), DataType<double>::type);
     pm2 = Mat(2, p1.size(), DataType<double>::type);
     for(int i=0; i < p1.size(); i++) {
@@ -109,15 +101,24 @@ bool Image::DetectChessboardRotation(int hcorners, int vcorners, int sqlen, Mat 
     int ret;
 
     for(int j=0; j<numSquares; j++)
-        realpts.push_back(Point3f(j/hcorners, j%hcorners, 0.0f));
+        realpts.push_back(Point3f(0.0f, j/hcorners, j%hcorners));
 
     ret = findChessboardCorners(image, boardsz, corners, CALIB_CB_ADAPTIVE_THRESH | CALIB_CB_FILTER_QUADS);
     if(!ret) return false;
-    // TODO : solve this shit
-    //cornerSubPix(image, corners, Size(11, 11), Size(-1, -1), TermCriteria(TermCriteria::EPS | TermCriteria::MAX_ITER, sqlen, 0.1));
+
+    cornerSubPix(image, corners, Size(5, 5), Size(-1, -1), TermCriteria(TermCriteria::EPS | TermCriteria::MAX_ITER, sqlen, 0.1));
+
 
     ret = solvePnPRansac(realpts, corners, intrinsics, distcoeff, rot, tr);
     if(!ret) return false;
+
+    /*
+    //drawChessboardCorners(image, boardsz, corners, ret);
+    drawFrameAxes(rgbimage, intrinsics, distcoeff, rot, tr, 5, 5);
+    namedWindow("window");
+    imshow("window", rgbimage);
+    waitKey(0);
+*/
 
     realpts.clear();
     corners.clear();

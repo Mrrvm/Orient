@@ -1,0 +1,52 @@
+cameraParams = 
+
+  cameraParameters with properties:
+
+   Camera Intrinsics
+                    IntrinsicMatrix: [3×3 double]
+                        FocalLength: [1.1253e+03 1.1256e+03]
+                     PrincipalPoint: [996.0930 754.3244]
+                               Skew: 0.9455
+                   RadialDistortion: [-0.3007 0.1288 -0.0318]
+               TangentialDistortion: [4.7003e-04 -3.3083e-04]
+                          ImageSize: [1542 2056]
+
+   Camera Extrinsics
+                   RotationMatrices: [3×3×93 double]
+                 TranslationVectors: [93×3 double]
+
+   Accuracy of Estimation
+              MeanReprojectionError: 0.1355
+                 ReprojectionErrors: [48×2×93 double]
+                  ReprojectedPoints: [48×2×93 double]
+
+   Calibration Settings
+                        NumPatterns: 93
+                        WorldPoints: [48×2 double]
+                         WorldUnits: 'millimeters'
+                       EstimateSkew: 1
+    NumRadialDistortionCoefficients: 3
+       EstimateTangentialDistortion: 1
+
+
+estimationErrors = 
+
+  cameraCalibrationErrors with properties:
+
+    IntrinsicsErrors: [1×1 intrinsicsEstimationErrors]
+    ExtrinsicsErrors: [1×1 extrinsicsEstimationErrors]
+
+
+TLDR
+
+K = [1.1253e+03 0.945541684501329     9.960929796822086e+02;
+     0		1.125630873153923e+03 7.543243830849593e+02;
+     0          0                     1                    ]
+
+radialdist = [-0.3007 0.1288 -0.0318]
+tandist = [4.7003e-04 -3.3083e-04]
+distcoeffs = [-0.3007 0.1288 4.7003e-04 -3.3083e-04 -0.0318]
+
+
+
+

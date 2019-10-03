@@ -14,13 +14,14 @@ void ThrowError(string what) {
 int main() {
 
     // Setup Parameters
-    Mat intrinsics = (Mat_<double>(3,3) <<   1.1573e+03, -3.3579,     975.9459,
-                                                        0,          1.1584e+03,  798.4888,
-                                                        0,          0,           1       );
+    Mat intrinsics = (Mat_<double>(3,3) <<
+            1.1253e+03,  0.945541684501329,     9.960929796822086e+02,
+            0,           1.125630873153923e+03, 7.543243830849593e+02,
+            0,           0,                     1                  );
     Mat baseline = (Mat_<double>(3,1) << 0.02, -0.055, 0.055);
-    Mat distcoeff = (Mat_<double>(5,1) << -0.3160, 0.1699, 3.0406e-04, 7.1815e-04, -0.0569);
+    Mat distcoeff = (Mat_<double>(5,1) << -0.3007, 0.1288, 4.7003e-04, -3.3083e-04, -0.0318);
     int radius = 1;
-    int hcorners = 9, vcorners = 7, sqlen = 21;
+    int hcorners = 8, vcorners = 6, sqlen = 42;
 
     // Variables
     Sensor mySensor;
@@ -90,10 +91,10 @@ int main() {
 #endif
 
 #if not online
-    img1.Load("img1", "/home/imarcher/", "jpg");
-    img2.Load("img2", "/home/imarcher/", "jpg");
-    chessimg1.Load("chessimg1", "/home/imarcher/", "jpg");
-    chessimg2.Load("chessimg2", "/home/imarcher/", "jpg");
+    img1.Load("0", "/home/imarcher/", "jpg");
+    img2.Load("10", "/home/imarcher/", "jpg");
+    chessimg1.Load("0", "/home/imarcher/", "jpg");
+    chessimg2.Load("10", "/home/imarcher/", "jpg");
 #endif
 
     // Get keypoints and matches
@@ -108,12 +109,14 @@ int main() {
     ret = Image::FindMatches(img1, img2, m1, m2, matches);
     if (!ret) ThrowError("Could not obtain matches");
     cout << YELLOW << "STATUS : " << RESET << "Matches obtained" << endl;
-    Image::ShowMatches(img1, img2, matches);
+    //Image::ShowMatches(img1, img2, matches);
 
     // Run RANSAC to filter outliers
     ret = myRot.RansacByProcrustes(m1, m2, matches);
-    //Image::ShowMatches(img1, img2, matches);
-
+    if (!ret) ThrowError("Could not filter matches");
+    cout << YELLOW << "STATUS : " << RESET << "Matches filtered" << endl;
+    Image::ShowMatches(img1, img2, matches);
+    exit(0);
     // Determine ground truth
     ret = chessimg1.DetectChessboardRotation(hcorners, vcorners, sqlen, intrinsics, distcoeff, Rgt1);
     if(!ret) ThrowError("Could not detect chessboard rotation");
@@ -121,8 +124,7 @@ int main() {
     ret = chessimg2.DetectChessboardRotation(hcorners, vcorners, sqlen, intrinsics, distcoeff, Rgt2);
     if(!ret) ThrowError("Could not detect chessboard rotation");
     cout << YELLOW << "STATUS : " << RESET << "Chessboard rotation obtained" << endl;
-    rgt = Rotm2Eul(Rgt2*Rgt1.t());
-
+    rgt = Rotm2Eul(Rgt1.t()*Rgt2);
     // Calculate rotation through
     // Procrustes
     ret = myRot.Estimate(m1, m2, "PROC");

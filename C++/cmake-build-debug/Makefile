@@ -177,33 +177,6 @@ defs.cpp.s:
 	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/defs.cpp.s
 .PHONY : defs.cpp.s
 
-examples/calibratecamera.o: examples/calibratecamera.cpp.o
-
-.PHONY : examples/calibratecamera.o
-
-# target to build an object file
-examples/calibratecamera.cpp.o:
-	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/examples/calibratecamera.cpp.o
-.PHONY : examples/calibratecamera.cpp.o
-
-examples/calibratecamera.i: examples/calibratecamera.cpp.i
-
-.PHONY : examples/calibratecamera.i
-
-# target to preprocess a source file
-examples/calibratecamera.cpp.i:
-	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/examples/calibratecamera.cpp.i
-.PHONY : examples/calibratecamera.cpp.i
-
-examples/calibratecamera.s: examples/calibratecamera.cpp.s
-
-.PHONY : examples/calibratecamera.s
-
-# target to generate assembly for a file
-examples/calibratecamera.cpp.s:
-	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/examples/calibratecamera.cpp.s
-.PHONY : examples/calibratecamera.cpp.s
-
 image.o: image.cpp.o
 
 .PHONY : image.o
@@ -327,9 +300,6 @@ help:
 	@echo "... defs.o"
 	@echo "... defs.i"
 	@echo "... defs.s"
-	@echo "... examples/calibratecamera.o"
-	@echo "... examples/calibratecamera.i"
-	@echo "... examples/calibratecamera.s"
 	@echo "... image.o"
 	@echo "... image.i"
 	@echo "... image.s"

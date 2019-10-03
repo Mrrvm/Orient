@@ -13,7 +13,316 @@
   <component name="ChangeListManager">
     <list default="true" id="1b2254cd-5c97-43f5-ae2c-68714e152f63" name="Default Changelist" comment="\">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/camera.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/camera.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/Makefile" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/Makefile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/main.cpp.cbp" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/main.cpp.cbp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/defs.h" beforeDir="false" afterPath="$PROJECT_DIR$/defs.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples/calibratecamera.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples/helloworld.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/image.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/image.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/image.h" beforeDir="false" afterPath="$PROJECT_DIR$/image.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/main.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rotation.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/rotation.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rotation.h" beforeDir="false" afterPath="$PROJECT_DIR$/rotation.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sensor.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/sensor.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Matlab/helpers/plotError.m" beforeDir="false" afterPath="$PROJECT_DIR$/../Matlab/helpers/plotError.m" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Matlab/reality/runReality.m" beforeDir="false" afterPath="$PROJECT_DIR$/../Matlab/reality/runReality.m" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Matlab/runAll.m" beforeDir="false" afterPath="$PROJECT_DIR$/../Matlab/runAll.m" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../input/Chessboard/filterdata/cpptest/data.mat" beforeDir="false" afterPath="$PROJECT_DIR$/../input/Chessboard/filterdata/cpptest/data.mat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../input/Chessboard/filterdataChessboard.m" beforeDir="false" afterPath="$PROJECT_DIR$/../input/Chessboard/filterdataChessboard.m" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/capture_images.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board/snapshot_10_18-23-43.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board/snapshot_11_18-23-51.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board/snapshot_12_18-24-02.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board/snapshot_13_18-24-14.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board/snapshot_14_18-24-19.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board/snapshot_15_18-24-21.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board/snapshot_16_18-24-22.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board/snapshot_17_18-24-25.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board/snapshot_18_18-24-27.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board/snapshot_19_18-24-29.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board/snapshot_20_18-24-31.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board/snapshot_21_18-24-32.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board/snapshot_22_18-24-36.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board/snapshot_23_18-24-38.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board/snapshot_24_18-24-40.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board/snapshot_25_18-24-42.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board/snapshot_26_18-24-44.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board/snapshot_27_18-24-47.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board/snapshot_28_18-25-24.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board/snapshot_29_18-25-28.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board/snapshot_30_18-25-31.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board/snapshot_31_18-25-33.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board/snapshot_33_18-25-54.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board/snapshot_34_18-25-56.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board/snapshot_35_18-26-01.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board/snapshot_36_18-26-05.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board/snapshot_37_18-26-08.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board/snapshot_38_18-26-11.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board/snapshot_39_18-26-15.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board/snapshot_40_18-26-22.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board/snapshot_41_18-26-26.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board/snapshot_42_18-26-36.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board/snapshot_43_18-26-46.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board/snapshot_44_18-26-55.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board/snapshot_45_18-27-05.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board/snapshot_46_18-27-09.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board/snapshot_47_18-27-15.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board/snapshot_48_18-27-24.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board/snapshot_49_18-27-28.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board/snapshot_50_18-27-35.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board/snapshot_51_18-27-37.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board/snapshot_53_18-27-40.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board/snapshot_54_18-27-42.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board/snapshot_55_18-27-47.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board/snapshot_56_18-27-49.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board/snapshot_57_18-27-51.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board/snapshot_58_18-27-53.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board/snapshot_59_18-27-55.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board/snapshot_5_18-23-10.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board/snapshot_60_18-27-57.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board/snapshot_61_18-28-04.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board/snapshot_62_18-28-10.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board/snapshot_63_18-28-13.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board/snapshot_64_18-28-25.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board/snapshot_65_18-28-29.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board/snapshot_66_18-28-38.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board/snapshot_67_18-28-42.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board/snapshot_68_18-28-49.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board/snapshot_69_18-28-52.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board/snapshot_6_18-23-19.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board/snapshot_7_18-23-25.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board/snapshot_8_18-23-31.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board/snapshot_9_18-23-37.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board2/10image.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board2/11image.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board2/12image.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board2/13image.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board2/14image.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board2/15image.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board2/16image.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board2/17image.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board2/18image.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board2/19image.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board2/1image.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board2/20image.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board2/21image.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board2/22image.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board2/23image.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board2/24image.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board2/25image.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board2/26image.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board2/27image.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board2/28image.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board2/29image.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board2/2image.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board2/30image.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board2/31image.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board2/32image.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board2/33image.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board2/34image.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board2/35image.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board2/36image.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board2/37image.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board2/38image.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board2/39image.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board2/3image.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board2/40image.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board2/41image.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board2/42image.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board2/43image.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board2/44image.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board2/45image.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board2/46image.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board2/47image.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board2/48image.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board2/49image.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board2/4image.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board2/50image.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board2/51image.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board2/52image.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board2/53image.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board2/54image.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board2/55image.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board2/56image.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board2/57image.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board2/58image.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board2/59image.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board2/5image.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board2/60image.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board2/62image.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board2/63image.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board2/64image.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board2/65image.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board2/6image.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board2/7image.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board2/8image.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board2/9image.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board3/10image.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board3/11image.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board3/12image.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board3/13image.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board3/14image.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board3/15image.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board3/16image.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board3/17image.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board3/18image.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board3/19image.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board3/1image.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board3/20image.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board3/21image.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board3/22image.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board3/23image.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board3/24image.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board3/25image.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board3/26image.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board3/27image.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board3/28image.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board3/29image.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board3/2image.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board3/30image.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board3/31image.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board3/32image.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board3/33image.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board3/34image.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board3/35image.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board3/36image.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board3/37image.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board3/38image.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board3/39image.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board3/3image.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board3/40image.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board3/41image.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board3/42image.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board3/43image.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board3/44image.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board3/45image.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board3/46image.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board3/47image.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board3/48image.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board3/49image.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board3/4image.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board3/50image.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board3/51image.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board3/52image.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board3/53image.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board3/54image.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board3/55image.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board3/56image.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board3/57image.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board3/58image.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board3/59image.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board3/5image.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board3/60image.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board3/61image.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board3/62image.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board3/63image.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board3/64image.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board3/65image.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board3/6image.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board3/7image.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board3/8image.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board3/9image.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/chess_board3/intrinsics.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/defs.hpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/get_image.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/get_intrinsics.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/get_rotationH.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/get_rotationProcrustes.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/images/1xx.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/images/1yy.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/images/1zz.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/images/2xx.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/images/2yy.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/images/2zz.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/images/3xx.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/images/3yy.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/images/3zz.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/images/4yy.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/images/axis.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/images/camera_model.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/images/grid.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/intrinsics.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/realtime_rotation.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/uncertainty/5/data.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/uncertainty/5/horizontal/10aimage.bmp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/uncertainty/5/horizontal/10image.bmp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/uncertainty/5/horizontal/1aimage.bmp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/uncertainty/5/horizontal/1image.bmp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/uncertainty/5/horizontal/2aimage.bmp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/uncertainty/5/horizontal/2image.bmp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/uncertainty/5/horizontal/3aimage.bmp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/uncertainty/5/horizontal/3image.bmp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/uncertainty/5/horizontal/4aimage.bmp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/uncertainty/5/horizontal/4image.bmp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/uncertainty/5/horizontal/5aimage.bmp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/uncertainty/5/horizontal/5image.bmp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/uncertainty/5/horizontal/6aimage.bmp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/uncertainty/5/horizontal/6image.bmp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/uncertainty/5/horizontal/7aimage.bmp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/uncertainty/5/horizontal/7image.bmp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/uncertainty/5/horizontal/8aimage.bmp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/uncertainty/5/horizontal/8image.bmp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/uncertainty/5/horizontal/9aimage.bmp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/uncertainty/5/horizontal/9image.bmp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/uncertainty/5/vertical/10aimage.bmp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/uncertainty/5/vertical/10image.bmp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/uncertainty/5/vertical/1aimage.bmp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/uncertainty/5/vertical/1image.bmp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/uncertainty/5/vertical/2aimage.bmp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/uncertainty/5/vertical/2image.bmp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/uncertainty/5/vertical/3aimage.bmp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/uncertainty/5/vertical/3image.bmp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/uncertainty/5/vertical/4aimage.bmp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/uncertainty/5/vertical/4image.bmp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/uncertainty/5/vertical/5aimage.bmp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/uncertainty/5/vertical/5image.bmp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/uncertainty/5/vertical/6aimage.bmp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/uncertainty/5/vertical/6image.bmp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/uncertainty/5/vertical/7aimage.bmp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/uncertainty/5/vertical/7image.bmp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/uncertainty/5/vertical/8aimage.bmp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/uncertainty/5/vertical/8image.bmp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/uncertainty/5/vertical/9aimage.bmp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trash/Camera_take1/uncertainty/5/vertical/9image.bmp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../workshop/data/d0.24/x/data.mat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../workshop/data/d0.24/x/rotations.mat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../workshop/data/d0.24/y/data.mat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../workshop/data/d0.24/y/rotations.mat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../workshop/data/d0.24/z/data.mat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../workshop/data/d0.24/z/rotations.mat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../workshop/data/d5/x/data.mat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../workshop/data/d5/x/rotations.mat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../workshop/data/d5/y/data.mat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../workshop/data/d5/y/rotations.mat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../workshop/data/d5/z/data.mat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../workshop/data/d5/z/rotations.mat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../workshop/results/real/d0.24/Error per angle (x axis) - Real data zoomin.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../workshop/results/real/d0.24/Error per angle (x axis) - Real data.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../workshop/results/real/d0.24/Error per angle (y axis) - Real data zoomin.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../workshop/results/real/d0.24/Error per angle (y axis) - Real data.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../workshop/results/real/d0.24/Error per angle (z axis) - Real data zoom.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../workshop/results/real/d0.24/Error per angle (z axis) - Real data zoomin.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../workshop/results/real/d0.24/Error per angle (z axis) - Real data.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../workshop/results/real/d5/Error per angle (x axis) - Real data zoomin.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../workshop/results/real/d5/Error per angle (x axis) - Real data.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../workshop/results/real/d5/Error per angle (y axis) - Real data zoomin.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../workshop/results/real/d5/Error per angle (y axis) - Real data.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../workshop/results/real/d5/Error per angle (z axis) - Real data zoomin.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../workshop/results/real/d5/Error per angle (z axis) - Real data.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../workshop/results/sim/d0.24/Error per angle (x axis)  - Sim data zoomin.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../workshop/results/sim/d0.24/Error per angle (x axis)  - Sim data.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../workshop/results/sim/d0.24/Error per angle (y axis)  - Sim data zoomin.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../workshop/results/sim/d0.24/Error per angle (y axis)  - Sim data.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../workshop/results/sim/d0.24/Error per angle (z axis)  - Sim data zoomin.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../workshop/results/sim/d0.24/Error per angle (z axis)  - Sim data.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../workshop/results/sim/d5/Error per angle (x axis)  - Sim data zoomin.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../workshop/results/sim/d5/Error per angle (x axis)  - Sim data.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../workshop/results/sim/d5/Error per angle (y axis)  - Sim data zoomin.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../workshop/results/sim/d5/Error per angle (y axis)  - Sim data.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../workshop/results/sim/d5/Error per angle (z axis)  - Sim data zoomin.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../workshop/results/sim/d5/Error per angle (z axis)  - Sim data.png" beforeDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -97,7 +406,12 @@
       <workItem from="1568289652697" duration="13668000" />
       <workItem from="1568385632033" duration="16298000" />
       <workItem from="1568728334864" duration="39159000" />
-      <workItem from="1568913281540" duration="41541000" />
+      <workItem from="1568913281540" duration="55290000" />
+      <workItem from="1569583720454" duration="16469000" />
+      <workItem from="1569689592210" duration="1630000" />
+      <workItem from="1569691346673" duration="15782000" />
+      <workItem from="1569853044133" duration="6885000" />
+      <workItem from="1570099429173" duration="5262000" />
     </task>
     <servers />
   </component>

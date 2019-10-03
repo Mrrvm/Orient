@@ -89,7 +89,7 @@ bool Camera::Capture(Image& imgobj) {
     ret = Capture(imgMat);
     if(!ret)
         return false;
-    imgobj.image = imgMat;
+    cvtColor(imgMat, imgobj.image, COLOR_BGR2GRAY);
     return true;
 }
 

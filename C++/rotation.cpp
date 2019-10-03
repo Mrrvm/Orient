@@ -190,7 +190,7 @@ bool Rotation::Procrustes(Mat M1, Mat M2) {
     SVDecomp(A, s, U, Vt);
     rotm = Vt.t()*U.t();
     eul = Rotm2Eul(rotm);
-    // TODO
+
     return true;
 }
 
@@ -312,12 +312,12 @@ int Rotation::TestR(vector<int>& inliers, vector<Point3d>& M1i, vector<Point3d>&
     return score;
 }
 
-bool Rotation::RansacByProcrustes(Mat& m1, Mat& m2, int maxIter, int minMatches, double maxErr, int goodMatches) {
+bool Rotation::RansacByProcrustes(Mat& m1, Mat& m2, int minMatches, double maxErr) {
     vector<DMatch> matches;
-    return RansacByProcrustes(m1, m2, matches, maxIter, minMatches, maxErr, goodMatches);
+    return RansacByProcrustes(m1, m2, matches, minMatches, maxErr);
 }
 
-bool Rotation::RansacByProcrustes(Mat& m1, Mat& m2, vector<DMatch>& matches, int maxIter, int minMatches, double maxErr, int goodMatches) {
+bool Rotation::RansacByProcrustes(Mat& m1, Mat& m2, vector<DMatch>& matches, int minMatches, double maxErr) {
     int i = 0, j = 0;
     Mat M1, M2;
     vector<Point3d> M1i, M2i, M1r, M2r;
@@ -334,6 +334,8 @@ bool Rotation::RansacByProcrustes(Mat& m1, Mat& m2, vector<DMatch>& matches, int
     M1 = ProjectToSphere(m1);
     M2 = ProjectToSphere(m2);
 
+    int goodMatches = round(MAXMATCHES*0.5);
+    int maxIter = round(log(1-0.99)/log(1-pow(1-OUTLIERPER, MINMATCHES)));
     srand(time(0));
 
     for(i = 0; i < maxIter; i++) {
@@ -356,8 +358,7 @@ bool Rotation::RansacByProcrustes(Mat& m1, Mat& m2, vector<DMatch>& matches, int
             }
         }
         ret = Procrustes(Mat(3, minMatches, DataType<double>::type, M1i.data()), Mat(3, minMatches, DataType<double>::type, M2i.data()));
-        if(!ret)
-            return false;
+        if(!ret) return false;
         score = TestR(inliers, M1i, M2i, M1r, M2r, maxErr) + minMatches;
 
         if(score > goodMatches) {
@@ -375,23 +376,34 @@ bool Rotation::RansacByProcrustes(Mat& m1, Mat& m2, vector<DMatch>& matches, int
 
     }
 
-    if(bestR.empty())
-        return false;
-
     Mat m1p, m2p;
     vector<DMatch> posmatches;
-    i = 0;
-    m1p.create(3, bestScore, DataType<double>::type);
-    m2p.create(3, bestScore, DataType<double>::type);
+    int n = 0;
+    i = 0; j = 0;
 
-    for(j = 0; j < m1.cols; j++){
+    if(bestScore > MAXMATCHES) {
+        n = MAXMATCHES;
+    }
+    else if(bestScore > minMatches) {
+        n = bestScore;
+    }
+    else {
+        return false;
+    }
+
+    m1p.create(3, n, DataType<double>::type);
+    m2p.create(3, n, DataType<double>::type);
+
+    while(i < n){
         if(bestInliers.at(j)) {
             m1p.col(i) = m1.col(j);
             m2p.col(i) = m2.col(j);
             posmatches.push_back(matches.at(j));
             i++;
         }
+        j++;
     }
+
     m1.release(); m2.release();
     m1 = m1p; m2 = m2p;
     matches.clear();

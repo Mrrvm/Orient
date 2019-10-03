@@ -29,8 +29,9 @@ end
 for j=1:nMethods
     if sum(nonzeros(j, :))
         fittedY(j, :) =  polyval(coeffs(j, :), fittedX(j, :));
-        %plot(fittedX(j, :), fitedY(j, :), strcat(colors{j},'-'), 'LineWidth', 1);
-        plot(var(nonzeros(j, :)), yvar(j, nonzeros(j, :)), strcat(colors{j},'-'), 'LineWidth', 1);
+        plot(fittedX(j, :), fittedY(j, :), strcat(colors{j},'-'), 'LineWidth', 1);
+        hold on;
+        plot(var(nonzeros(j, :)), yvar(j, nonzeros(j, :)), strcat(colors{j},'.'), 'LineWidth', 1);
         hold on;
     end
 end

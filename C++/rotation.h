@@ -31,8 +31,8 @@ public:
     bool Procrustes(Mat, Mat);
     bool Estimate(Mat, Mat, string, Mat eulinit = Mat(1,1, DataType<double>::type), bool info = false);
     double ComputeError(Mat);
-    bool RansacByProcrustes(Mat&, Mat&, int maxIter = MAXITER, int minMatches = MINMATCHES, double maxErr = MAXERROR, int goodMatches = GOODMATCHES);
-    bool RansacByProcrustes(Mat&, Mat&, vector<DMatch>&, int maxIter = MAXITER, int minMatches = MINMATCHES, double maxErr = MAXERROR, int goodMatches = GOODMATCHES);
+    bool RansacByProcrustes(Mat&, Mat&, int minMatches = MINMATCHES, double maxErr = MAXERROR);
+    bool RansacByProcrustes(Mat&, Mat&, vector<DMatch>&, int minMatches = MINMATCHES, double maxErr = MAXERROR);
 
 };
 

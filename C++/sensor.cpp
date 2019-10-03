@@ -36,7 +36,7 @@ bool Sensor::GetOrientation() {
             count ++;
         }
     }
-    for(int i = 1; i < 4; i++) {
+    for(int i = 0; i < 4; i++) {
         quat.at<double>(i) = data.q[i];
     }
     eul.at<double>(0) = data.r[2];
