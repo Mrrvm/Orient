@@ -5,7 +5,7 @@ vars.methods = {'OPPR', 'GRAT', 'MBPE'};
 vars.peraxis = 0;
 vars.colors = {'b', 'g', 'r'};
 vars.filename = 'results.txt';
-vars.currBaseline = [0.0 0.0 0.0679]'; % add the 4mm lens length
+vars.currBaseline = [0.0 0.0 0.08479]'; % add the 4mm lens length
 vars.intrinsics = [1.1253e+03 0.945541684501329     9.960929796822086e+02;
                      0		  1.125630873153923e+03 7.543243830849593e+02;
                      0        0                     1                    ];

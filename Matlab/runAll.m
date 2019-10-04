@@ -22,7 +22,7 @@ if strcmp(TYPE, 'SIM_BASELINES')
     while i <= iters
         baselines(:, i+1) = baselines(:, i) + vars.baseline.inc;
         vars.currBaseline = baselines(:, i);
-         [ang, axisCount, eR, eT, ransacRes] =  runSimulation(angles, vars);
+         [ang, axisCount, eR, eT, ransacRes] = runSimulation(angles, vars);
         for j=1:nMethods
             meRAllAxis(j, i) = safeMean(safeMean( eR( (3*(j-1)+1):(3*(j-1)+3), :), 2), 1);
         end

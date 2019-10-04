@@ -8,14 +8,14 @@ function filterdataChessboard(imgDir, axis, savePath, cameraParams, squareSize, 
 % Images should all be in a directory
 %
 % e.g. arguments
-% intrinsics = [1.1573e+03 -3.3579     975.9459; 
-%               0          1.1584e+03  798.4888;
-%               0          0           1      ];
-% tanDist = [3.0406e-04 7.1815e-04];
-% radialDist = [-0.3160 0.1699 -0.0569];
+% intrinsics = [1.1253e+03 0.945541684501329     9.960929796822086e+02;
+%               0		   1.125630873153923e+03 7.543243830849593e+02;
+%               0          0                     1                   ];
+% tanDist = [4.7003e-04 -3.3083e-04];
+% radialDist = [-0.3007 0.1288 -0.0318];
 % squareSize = 21;
 % boardSize = [8 10];
-% cameraParams = cameraParameters('IntrinsicMatrix', intrinsics', ...
+% cameraParams = cameraParameters('IntrinsicMatrix', intrinsics, ...
 %   ...'RadialDistortion', radialDist, 'TangentialDistortion', tanDist); 
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

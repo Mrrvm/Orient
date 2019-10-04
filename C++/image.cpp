@@ -101,13 +101,12 @@ bool Image::DetectChessboardRotation(int hcorners, int vcorners, int sqlen, Mat 
     int ret;
 
     for(int j=0; j<numSquares; j++)
-        realpts.push_back(Point3f(0.0f, j/hcorners, j%hcorners));
+        realpts.push_back(Point3f(j/hcorners, j%hcorners, 0.0f));
 
     ret = findChessboardCorners(image, boardsz, corners, CALIB_CB_ADAPTIVE_THRESH | CALIB_CB_FILTER_QUADS);
     if(!ret) return false;
 
     cornerSubPix(image, corners, Size(5, 5), Size(-1, -1), TermCriteria(TermCriteria::EPS | TermCriteria::MAX_ITER, sqlen, 0.1));
-
 
     ret = solvePnPRansac(realpts, corners, intrinsics, distcoeff, rot, tr);
     if(!ret) return false;
@@ -118,7 +117,7 @@ bool Image::DetectChessboardRotation(int hcorners, int vcorners, int sqlen, Mat 
     namedWindow("window");
     imshow("window", rgbimage);
     waitKey(0);
-*/
+    */
 
     realpts.clear();
     corners.clear();

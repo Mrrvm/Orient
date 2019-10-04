@@ -23,8 +23,8 @@
 #define BITSPIXEL 32
 #define CVTYPE CV_8UC4
 #define MAXMATCHES 20
-#define MINMATCHES 5
-#define MINHESSIAN 600
+#define MINMATCHES 3
+#define MINHESSIAN 200
 #define MAXERROR 0.05
 #define OUTLIERPER 0.4
 

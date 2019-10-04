@@ -185,6 +185,7 @@ bool Rotation::Procrustes(Mat M1, Mat M2) {
     if(M1.cols < 3) {
         return false;
     }
+
     Mat A = M1*M2.t();
     Mat U, s, Vt;
     SVDecomp(A, s, U, Vt);
@@ -387,17 +388,18 @@ bool Rotation::RansacByProcrustes(Mat& m1, Mat& m2, vector<DMatch>& matches, int
     else if(bestScore > minMatches) {
         n = bestScore;
     }
-    else {
+    else
         return false;
-    }
 
-    m1p.create(3, n, DataType<double>::type);
-    m2p.create(3, n, DataType<double>::type);
+    m1p.create(2, n, DataType<double>::type);
+    m2p.create(2, n, DataType<double>::type);
 
     while(i < n){
         if(bestInliers.at(j)) {
-            m1p.col(i) = m1.col(j);
-            m2p.col(i) = m2.col(j);
+            m1p.at<double>(0, i) = m1.at<double>(0, i);
+            m1p.at<double>(1, i) = m1.at<double>(1, i);
+            m2p.at<double>(0, i) = m2.at<double>(0, i);
+            m2p.at<double>(1, i) = m2.at<double>(1, i);
             posmatches.push_back(matches.at(j));
             i++;
         }
