@@ -25,8 +25,8 @@
 #define MAXMATCHES 20
 #define MINMATCHES 3
 #define MINHESSIAN 200
-#define MAXERROR 0.05
-#define OUTLIERPER 0.4
+#define MAXERROR 0.005
+#define OUTLIERPER 0.7
 
 #define RESET   "\033[0m"
 #define BLACK   "\033[30m"      /* Black */

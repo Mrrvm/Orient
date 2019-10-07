@@ -293,16 +293,16 @@ int Rotation::TestR(vector<int>& inliers, vector<Point3d>& M1i, vector<Point3d>&
     int cols = M1r.size();
     int j = 0;
     int score = 0;
-    double err, min;
+    double err;
     Mat V1, V2, diff;
 
     for(int i = 0; i < cols; i++) {
         V1 = Mat(M1r.at(i)).reshape(1, 3);
         V2 = Mat(M2r.at(i)).reshape(1, 3);
-        diff = abs(rotm*V1 - V2);
-        minMaxLoc(diff, &min, &err);
+        diff = V2 - rotm*V1;
+        err = (diff.at<double>(0)+diff.at<double>(1)+diff.at<double>(2))/3;
         while(inliers.at(j) != 0) j++;
-        if(err < maxErr) {
+        if(abs(err) < maxErr) {
             inliers.at(j) = 1;
             M1i.push_back(M1r.at(i));
             M2i.push_back(M2r.at(i));
@@ -319,11 +319,12 @@ bool Rotation::RansacByProcrustes(Mat& m1, Mat& m2, int minMatches, double maxEr
 }
 
 bool Rotation::RansacByProcrustes(Mat& m1, Mat& m2, vector<DMatch>& matches, int minMatches, double maxErr) {
-    int i = 0, j = 0;
+    int i = 0, j = 0, z = 0;
     Mat M1, M2;
     vector<Point3d> M1i, M2i, M1r, M2r;
+    Mat M1aux(3, minMatches, DataType<double>::type), M2aux(3, minMatches, DataType<double>::type);
     Mat bestR, maybeR;
-    int score = 0, bestScore = 0;
+    int score = 0, bestScore = -1;
     vector<int> inliers(m1.cols, 0), bestInliers(m1.cols, 0);
     int done = 0;
     Mat A, U, s, Vt;
@@ -337,6 +338,9 @@ bool Rotation::RansacByProcrustes(Mat& m1, Mat& m2, vector<DMatch>& matches, int
 
     int goodMatches = round(MAXMATCHES*0.5);
     int maxIter = round(log(1-0.99)/log(1-pow(1-OUTLIERPER, MINMATCHES)));
+    ret = Procrustes(M1, M2);
+    if(!ret) return false;
+    bestR = rotm;
     srand(time(0));
 
     for(i = 0; i < maxIter; i++) {
@@ -348,27 +352,37 @@ bool Rotation::RansacByProcrustes(Mat& m1, Mat& m2, vector<DMatch>& matches, int
             for(j = 0; j < m1.cols; j++) done += inliers.at(j);
         }
 
+        z = 0;
         for(j = 0; j < m1.cols; j++){
             if(inliers.at(j)) {
                 M1i.push_back(Point3d(M1.at<double>(0, j), M1.at<double>(1, j), M1.at<double>(2, j)));
                 M2i.push_back(Point3d(M2.at<double>(0, j), M2.at<double>(1, j), M2.at<double>(2, j)));
+                M1aux.at<double>(0, z) = M1.at<double>(0, j);
+                M1aux.at<double>(1, z) = M1.at<double>(1, j);
+                M1aux.at<double>(2, z) = M1.at<double>(2, j);
+                M2aux.at<double>(0, z) = M2.at<double>(0, j);
+                M2aux.at<double>(1, z) = M2.at<double>(1, j);
+                M2aux.at<double>(2, z) = M2.at<double>(2, j);
+                z++;
             }
             else {
                 M1r.push_back(Point3d(M1.at<double>(0, j), M1.at<double>(1, j), M1.at<double>(2, j)));
                 M2r.push_back(Point3d(M2.at<double>(0, j), M2.at<double>(1, j), M2.at<double>(2, j)));
             }
         }
-        ret = Procrustes(Mat(3, minMatches, DataType<double>::type, M1i.data()), Mat(3, minMatches, DataType<double>::type, M2i.data()));
-        if(!ret) return false;
-        score = TestR(inliers, M1i, M2i, M1r, M2r, maxErr) + minMatches;
 
-        if(score > goodMatches) {
+        ret = Procrustes(M1aux, M2aux);
+        if(!ret) return false;
+
+        score = TestR(inliers, M1i, M2i, M1r, M2r, maxErr) + minMatches;
+        if(score >= goodMatches) {
             if(score > bestScore) {
                 bestR = rotm;
                 bestScore = score;
                 bestInliers = inliers;
             }
         }
+
         M1i.clear();
         M2i.clear();
         M1r.clear();
@@ -388,8 +402,9 @@ bool Rotation::RansacByProcrustes(Mat& m1, Mat& m2, vector<DMatch>& matches, int
     else if(bestScore > minMatches) {
         n = bestScore;
     }
-    else
+    else {
         return false;
+    }
 
     m1p.create(2, n, DataType<double>::type);
     m2p.create(2, n, DataType<double>::type);
@@ -400,7 +415,8 @@ bool Rotation::RansacByProcrustes(Mat& m1, Mat& m2, vector<DMatch>& matches, int
             m1p.at<double>(1, i) = m1.at<double>(1, i);
             m2p.at<double>(0, i) = m2.at<double>(0, i);
             m2p.at<double>(1, i) = m2.at<double>(1, i);
-            posmatches.push_back(matches.at(j));
+            if(!matches.empty())
+                posmatches.push_back(matches.at(j));
             i++;
         }
         j++;
@@ -408,8 +424,10 @@ bool Rotation::RansacByProcrustes(Mat& m1, Mat& m2, vector<DMatch>& matches, int
 
     m1.release(); m2.release();
     m1 = m1p; m2 = m2p;
-    matches.clear();
-    matches = posmatches;
+    if(!matches.empty()) {
+        matches.clear();
+        matches = posmatches;
+    }
     return true;
 }
 

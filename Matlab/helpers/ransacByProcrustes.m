@@ -34,7 +34,7 @@ while i < maxIters
      restInds =  testModel(rest1, rest2, ransac.maxErr, R);
      alsoInliers1 = M1(:, restInds>0);
      alsoInliers2 = M2(:, restInds>0);
-     if size(alsoInliers1,2) >= ransac.goodMatches
+     if size(alsoInliers1,2)+minMatches >= ransac.goodMatches
          allInliers1 = [maybeInliers1 alsoInliers1];
          allInliers2 = [maybeInliers2 alsoInliers2];
          modelScore = sum(testModel(allInliers1, allInliers2, ransac.maxErr, R));

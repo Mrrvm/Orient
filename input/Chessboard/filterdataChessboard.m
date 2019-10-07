@@ -15,7 +15,7 @@ function filterdataChessboard(imgDir, axis, savePath, cameraParams, squareSize, 
 % radialDist = [-0.3007 0.1288 -0.0318];
 % squareSize = 21;
 % boardSize = [8 10];
-% cameraParams = cameraParameters('IntrinsicMatrix', intrinsics, ...
+% cameraParams = cameraParameters('IntrinsicMatrix', intrinsics', ...
 %   ...'RadialDistortion', radialDist, 'TangentialDistortion', tanDist); 
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

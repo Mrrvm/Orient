@@ -74,7 +74,7 @@ bool Image::FindMatches(Image img1, Image img2, Mat& m1, Mat& m2, vector<DMatch>
     }
 
     p1.clear(); p2.clear(); matches.clear();
-    matches = pmatches;
+    matches = pmatches; //TODO: add an if in case user doesnt use matches
     m1 = pm1;
     m2 = pm2;
 
