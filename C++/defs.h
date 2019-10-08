@@ -41,12 +41,15 @@
 using namespace std;
 using namespace cv;
 
-bool IsRotm(Mat rotm);
+bool IsRotm(Mat);
 Mat Eul2Rotm(Mat);
-Mat Rotm2Eul(Mat rotm);
-Mat Rotm2Quat(Mat rotm);
-Mat Quat2Rotm(Mat quat);
-Mat Angax2Rotm(Mat angax);
-Mat Rotm2Angax(Mat rotm);
+Mat Rotm2Eul(Mat);
+Mat Rotm2Quat(Mat);
+Mat Quat2Rotm(Mat);
+Mat Angax2Rotm(Mat);
+Mat Rotm2Angax(Mat);
+Mat Quat2Eul(Mat);
+Mat QuatConjugate(Mat);
+Mat QuatMultiply(Mat, Mat);
 
 #endif

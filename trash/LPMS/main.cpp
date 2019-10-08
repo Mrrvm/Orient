@@ -45,6 +45,8 @@ int main(int argc, char *argv[])
 				d.rotationM[0], d.rotationM[1],d.rotationM[2],
 				d.rotationM[3],d.rotationM[4], d.rotationM[5], 
 				d.rotationM[6], d.rotationM[7], d.rotationM[8]);
+
+			printf("%f %f %f %f\n", d.q[0], d.q[1], d.q[2], d.q[3]);
 /*
 			my_file << std::chrono::duration_cast<std::chrono::milliseconds>(timestamp-beginning).count() <<
 			" " << d.q[0] << " " << " " << d.q[1] << " " << " " << d.q[2] << " " <<

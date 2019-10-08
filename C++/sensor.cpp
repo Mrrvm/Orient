@@ -3,8 +3,8 @@
 Sensor::Sensor() {
     manager = LpmsSensorManagerFactory();
     rotm = Mat::zeros(cv::Size(3,3), DataType<double>::type);
-    quat = Mat::zeros(cv::Size(3,1), DataType<double>::type);
-    eul = Mat::zeros(cv::Size(4,3), DataType<double>::type);
+    quat = Mat::zeros(cv::Size(4,1), DataType<double>::type);
+    eul = Mat::zeros(cv::Size(3,1), DataType<double>::type);
 }
 
 bool Sensor::Connect(const char* _id, int _type) {
@@ -50,4 +50,5 @@ void Sensor::Disconnect() {
     manager->removeSensor(sensor);
     delete manager;
 }
+
 
