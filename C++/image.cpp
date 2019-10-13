@@ -95,7 +95,7 @@ bool Image::DetectChessboardRotation(int hcorners, int vcorners, int sqlen, Mat 
 
     vector<Point2f> corners;
     vector<Point3f> realpts;
-    Mat tr, rot;
+    Mat tr, rot, Rt;
     Size boardsz = Size(hcorners, vcorners);
     int numSquares = hcorners*vcorners;
     int ret;
@@ -111,16 +111,17 @@ bool Image::DetectChessboardRotation(int hcorners, int vcorners, int sqlen, Mat 
     ret = solvePnPRansac(realpts, corners, intrinsics, distcoeff, rot, tr);
     if(!ret) return false;
 
-    /*
+/*
     //drawChessboardCorners(image, boardsz, corners, ret);
     drawFrameAxes(rgbimage, intrinsics, distcoeff, rot, tr, 5, 5);
     namedWindow("window");
     imshow("window", rgbimage);
     waitKey(0);
-    */
+*/
 
     realpts.clear();
     corners.clear();
-    Rodrigues(rot, R);
+    Rodrigues(rot, Rt);
+    R = Rt.t();
     return true;
 }

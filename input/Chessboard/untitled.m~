@@ -10,15 +10,15 @@ img1 = imread('/home/imarcher/image1.png');
 img2 = imread('/home/imarcher/image2.png');
 
 
-[uimg1, newOrigin] = undistortImage(img1, cameraParams);
+[uimg1, newor] = undistortImage(img1, cameraParams);
 [imgPts1, boardSize] = detectCheckerboardPoints(uimg1);
 imgPts1 = [imgPts1(:,1) + newOrigin(1), ...
              imgPts1(:,2) + newOrigin(2)];
 worldPoints = generateCheckerboardPoints(boardSize, squareSize);
 [R1, t1] = extrinsics(imgPts1, worldPoints, cameraParams);
 
-[uimg2, newOrigin] = undistortImage(img2, cameraParams);
-[imgPts2, boardSize] = detectCheckerboardPoints(uimg2);
+[imgPts2, boardSize] = detectCheckerboardPoints(img2);
+[uimg2, newor] = undistortImage(img2, cameraParams);
 imgPts2 = [imgPts2(:,1) + newOrigin(1), ...
              imgPts2(:,2) + newOrigin(2)];
 [R2, t2] = extrinsics(imgPts2, worldPoints, cameraParams);

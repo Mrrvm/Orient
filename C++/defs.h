@@ -24,7 +24,7 @@
 #define CVTYPE CV_8UC4
 #define MAXMATCHES 20
 #define MINMATCHES 3
-#define MINHESSIAN 200
+#define MINHESSIAN 800
 #define MAXERROR 0.005
 #define OUTLIERPER 0.7
 

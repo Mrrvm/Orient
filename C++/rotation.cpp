@@ -189,9 +189,11 @@ bool Rotation::Procrustes(Mat M1, Mat M2) {
     Mat A = M1*M2.t();
     Mat U, s, Vt;
     SVDecomp(A, s, U, Vt);
-    rotm = Vt.t()*U.t();
+    Mat rota = Vt.t()*U.t();
+    rotm = rota.t();
     eul = Rotm2Eul(rotm);
-
+    //quat = Rotm2Quat(rotm);
+    //rotv = Rotm2Rotv(rotm);
     return true;
 }
 
@@ -267,6 +269,8 @@ bool Rotation::Estimate(Mat m1, Mat m2, string method, Mat eulinit, bool info) {
     if (method == "PROC") {
         Mat M1 = ProjectToSphere(m1);
         Mat M2 = ProjectToSphere(m2);
+        cout << m1 << endl;
+        cout << m2 << endl;
         ret = Procrustes(M1, M2);
     }
     else if(method == "GRAT") {
@@ -411,17 +415,17 @@ bool Rotation::RansacByProcrustes(Mat& m1, Mat& m2, vector<DMatch>& matches, int
 
     while(i < n){
         if(bestInliers.at(j)) {
-            m1p.at<double>(0, i) = m1.at<double>(0, i);
-            m1p.at<double>(1, i) = m1.at<double>(1, i);
-            m2p.at<double>(0, i) = m2.at<double>(0, i);
-            m2p.at<double>(1, i) = m2.at<double>(1, i);
+            m1p.at<double>(0, i) = m1.at<double>(0, j);
+            m1p.at<double>(1, i) = m1.at<double>(1, j);
+            m2p.at<double>(0, i) = m2.at<double>(0, j);
+            m2p.at<double>(1, i) = m2.at<double>(1, j);
             if(!matches.empty())
                 posmatches.push_back(matches.at(j));
             i++;
         }
         j++;
     }
-
+    cout << m1 << endl;
     m1.release(); m2.release();
     m1 = m1p; m2 = m2p;
     if(!matches.empty()) {

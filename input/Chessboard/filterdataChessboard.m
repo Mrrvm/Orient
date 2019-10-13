@@ -59,6 +59,8 @@ for i=1:numel(imgs)
         data(j).path = imgName1;
         [imgUn1, newOrigin] = undistortImage(data(j).img, cameraParams,'OutputView','same');
         [imgPts1, boardSize] = detectCheckerboardPoints(imgUn1);
+        imgPts1 = [imgPts1(:,1) + newOrigin(1), ...
+             imgPts1(:,2) + newOrigin(2)];
         if (size(imgPts1, 1) == size(worldPoints, 1)) 
             [R1, t1] = extrinsics(imgPts1, worldPoints, cameraParams);
             c = j + 1;
@@ -68,6 +70,8 @@ for i=1:numel(imgs)
                     imgFile2 = fullfile(imgDir, imgName2);
                     [imgUn2, newOrigin] = undistortImage(imread(imgFile2), cameraParams,'OutputView','same');
                     [imgPts2, boardSize] = detectCheckerboardPoints(imgUn2);
+                    imgPts2 = [imgPts2(:,1) + newOrigin(1), ...
+                            imgPts2(:,2) + newOrigin(2)];
                     if (size(imgPts2, 1) == size(worldPoints, 1)) 
                         [R2, t2] = extrinsics(imgPts2, worldPoints, cameraParams);
                         R = R2'*R1;
