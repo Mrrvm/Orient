@@ -1,7 +1,7 @@
-#include "../camera.h"
-#include "../image.h"
-#include "../sensor.h"
-#include "../defs.h"
+#include "camera.h"
+#include "image.h"
+#include "sensor.h"
+#include "defs.h"
 
 #define online 0
 
@@ -17,18 +17,12 @@ int main() {
     Camera myCam;
     Image img1, img2;
     Image chessimg1, chessimg2;
+    Mat quat1, quat2;
     bool ret;
     string dir;
 
-    dir = 'Ex1-Lab/';
-    ofstream out("/home/imarcher/"+dir+"imu.data");
-
-    // Connect camera and sensor
-    ret = myCam.Connect();
-    if (!ret) ThrowError("Camera not connected");
-    cout << YELLOW << "STATUS : " << RESET << "Camera connected" << endl;
-
-    getchar();
+    dir = "/home/imarcher/Ex1-Lab-woodstand/x/";
+    ofstream out(dir+"IMU/imu.data");
 
     // Connect sensor
     ret = mySensor.Connect("A5014194", DEVICE_LPMS_U);
@@ -37,15 +31,22 @@ int main() {
 
     getchar();
 
-    int i = 0;
-    while(i < 50) {
+    // Connect camera and sensor
+    ret = myCam.Connect();
+    if (!ret) ThrowError("Camera not connected");
+    cout << YELLOW << "STATUS : " << RESET << "Camera connected" << endl;
 
+
+    int i = 0;
+    while(i < 20) {
+
+        getchar();
         // Get image 1
         ret = myCam.Capture(img1);
         if (!ret) ThrowError("Camera did not capture image");
         cout << YELLOW << "STATUS : " << RESET << "Camera captured image" << endl;
         img1.Show();
-        ret = img1.Save(i+"img1", "/home/imarcher/" + dir, "jpg");
+        ret = img1.Save(to_string(i)+"img1", dir+"features/", "jpg");
         if (!ret) ThrowError("Image did not save");
         cout << YELLOW << "STATUS : " << RESET << "Image saved" << endl;
 
@@ -56,18 +57,18 @@ int main() {
         if (!ret) ThrowError("Camera did not capture image");
         cout << YELLOW << "STATUS : " << RESET << "Camera captured image" << endl;
         chessimg1.Show();
-        ret = chessimg1.Save(i+"chessimg1", "/home/imarcher/" + dir, "jpg");
+        ret = chessimg1.Save(to_string(i)+"chessimg1", dir+"GT/", "jpg");
         if (!ret) ThrowError("Image did not save");
         cout << YELLOW << "STATUS : " << RESET << "Image saved" << endl;
 
-        getchar();
 
         // Get orientation 1
         ret = mySensor.GetOrientation();
         if (!ret) ThrowError("Sensor was not able to get orientation");
         cout << YELLOW << "STATUS : " << RESET << "Orientation obtained" << endl;
-        cout << BLUE << "IMU (degrees)" << RESET << mySensor.eul << endl;
-        out << mySensor.eul << " , " << mySensor.quat << " , ";
+        mySensor.quat.copyTo(quat1);
+        cout << BLUE << "IMU (degrees)" << RESET << quat1 << endl;
+        out << quat1 << " , ";
 
         getchar();
 
@@ -76,7 +77,7 @@ int main() {
         if (!ret) ThrowError("Camera did not capture image");
         cout << YELLOW << "STATUS : " << RESET << "Camera captured image" << endl;
         img2.Show();
-        ret = img2.Save(i+"img2", "/home/imarcher/" + dir, "jpg");
+        ret = img2.Save(to_string(i)+"img2", dir+"features/", "jpg");
         if (!ret) ThrowError("Image did not save");
         cout << YELLOW << "STATUS : " << RESET << "Image saved" << endl;
 
@@ -87,18 +88,18 @@ int main() {
         if (!ret) ThrowError("Camera did not capture image");
         cout << YELLOW << "STATUS : " << RESET << "Camera captured image" << endl;
         chessimg2.Show();
-        ret = chessimg2.Save(i+"chessimg2", "/home/imarcher/" + dir, "jpg");
+        ret = chessimg2.Save(to_string(i)+"chessimg2", dir+"GT/", "jpg");
         if (!ret) ThrowError("Image did not save");
         cout << YELLOW << "STATUS : " << RESET << "Image saved" << endl;
 
-        getchar();
 
         // Get orientation 2
         ret = mySensor.GetOrientation();
         if (!ret) ThrowError("Sensor was not able to get orientation");
         cout << YELLOW << "STATUS : " << RESET << "Orientation obtained" << endl;
-        cout << BLUE << "IMU (degrees)" << RESET << mySensor.eul << endl;
-        out << mySensor.eul << " , " << mySensor.quat << endl;
+        mySensor.quat.copyTo(quat2);
+        cout << BLUE << "IMU (degrees)" << RESET << quat2 << endl;
+        out << quat2 << endl;
 
         i++;
     }

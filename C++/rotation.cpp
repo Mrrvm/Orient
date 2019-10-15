@@ -269,8 +269,6 @@ bool Rotation::Estimate(Mat m1, Mat m2, string method, Mat eulinit, bool info) {
     if (method == "PROC") {
         Mat M1 = ProjectToSphere(m1);
         Mat M2 = ProjectToSphere(m2);
-        cout << m1 << endl;
-        cout << m2 << endl;
         ret = Procrustes(M1, M2);
     }
     else if(method == "GRAT") {

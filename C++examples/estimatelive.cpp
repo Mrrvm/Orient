@@ -15,12 +15,12 @@ int main() {
 
     // Setup Parameters
     Mat intrinsics = (Mat_<double>(3,3) <<   1.1253e+03, 0.945541684501329,    9.960929796822086e+02,
-    0,           1.125630873153923e+03, 7.543243830849593e+02,
-    0,           0,                     1                  );
+            0,           1.125630873153923e+03, 7.543243830849593e+02,
+            0,           0,                     1                  );
     Mat baseline = (Mat_<double>(3,1) << 0.02, -0.055, 0.055);
     Mat distcoeff = (Mat_<double>(5,1) << -0.3007, 0.1288, 4.7003e-04, -3.3083e-04, -0.0318);
-    int radius = 1;
-    int hcorners = 8, vcorners = 6, sqlen = 42;
+    int radius = 3;
+    int hcorners = 10, vcorners = 7, sqlen = 20;
 
     // Variables
     Sensor mySensor;
@@ -90,10 +90,10 @@ int main() {
 #endif
 
 #if not online
-    img1.Load("img1", "/home/imarcher/", "jpg");
-    img2.Load("img2", "/home/imarcher/", "jpg");
-    chessimg1.Load("chessimg1", "/home/imarcher/", "jpg");
-    chessimg2.Load("chessimg2", "/home/imarcher/", "jpg");
+    img1.Load("image1", "/home/imarcher/", "png");
+    img2.Load("image2", "/home/imarcher/", "png");
+    chessimg1.Load("image1", "/home/imarcher/", "png");
+    chessimg2.Load("image2", "/home/imarcher/", "png");
 #endif
 
     // Get keypoints and matches
@@ -112,7 +112,9 @@ int main() {
 
     // Run RANSAC to filter outliers
     ret = myRot.RansacByProcrustes(m1, m2, matches);
-    //Image::ShowMatches(img1, img2, matches);
+    if (!ret) ThrowError("Could not filter matches");
+    cout << YELLOW << "STATUS : " << RESET << "Matches filtered" << endl;
+    Image::ShowMatches(img1, img2, matches);
 
     // Determine ground truth
     ret = chessimg1.DetectChessboardRotation(hcorners, vcorners, sqlen, intrinsics, distcoeff, Rgt1);
@@ -122,6 +124,8 @@ int main() {
     if(!ret) ThrowError("Could not detect chessboard rotation");
     cout << YELLOW << "STATUS : " << RESET << "Chessboard rotation obtained" << endl;
     rgt = Rotm2Eul(Rgt1.t()*Rgt2);
+    cout << rgt*180/M_PI << endl;
+
     // Calculate rotation through
     // Procrustes
     ret = myRot.Estimate(m1, m2, "PROC");
@@ -129,6 +133,8 @@ int main() {
     cout << YELLOW << "STATUS : " << RESET << "Procrustes estimate obtained" << endl;
     myRot.eul.copyTo(proc);
     eproc = myRot.ComputeError(rgt);
+    cout << proc*180/M_PI << endl;
+    exit(0);
 
     // Gradient-Based Technique
     ret = myRot.Estimate(m1, m2, "GRAT", proc, false);

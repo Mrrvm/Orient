@@ -14,8 +14,8 @@ radius = 3;
 
 cameraParams = cameraParameters('IntrinsicMatrix', intrinsics', 'RadialDistortion', radialDist, 'TangentialDistortion', tanDist); 
 
-img1 = undistortImage(imread('/home/imarcher/image1.png'), cameraParams);
-img2 = undistortImage(imread('/home/imarcher/image2.png'), cameraParams);
+img1 = undistortImage(imread('/home/imarcher/0img1.jpg'), cameraParams);
+img2 = undistortImage(imread('/home/imarcher/0img2.jpg'), cameraParams);
 p1 = detectSURFFeatures(img1);
 p2 = detectSURFFeatures(img2);
 [f1,vpts1] = extractFeatures(img1, p1);

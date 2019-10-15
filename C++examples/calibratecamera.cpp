@@ -1,8 +1,8 @@
-#include "../camera.h"
-#include "../image.h"
-#include "../sensor.h"
-#include "../rotation.h"
-#include "../defs.h"
+#include "camera.h"
+#include "image.h"
+#include "sensor.h"
+#include "rotation.h"
+#include "defs.h"
 
 #define online 0
 
