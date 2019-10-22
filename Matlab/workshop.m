@@ -1,40 +1,46 @@
 close all;
 clear all;
 
-vars.methods = {'OPPR', 'MEEN', 'MBPE', 'GRAT', 'MEE'};
-vars.colors = {'b', 'g', 'r', 'c', 'm'};
+vars.methods = {'OPPR', 'MBPE', 'GRAT'};
+vars.colors = {'b', 'g', 'r'};
 vars.filename = 'results.txt';
-vars.currBaseline = [0.02 -0.055 0.055]';
-vars.intrinsics = [1.1573e+03 -3.3579         975.9459; 
-                           0                   1.1584e+03  798.4888;
-                           0                   0                    1                 ];
-vars.tanDist = [3.0406e-04 7.1815e-04];
-vars.radialDist = [-0.3160 0.1699 -0.0569];
+vars.currBaseline = [0.0 0.0 0.0537]';
+vars.intrinsics = [1.1253e+03 0.945541684501329     9.960929796822086e+02;
+                     0		  1.125630873153923e+03 7.543243830849593e+02;
+                     0        0                     1                    ];
+vars.tanDist = [4.7003e-04 -3.3083e-04];
+vars.radialDist = [-0.3007 0.1288 -0.0318];
 vars.imgDim = [2056 1542];
 vars.minMatches = 3;
-vars.maxMatches = 20;
-vars.ransac.on = 0;
-vars.ransac.outlierPer          = 0.40; 
+vars.maxMatches = 30;
+vars.ransac.on = 1;
+vars.ransac.outlierPer          = 0.70; 
 vars.ransac.goodMatches    = round(vars.maxMatches*0.5);
-vars.ransac.maxErr              = 0.05;   % in meters
+vars.ransac.maxErr              = 0.001;   % in meters
+
+%==========================================================================
+% REAL DATA 
+
+vars.entropyThreshold = 1;
+vars.peraxis = 0;
+vars.currDistToCam.max = 5;
+vars.projectionRadius = vars.currDistToCam.max + 1;        
+vars.inputDir = '../input/camera/Ex2-Lab-Eye/';
+vars.saveDir = '../results/Matlab/real/camera/Ex2-Lab-Eye/';
+runAll('REAL_AXISANGLES', vars);
 
 %==========================================================================
 % SIMULATION
 vars.nMatches = 20;
-vars.nFalseMatches = 1;
+vars.nFalseMatches = round(vars.nMatches*0.1);
 vars.saccadeSigma = 10;
-vars.nSaccades = 10;
+vars.nSaccades = 45;
 vars.currDistToCam.min = 0.05;
 vars.currNoisePixelsSigma = 10;
 
-vars.currDistToCam.max= 0.24;
-vars.projectionRadius = vars.currDistToCam.max + 1;
-vars.saveDir = '../results/Matlab/sim/d0.24/';
-%runAll('SIM_AXISANGLES', vars);
-
-vars.currDistToCam.max = 5.77;
+vars.currDistToCam.max = 5;
 vars.projectionRadius = vars.currDistToCam.max + 1;        
-vars.saveDir = '../results/Matlab/sim/d5/';
+vars.saveDir = '../results/Matlab/sim/Ex1-Lab-woodstand/';
 %runAll('SIM_AXISANGLES', vars);
 
 vars.currDistToCam.max= 1;
@@ -43,22 +49,7 @@ vars.noisePixelsSigma.max = 200;
 vars.noisePixelsSigma.min = 0;
 vars.noisePixelsSigma.inc = 10; 
 vars.saveDir = '../results/Matlab/sim/d1/noise/';
-runAll('SIM_NOISES', vars);
-
-%==========================================================================
-% REAL DATA 
-vars.currDistToCam.max= 0.24;
-vars.projectionRadius = vars.currDistToCam.max + 1;
-vars.inputDir = 'workshop/data/d0.24/';
-vars.saveDir = 'results/real/d0.24/';
-%runAll('REAL_AXISANGLES', vars);
-
-vars.currDistToCam.max = 5.77;
-vars.projectionRadius = vars.currDistToCam.max + 1;        
-vars.inputDir = 'workshop/data/d5/';
-vars.saveDir = 'results/real/d5/';
-%runAll('REAL_AXISANGLES', vars);
-
+%runAll('SIM_NOISES', vars);
 
 
 

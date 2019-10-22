@@ -1,31 +1,79 @@
-intrinsics = [1.1253e+03 0.945541684501329     9.960929796822086e+02;
-              0		   1.125630873153923e+03 7.543243830849593e+02;
-              0          0                     1                   ];
-tanDist = [4.7003e-04 -3.3083e-04];
-radialDist = [-0.3007 0.1288 -0.0318];
-squareSize = 20;
+clear all;
+close all;
+
+vars.currBaseline = [0.0 0.0 0.0537]';
+vars.intrinsics = [1.1253e+03 0.945541684501329     9.960929796822086e+02;
+                     0		  1.125630873153923e+03 7.543243830849593e+02;
+                     0        0                     1                    ];
+vars.tanDist = [4.7003e-04 -3.3083e-04];
+vars.radialDist = [-0.3007 0.1288 -0.0318];
+vars.squareSize = 20;
 vars.minMatches = 3;
-vars.maxMatches = 20;
-vars.ransac.on = 0;
+vars.maxMatches = 100;
+vars.imgDim = [2056 1542];
+vars.radius = 5;
+
+vars.ransac.on = 1;
 vars.ransac.outlierPer          = 0.70; 
-vars.ransac.goodMatches    = round(vars.maxMatches*0.5);
-vars.ransac.maxErr              = 0.001;   % in meters
-radius = 3;
+vars.ransac.goodMatches         = round(vars.maxMatches*0.5);
+vars.ransac.maxErr              = 0.005;   % in meters
 
-cameraParams = cameraParameters('IntrinsicMatrix', intrinsics', 'RadialDistortion', radialDist, 'TangentialDistortion', tanDist); 
+cameraParams = cameraParameters('IntrinsicMatrix', vars.intrinsics', 'RadialDistortion', vars.radialDist, 'TangentialDistortion', vars.tanDist); 
+I = [1 0 0; 0 1 0; 0 0 1];
 
-img1 = undistortImage(imread('/home/imarcher/0img1.jpg'), cameraParams);
-img2 = undistortImage(imread('/home/imarcher/0img2.jpg'), cameraParams);
-p1 = detectSURFFeatures(img1);
-p2 = detectSURFFeatures(img2);
-[f1,vpts1] = extractFeatures(img1, p1);
-[f2,vpts2] = extractFeatures(img2, p2);
-matches = matchFeatures(f1, f2, 'Method', 'Exhaustive',  'MatchThreshold', 100, 'Unique', true);
+chessimg1 = imread('../input/GT_filter/Chessboard/rawdata/Ex2-Lab-Eye/2chessimg.jpg');
+chessimg2 = imread('../input/GT_filter/Chessboard/rawdata/Ex2-Lab-Eye/7chessimg.jpg');
+
+[uchessimg1, newOrigin] = undistortImage(chessimg1, cameraParams);
+[chessimgPts1, boardSize] = detectCheckerboardPoints(uchessimg1);
+chessimgPts1 = [chessimgPts1(:,1) + newOrigin(1), ...
+             chessimgPts1(:,2) + newOrigin(2)];
+worldPoints = generateCheckerboardPoints(boardSize, vars.squareSize);
+[R1, t1] = extrinsics(chessimgPts1, worldPoints, cameraParams);
+
+[uchessimg2, newOrigin] = undistortImage(chessimg2, cameraParams);
+[chessimgPts2, boardSize] = detectCheckerboardPoints(uchessimg2);
+chessimgPts2 = [chessimgPts2(:,1) + newOrigin(1), ...
+             chessimgPts2(:,2) + newOrigin(2)];
+[R2, t2] = extrinsics(chessimgPts2, worldPoints, cameraParams);
+Rgt = R1'*R2;
+rotm2eul(Rgt)*180/pi
+
+img1 = imread('../input/camera/Ex2-Lab-Eye/2img.jpg');
+img2 = imread('../input/camera/Ex2-Lab-Eye/7img.jpg');
+
+uimg1 = undistortImage(img1, cameraParams);
+uimg2 = undistortImage(img2, cameraParams);
+p1 = detectSURFFeatures(uimg1, 'MetricThreshold', 100);
+p2 = detectSURFFeatures(uimg2, 'MetricThreshold', 100);
+[f1, vpts1] = extractFeatures(uimg1, p1);
+[f2, vpts2] = extractFeatures(uimg2, p2);
+matches = matchFeatures(f1, f2, 'Method', 'Exhaustive', 'Unique', true, 'MatchThreshold', 100);
 m1a = vpts1(matches(:,1));
 m2a = vpts2(matches(:,2));
-[m1, m2, err, ~] = ransacByProcrustes(m1a.Location', m2a.Location', intrinsics, radius, vars.minMatches, vars.maxMatches, vars.ransac);
-    
-figure; showMatchedFeatures(img1, img2, m1', m2');  
+[m1, m2, err, ~] = ransacByProcrustes(m1a.Location', m2a.Location', vars.intrinsics, vars.radius, vars.minMatches, vars.maxMatches, vars.ransac);
 
-[R, T] = orthProcrustesProb(m1, m2, radius, intrinsics);
-rotm2eul(R)*180/pi
+%figure; showMatchedFeatures(uimg1, uimg2, m1a.Location, m2a.Location); 
+figure; showMatchedFeatures(uimg1, uimg2, m1', m2'); 
+
+sections1 = whichImageSections(m1, vars.imgDim); 
+sections2 = whichImageSections(m2, vars.imgDim); 
+
+%m1 = double(m1a.Location');
+%m2 = double(m2a.Location');
+
+% vars.nMatches = 20;
+% vars.currDistToCam.max = vars.radius;
+% vars.currDistToCam.min = 0.05;
+% R = eul2rotm(-rotm2eul(Rgt));
+% T = (R-I)*vars.currBaseline;
+% [Mw, M1, M2, m1, m2, err] = simulator(vars.nMatches, R, T, vars.currDistToCam.max, vars.currDistToCam.min, vars.currBaseline, vars.intrinsics, vars.imgDim);
+
+[Roppr, T] = orthProcrustesProb(m1, m2, vars.radius, vars.intrinsics);
+-rotm2eul(Roppr)*180/pi
+[Rmbpe, T] = minBackProject(m1, m2, vars.currBaseline, rotm2eul(Roppr), vars.radius, vars.intrinsics); 
+-rotm2eul(Rmbpe)*180/pi
+[Rgrat, T] = minEpipolarGradient(m1, m2, vars.currBaseline, vars.intrinsics, rotm2eul(Roppr));
+-rotm2eul(Rgrat)*180/pi
+
+

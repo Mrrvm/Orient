@@ -93,16 +93,16 @@ if strcmp(TYPE, 'SIM_AXISANGLES')
             meR(:, j) = safeMean( eR( (3*(j-1)+1):(3*(j-1)+3), :), 2);
             pveR(:, j)  = sum( (eR( (3*(j-1)+1):(3*(j-1)+3), :) - meR(:, j)).^2, 2);
             if axisCount(1)
-                fprintf('%s \t | %f | %f |', vars.methods{j}, meR(1, j), pveR(1, j)/axisCount(1));
-                fprintf(fileID, '%s \t | %f | %f |', vars.methods{j}, meR(1, j), pveR(1, j)/axisCount(1));
+                fprintf('%s \t | %f | %f |', vars.methods{j}, meR(1, j), sqrt(pveR(1, j)/axisCount(1)));
+                fprintf(fileID, '%s \t | %f | %f |', vars.methods{j}, meR(1, j), sqrt(pveR(1, j)/axisCount(1)));
             end
             if axisCount(2)
-                fprintf('\t | %f | %f |', meR(2, j), pveR(2, j)/axisCount(2));
-                fprintf(fileID, '\t | %f | %f |', meR(2, j), pveR(2, j)/axisCount(2));
+                fprintf('\t | %f | %f |', meR(2, j), sqrt(pveR(2, j)/axisCount(2)));
+                fprintf(fileID, '\t | %f | %f |', meR(2, j), sqrt(pveR(2, j)/axisCount(2)));
             end
             if axisCount(3)
-                fprintf('\t | %f | %f |', meR(3, j), pveR(3, j)/axisCount(3));
-                fprintf(fileID, '\t | %f | %f |', meR(3, j), pveR(3, j)/axisCount(3));
+                fprintf('\t | %f | %f |', meR(3, j), sqrt(pveR(3, j)/axisCount(3)));
+                fprintf(fileID, '\t | %f | %f |', meR(3, j), sqrt(pveR(3, j)/axisCount(3)));
             end 
             fprintf('\n');
             fprintf(fileID, '\n');
@@ -142,27 +142,34 @@ end
 %==========================================================================
 % Test error in terms of angles using real data CHANGE
 if strcmp(TYPE, 'REAL_AXISANGLES')
-    [ang, axisCount, eR, eT, ransacRes] = runReality(vars);
+    [ang, axisCount, eR, eT, ransacRes, entropy] = runReality(vars);
 
     fileID = fopen(strcat(vars.saveDir, vars.filename),'w');
     
     if vars.peraxis == 0
-        fprintf('\n\t | Mean | Variance \t');
-        fprintf(fileID, '\n\t\t | Mean | Variance \t\t');
+        fprintf('\n\t | Mean | Variance \n');
+        fprintf(fileID, '\n\t\t | Mean | Variance \n');
+        
+        hist = zeros(nMethods, 6);
+        bins = [0.5 1  3 5 10];
         for j=1:nMethods
+             hist(j, :) = createHistogram(eR(j, :), bins);
              meR(j) = safeMean(eR(j, :), 2);
              pveR(j)  = sum( (eR(j, :) - meR(j)).^2, 2);
-             fprintf('%s \t | %f | %f |', vars.methods{j}, meR(j), pveR(j)/axisCount);
-             fprintf(fileID, '%s \t | %f | %f |', vars.methods{j}, meR(j), pveR(j)/axisCount);
+             fprintf('%s \t | %f | %f |', vars.methods{j}, meR(j), sqrt(pveR(j)/axisCount));
+             fprintf(fileID, '%s \t | %f | %f |', vars.methods{j}, meR(j), sqrt(pveR(j)/axisCount));
              fprintf('\n');
              fprintf(fileID, '\n');
-        end
+        end    
         
         [minerror, ind] = min(meR);
-        fprintf('\nBest method was %s with %f degrees of mean error.\n\n', vars.methods{ind}, minerror/3);
-        fprintf(fileID, '\nBest method was %s with %f degrees of mean error.\n\n', vars.methods{ind}, minerror/3);
+        fprintf('\nBest method was %s with %f degrees of mean error.\n\n', vars.methods{ind}, minerror);
+        fprintf(fileID, '\nBest method was %s with %f degrees of mean error.\n\n', vars.methods{ind}, minerror);
         
         plotError(ang(1, :), eR, 'Angles (degrees)', 'Error per angle - Real data', vars.saveDir, vars.methods, vars.colors);
+        
+        entropy
+        hist
         
     else
         % Compute mean error and variance
@@ -172,16 +179,16 @@ if strcmp(TYPE, 'REAL_AXISANGLES')
                 meR(:, j) = safeMean( eR( (3*(j-1)+1):(3*(j-1)+3), :), 2);
                 pveR(:, j)  = sum( (eR( (3*(j-1)+1):(3*(j-1)+3), :) - meR(:, j)).^2, 2);
                 if axisCount(1)    
-                    fprintf('%s \t | %f | %f |', vars.methods{j}, meR(1, j), pveR(1, j)/axisCount(1));
-                    fprintf(fileID, '%s \t | %f | %f |', vars.methods{j}, meR(1, j), pveR(1, j)/axisCount(1));
+                    fprintf('%s \t | %f | %f |', vars.methods{j}, meR(1, j), sqrt(pveR(1, j)/axisCount(1)));
+                    fprintf(fileID, '%s \t | %f | %f |', vars.methods{j}, meR(1, j), sqrt(pveR(1, j)/axisCount(1)));
                 end
                 if axisCount(2)
-                    fprintf('\t | %f | %f |', meR(2, j), pveR(2, j)/axisCount(2));
-                    fprintf(fileID, '\t | %f | %f |', meR(2, j), pveR(2, j)/axisCount(2));
+                    fprintf('\t | %f | %f |', meR(2, j), sqrt(pveR(2, j)/axisCount(2)));
+                    fprintf(fileID, '\t | %f | %f |', meR(2, j), sqrt(pveR(2, j)/axisCount(2)));
                 end
                 if axisCount(3)
-                    fprintf('\t | %f | %f |', meR(3, j), pveR(3, j)/axisCount(3));
-                    fprintf(fileID, '\t | %f | %f |', meR(3, j), pveR(3, j)/axisCount(3));
+                    fprintf('\t | %f | %f |', meR(3, j), sqrt(pveR(3, j)/axisCount(3)));
+                    fprintf(fileID, '\t | %f | %f |', meR(3, j), sqrt(pveR(3, j)/axisCount(3)));
                 end
                 fprintf('\n');
                 fprintf(fileID, '\n');
@@ -193,20 +200,20 @@ if strcmp(TYPE, 'REAL_AXISANGLES')
         fprintf(fileID, '\nBest method was %s with %f degrees of mean error.\n\n', vars.methods{ind}, minerror/3);
 
         for j=1:nMethods
-            xerr(j, :) = eR( (3*(j-1)+1), (eR( (3*(j-1)+1), :) ~= 0 ));
+            xerr(j, :) = eR( (3*(j-1)+1), (eR( (3*(j-1)+1), :) ~= 0));
             yerr(j, :) = eR( (3*(j-1)+2), (eR( (3*(j-1)+2), :) ~= 0));
             zerr(j, :) = eR( (3*(j-1)+3), (eR( (3*(j-1)+3), :) ~= 0));
         end
 
         plotError(ang(1, ang(1,:) ~= 0), xerr, 'Angles (degrees)', 'Error per angle (x axis) - Real data', vars.saveDir, vars.methods, vars.colors);
         plotError(ang(2, ang(2,:) ~= 0), yerr, 'Angles (degrees)', 'Error per angle (y axis) - Real data', vars.saveDir, vars.methods, vars.colors);
-        plotError(ang(3, ang(3,:) ~= 0), zerr, 'ransacResAngles (degrees)', 'Error per angle (z axis) - Real data', vars.saveDir, vars.methods, vars.colors);
+        plotError(ang(3, ang(3,:) ~= 0), zerr, 'Angles (degrees)', 'Error per angle (z axis) - Real data', vars.saveDir, vars.methods, vars.colors);
 
     end     
 end
 
 if vars.ransac.on
-    fprintf('\nRansac detected a %f  percentage of bad matches\n\n', safeMean( safeMean(ransacRes, 2), 1));
+    fprintf('\nRansac detected a %f  percentage of bad matches\n\n', safeMean( safeMean(ransacRes, 2)*100, 1));
 end
 
 end

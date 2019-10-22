@@ -4,8 +4,8 @@ szh = size(val, 2);
 szv = size(val,1);
     
 if option == 2
+    res = zeros(szv, 1);
     for j=1:szv
-        res = zeros(szv, 1);
         count = 0;
         for i=1:szh
             if val(j, i) ~= 0
@@ -21,8 +21,8 @@ end
 
     
 if option == 1
+    res = zeros(1, szh);
     for j=1:szh
-        res = zeros(1, szh);
         count = 0;
         for i=1:szv
             if val(i, j) ~= 0

@@ -54,15 +54,15 @@ Mat Quat2Eul(Mat q) {
     double cosr_cosp = 1.0 - 2.0 * (q.at<double>(1)*q.at<double>(1) + q.at<double>(2)*q.at<double>(2));
 
     eul.at<double>(2) = atan2(sinr_cosp, cosr_cosp);
-    double sinp = +2.0 * (q.at<double>(0)*q.at<double>(2) - q.at<double>(3)*q.at<double>(1));
+    double sinp = 2.0 * (q.at<double>(0)*q.at<double>(2) - q.at<double>(3)*q.at<double>(1));
 
     if (fabs(sinp) >= 1)
         eul.at<double>(1) = copysign(M_PI / 2, sinp);
     else
         eul.at<double>(1) = asin(sinp);
 
-    double siny_cosp = +2.0 * (q.at<double>(0)*q.at<double>(3) + q.at<double>(1)*q.at<double>(2));
-    double cosy_cosp = +1.0 - 2.0 * (q.at<double>(2)*q.at<double>(2) + q.at<double>(3)*q.at<double>(3));
+    double siny_cosp = 2.0 * (q.at<double>(0)*q.at<double>(3) + q.at<double>(1)*q.at<double>(2));
+    double cosy_cosp = 1.0 - 2.0 * (q.at<double>(2)*q.at<double>(2) + q.at<double>(3)*q.at<double>(3));
     eul.at<double>(0) = atan2(siny_cosp, cosy_cosp);
 
     return eul;

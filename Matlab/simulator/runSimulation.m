@@ -50,7 +50,7 @@ for i=1:3
         [eRi, eTi]= estimator(m1, m2, vars.projectionRadius, vars.intrinsics, vars.currBaseline, rotm2eul(R), T, vars.methods);
         sizeeRi = size(eRi, 2);
         for n=1:sizeeRi
-            eR(3*(n-1)+i, j) = eRi(n); 
+            eR(3*(n-1)+i, j) = eRi(n)*180/pi; 
             eT(3*(n-1)+i, j) = eTi(n); 
         end
         

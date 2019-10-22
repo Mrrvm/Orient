@@ -51,7 +51,7 @@ for j=1:nMethods
     end
     
     % Compute error between each method results and truth
-    eR(j) = norm(rotm2eul(R)-rreal);
+    eR(j) = norm((-rotm2eul(R))-rreal);
     eT(j) = norm(T-treal);
     clear R T;
    

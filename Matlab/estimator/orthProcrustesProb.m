@@ -19,9 +19,7 @@ M2 = projectToSphere(K, m2, radius);
 A = M1*M2';
 [U,S,V] = svd(A);
 
-Rt = V*U';
-
-R = Rt';
+R = V*U';
 
 T = [0 0 0]';
 

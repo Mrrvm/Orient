@@ -1,4 +1,4 @@
-function [plotAng, axisCount, eR, eT, ransacRes] = runReality(vars)
+function [plotAng, axisCount, eR, eT, ransacRes, entropy] = runReality(vars)
 %runReality Estimate transformation on real data
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Input
@@ -19,6 +19,9 @@ function [plotAng, axisCount, eR, eT, ransacRes] = runReality(vars)
 %   eR...               Error from each method
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
    
+sections = zeros(6, 6);
+entropy = zeros(1, 4);
+nentropy = zeros(2, 1);
 cameraParams = cameraParameters('IntrinsicMatrix', vars.intrinsics', 'RadialDistortion', vars.radialDist, 'TangentialDistortion', vars.tanDist); 
 
 if vars.peraxis == 1
@@ -35,32 +38,36 @@ if vars.peraxis == 1
                     load(strcat(vars.inputDir, 'x/rotations.mat'));
                     axisCount(1) = numel(rotations);
                 end
+         else
+             if dirs(z).name == 'y'
+                    if(exist(strcat(vars.inputDir, 'y/data.mat'), 'file') && exist(strcat(vars.inputDir, 'y/rotations.mat'), 'file'))
+                        i = 2; 
+                        load(strcat(vars.inputDir, 'y/data.mat'));
+                        load(strcat(vars.inputDir, 'y/rotations.mat'));
+                        axisCount(2) = numel(rotations);
+                    end
+             else
+                 if dirs(z).name == 'z'
+                        if(exist(strcat(vars.inputDir, 'z/data.mat'), 'file') && exist(strcat(vars.inputDir, 'z/rotations.mat'), 'file'))
+                            i = 3; 
+                            load(strcat(vars.inputDir, 'z/data.mat'));
+                            load(strcat(vars.inputDir, 'z/rotations.mat'));
+                            axisCount(3) = numel(rotations);
+                        end
+                 else
+                     continue;
+                 end
+             end
          end
-         if dirs(z).name == 'y'
-                if(exist(strcat(vars.inputDir, 'y/data.mat'), 'file') && exist(strcat(vars.inputDir, 'y/rotations.mat'), 'file'))
-                    i = 2; 
-                    load(strcat(vars.inputDir, 'y/data.mat'));
-                    load(strcat(vars.inputDir, 'y/rotations.mat'));
-                    axisCount(2) = numel(rotations);
-                end
-         end
-         if dirs(z).name == 'z'
-                if(exist(strcat(vars.inputDir, 'z/data.mat'), 'file') && exist(strcat(vars.inputDir, 'z/rotations.mat'), 'file'))
-                    i = 3; 
-                    load(strcat(vars.inputDir, 'z/data.mat'));
-                    load(strcat(vars.inputDir, 'z/rotations.mat'));
-                    axisCount(3) = numel(rotations);
-                end
-         end
-
+                 
          j = 1;
          ransacRes = zeros(3, numel(rotations));
          for k = 1:numel(rotations)
             %% Extract matches from images
             img1 = undistortImage(data(rotations(k).indImg1).img, cameraParams);
             img2 = undistortImage(data(rotations(k).indImg2).img, cameraParams);
-            p1 = detectSURFFeatures(img1);
-            p2 = detectSURFFeatures(img2);
+            p1 = detectSURFFeatures(img1, 'MetricThreshold', 100);
+            p2 = detectSURFFeatures(img2, 'MetricThreshold', 100);
             [f1,vpts1] = extractFeatures(img1, p1);
             [f2,vpts2] = extractFeatures(img2, p2);
             matches = matchFeatures(f1, f2, 'Method', 'Exhaustive',  'MatchThreshold', 100, 'Unique', true);
@@ -78,10 +85,10 @@ if vars.peraxis == 1
             plotAng(i,j) = rotations(k).angle;
 
             %% Estimate transformation error
-            [eRi, eTi]= estimator(m1, m2, vars.projectionRadius, vars.intrinsics, vars.currBaseline, rotations(k).rot, rotations(k).tr, vars.methods);
+            [eRi, eTi] = estimator(m1, m2, vars.projectionRadius, vars.intrinsics, vars.currBaseline, rotations(k).rot, [0 0 0], vars.methods);
             sizeeRi = size(eRi, 2);
             for n=1:sizeeRi
-                eR(3*(n-1)+i, j) = eRi(n); 
+                eR(3*(n-1)+i, j) = eRi(n)*180/pi; 
                 eT(3*(n-1)+i, j) = eTi(n); 
             end
             j = j + 1;
@@ -108,8 +115,8 @@ else
         %% Extract matches from images
         img1 = undistortImage(data(rotations(k).indImg1).img, cameraParams);
         img2 = undistortImage(data(rotations(k).indImg2).img, cameraParams);
-        p1 = detectSURFFeatures(img1);
-        p2 = detectSURFFeatures(img2);
+            p1 = detectSURFFeatures(img1, 'MetricThreshold', 100);
+            p2 = detectSURFFeatures(img2, 'MetricThreshold', 100);
         [f1,vpts1] = extractFeatures(img1, p1);
         [f2,vpts2] = extractFeatures(img2, p2);
         matches = matchFeatures(f1, f2, 'Method', 'Exhaustive',  'MatchThreshold', 100, 'Unique', true);
@@ -125,18 +132,43 @@ else
             %figure; showMatchedFeatures(img1, img2, m1', m2');  
 
             % Save angles for plot
-            plotAng(:, j) = rotations(k).rot*180/pi;
+            axang = rotm2axang(eul2rotm(rotations(k).rot));
+            plotAng(:, j) = axang(4)*180/pi;
 
             %% Estimate transformation error
             [eRi, eTi] = estimator(m1, m2, vars.projectionRadius, vars.intrinsics, vars.currBaseline, rotations(k).rot, [0 0 0], vars.methods);
-            eR(:, j) = eRi; 
+            eR(:, j) = eRi*180/pi; 
             eT(:, j) = eTi; 
+            
+            % Check image sections
+            maxeR = max(eR);
+            if(maxeR < vars.entropyThreshold) 
+                sections(1:3, 1:3) = whichImageSections(m1, vars.imgDim);
+                sections(1:3, 4:6) = whichImageSections(m2, vars.imgDim);
+                entropy(1) = entropy(1) + findEntropy(sections(1:3, 1:3));
+                entropy(2) = entropy(2) + findEntropy(sections(1:3, 4:6));
+                nentropy(1) = nentropy(1) + 1;
+            else
+                sections(4:6, 1:3) = whichImageSections(m1, vars.imgDim);
+                sections(4:6, 4:6) = whichImageSections(m2, vars.imgDim);
+                entropy(3) = entropy(3) + findEntropy(sections(4:6, 1:3));
+                entropy(4) = entropy(4) + findEntropy(sections(4:6, 4:6));
+                nentropy(2) = nentropy(2) + 1;
+            end
+                      
             j = j + 1;
+            %sections
+            %entropy
         end
 
     end
     axisCount = j;
 end
+
+entropy(1) = entropy(1)/nentropy(1);
+entropy(2) = entropy(2)/nentropy(1);
+entropy(3) = entropy(3)/nentropy(2);
+entropy(4) = entropy(4)/nentropy(2);
 
 end
 
