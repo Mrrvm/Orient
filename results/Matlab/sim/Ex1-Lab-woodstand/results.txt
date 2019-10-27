@@ -1,8 +1,0 @@
-Rotation Axizs 	 & X 		 & 			  & Y 		 & 			 & Z 		 & 			 
- 				 & Mean 	 & Variance 	 & Mean 	 & Variance 	 & Mean 	 & Variance 
-OPPR 	 | 0.477395 | 0.680085 |	 | 0.447657 | 0.519484 |	 | 0.359740 | 0.151125 |
-MBPE 	 | 0.490137 | 0.790252 |	 | 0.435080 | 0.481363 |	 | 0.342807 | 0.152676 |
-GRAT 	 | 1.637598 | 3.170474 |	 | 1.350136 | 1.864482 |	 | 0.686991 | 0.428843 |
-
-Best method was MBPE with 0.422675 degrees of mean error.
-

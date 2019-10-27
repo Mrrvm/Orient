@@ -26,8 +26,14 @@ eT = zeros(size(vars.methods,2)*3, 1);
 % x-1, y-2, z-3 
 for i=1:3
     for j=1:vars.nSaccades
+        
+        % To simulate the camera rotation 30 deg
+        camrot = angles(j)*[(3-i)==0 (2-i)==0 (1-i)==0]; 
+        % we need the points to rotate -30 deg 
+        ptsrot = -angles(j)*[(3-i)==0 (2-i)==0 (1-i)==0];
+        
         %% Simulate points
-        R = eul2rotm(-angles(j)*[(3-i)==0 (2-i)==0 (1-i)==0]);
+        R = eul2rotm(ptsrot);
         T = (R-I)*vars.currBaseline;
         [Mw, M1, M2, m1, m2, err] = simulator(vars.nMatches, R, T, vars.currDistToCam.max, vars.currDistToCam.min, vars.currBaseline, vars.intrinsics, vars.imgDim);
         if err == 1
@@ -47,7 +53,7 @@ for i=1:3
         plotAng(i, axisCount(i)+1) = angles(j)*180/pi;
         
         %% Estimate transformation error
-        [eRi, eTi]= estimator(m1, m2, vars.projectionRadius, vars.intrinsics, vars.currBaseline, rotm2eul(R), T, vars.methods);
+        [eRi, eTi, ~]= estimator(m1, m2, vars.projectionRadius, vars.intrinsics, vars.currBaseline, camrot, T, vars.methods);
         sizeeRi = size(eRi, 2);
         for n=1:sizeeRi
             eR(3*(n-1)+i, j) = eRi(n)*180/pi; 

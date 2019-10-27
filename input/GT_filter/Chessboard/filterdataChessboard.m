@@ -34,7 +34,8 @@ function filterdataChessboard(chessimgDir, imgDir, axis, savePath, cameraParams,
 
 chessimgs = dir(fullfile(chessimgDir, '*'));
 imgs = dir(fullfile(imgDir, '*'));
- 
+worldPoints = generateCheckerboardPoints(boardSize, squareSize);
+
 if axis == 'x'
     vector = [0 0 1];
  end

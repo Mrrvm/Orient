@@ -4,19 +4,19 @@ sz = size(eR, 2);
 hist = zeros(1, 6);
 
 for i=1:sz
-    if(eR(i) < bin(1))
+    if(eR(i) < bins(1))
         hist(1) = hist(1) + 1;
     else
-        if(eR(i) < bin(2))
+        if(eR(i) < bins(2))
             hist(2) = hist(2) + 1;
         else
-            if(eR(i) < bin(3))
+            if(eR(i) < bins(3))
                 hist(3) = hist(3) + 1;
             else
-                if(eR(i) < bin(4))
+                if(eR(i) < bins(4))
                     hist(4) = hist(4) + 1;
                     else
-                    if(eR(i) < bin(5))
+                    if(eR(i) < bins(5))
                         hist(5) = hist(5) + 1;
                     else
                         hist(6) = hist(6) + 1;

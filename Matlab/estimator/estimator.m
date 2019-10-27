@@ -1,4 +1,4 @@
-function [eR, eT] = estimator(m1, m2, radius, K, B, rreal, treal, methods)
+function [eR, eT, rot] = estimator(m1, m2, radius, K, B, rreal, treal, methods)
 %estimator Estimate transformation error based on 4 different methods: 
 % orthogonal procrustes problem, full procrustes, minimization of back
 % projection error and epipolar geometry 
@@ -51,6 +51,7 @@ for j=1:nMethods
     end
     
     % Compute error between each method results and truth
+    rot(j, :) = -rotm2eul(R);
     eR(j) = norm((-rotm2eul(R))-rreal);
     eT(j) = norm(T-treal);
     clear R T;

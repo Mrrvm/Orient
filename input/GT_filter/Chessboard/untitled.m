@@ -6,8 +6,8 @@ radialDist = [-0.3007 0.1288 -0.0318];
 squareSize = 20;
 cameraParams = cameraParameters('IntrinsicMatrix', intrinsics', 'RadialDistortion', radialDist, 'TangentialDistortion', tanDist); 
 
-img1 = imread('/home/imarcher/image1.png');
-img2 = imread('/home/imarcher/image2.png');
+img1 = imread('rawdata/Ex1-Lab-woodstand/y/0chessimg.jpg');
+img2 = imread('rawdata/Ex1-Lab-woodstand/y/1chessimg.jpg');
 
 [uimg1, newOrigin] = undistortImage(img1, cameraParams);
 [imgPts1, boardSize] = detectCheckerboardPoints(uimg1);

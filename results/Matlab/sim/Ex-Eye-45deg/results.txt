@@ -1,0 +1,9 @@
+Rotation Axizs 	 & X 		 & 			  & Y 		 & 			 & Z 		 & 			 
+ 				 & Mean 	 & Variance 	 & Mean 	 & Variance 	 & Mean 	 & Variance 
+OPPR 	 | 0.842345 | 0.646147 |	 | 0.767792 | 0.413385 |	 | 0.384429 | 0.480616 |
+MBPE 	 | 0.747688 | 0.924101 |	 | 0.617950 | 0.368574 |	 | 0.378500 | 0.501458 |
+GRAT 	 | 2.322731 | 2.838696 |	 | 1.525566 | 1.924615 |	 | 0.650939 | 0.548781 |
+
+Best method was MBPE with 0.581379 degrees of mean error.
+
+Ransac detected a 20.790123  percentage of bad matches
