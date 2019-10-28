@@ -1,7 +1,7 @@
-load('../input/GT_filter/Chessboard/filterdata/Ex2-Lab-Eye/rotations.mat');
+load('../input/camera/Ex3-Lab-Eye/rotations.mat');
 gt = rotations;
 
-load('../input/IMU_filter/filterdata/Ex2-Lab-Eye/imurotations.mat');
+load('../input/IMU_filter/filterdata/Ex3-Lab-Eye/imurotations.mat');
 imu = imurotations;
 
 n = 10;
@@ -39,7 +39,7 @@ result = sprintf('\nMean: %f degrees \n Standard Deviation: %f degrees\n', meR*1
 
 fig = figure;
 ptitle = 'Error per angle - IMU data';
-saveDir = '../results/Matlab/real/imu/Ex2-Lab-Eye/';
+saveDir = '../results/Matlab/real/imu/Ex3-Lab-Eye/';
 hold on;
 plot(angles, eR*180/pi, 'r.');
 title(strcat(ptitle, result));

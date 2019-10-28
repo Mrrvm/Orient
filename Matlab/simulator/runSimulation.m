@@ -1,4 +1,4 @@
-function [plotAng, axisCount, eR, eT, ransacRes] = runSimulation(angles, vars)
+function [ang, nrots, eR, eT, ransacRes] = runSimulation(angles, vars)
 %runSimulation Simulate points on space and estimate transformation
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Input
@@ -17,51 +17,46 @@ function [plotAng, axisCount, eR, eT, ransacRes] = runSimulation(angles, vars)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 I = [1 0 0; 0 1 0; 0 0 1];
-axisCount = zeros(1,3);
-ransacRes = zeros(3, vars.nSaccades);
-plotAng = zeros(3,1);
-eR = zeros(size(vars.methods,2)*3, 1);
-eT = zeros(size(vars.methods,2)*3, 1);
+nrots = 0;
+ransacRes = zeros(vars.nSaccades, 1);
+ang = 0;
+eR = zeros(size(vars.methods,2), 1);
+eT = zeros(size(vars.methods,2), 1);
 
-% x-1, y-2, z-3 
-for i=1:3
-    for j=1:vars.nSaccades
+for j=1:vars.nSaccades
         
-        % To simulate the camera rotation 30 deg
-        camrot = angles(j)*[(3-i)==0 (2-i)==0 (1-i)==0]; 
-        % we need the points to rotate -30 deg 
-        ptsrot = -angles(j)*[(3-i)==0 (2-i)==0 (1-i)==0];
-        
-        %% Simulate points
-        R = eul2rotm(ptsrot);
-        T = (R-I)*vars.currBaseline;
-        [Mw, M1, M2, m1, m2, err] = simulator(vars.nMatches, R, T, vars.currDistToCam.max, vars.currDistToCam.min, vars.currBaseline, vars.intrinsics, vars.imgDim);
+    % To simulate the camera rotation 30 deg
+    camrot = angles(j, :); 
+    % we need the points to rotate -30 deg 
+    ptsrot = -angles(j, :);
+
+    %% Simulate points
+    R = eul2rotm(ptsrot);
+    T = (R-I)*vars.currBaseline;
+    [Mw, M1, M2, m1, m2, err] = simulator(vars.nMatches, R, T, vars.currDistToCam.max, vars.currDistToCam.min, vars.currBaseline, vars.intrinsics, vars.imgDim);
+    if err == 1
+        continue;
+    end
+    [m1, m2] = falseMatchesGen(m1, m2, vars.nFalseMatches, vars.imgDim);
+    [m1, m2] = noiseGen(m1, m2, vars.currNoisePixelsSigma, vars.imgDim);
+    if vars.ransac.on
+        [m1, m2, err, ransacRes(j)] = ransacByProcrustes(m1, m2, vars.intrinsics, vars.projectionRadius, vars.minMatches, vars.maxMatches, vars.ransac);
         if err == 1
             continue;
         end
-        [m1, m2] = falseMatchesGen(m1, m2, vars.nFalseMatches, vars.imgDim);
-        [m1, m2] = noiseGen(m1, m2, vars.currNoisePixelsSigma, vars.imgDim);
-        if vars.ransac.on
-            [m1, m2, err, ransacRes(i, j)] = ransacByProcrustes(m1, m2, vars.intrinsics, vars.projectionRadius, vars.minMatches, vars.maxMatches, vars.ransac);
-            if err == 1
-                continue;
-            end
-        end
-        %figure; plot(m1(1,:), m1(2,:), 'bx'); hold on; plot(m2(1,:), m2(2,:), 'rx');
-        
-        % Save angles for plot
-        plotAng(i, axisCount(i)+1) = angles(j)*180/pi;
-        
-        %% Estimate transformation error
-        [eRi, eTi, ~]= estimator(m1, m2, vars.projectionRadius, vars.intrinsics, vars.currBaseline, camrot, T, vars.methods);
-        sizeeRi = size(eRi, 2);
-        for n=1:sizeeRi
-            eR(3*(n-1)+i, j) = eRi(n)*180/pi; 
-            eT(3*(n-1)+i, j) = eTi(n); 
-        end
-        
-        axisCount(i) = axisCount(i) +1;
-    end  
-end
+    end
+    %figure; plot(m1(1,:), m1(2,:), 'bx'); hold on; plot(m2(1,:), m2(2,:), 'rx');
+
+    nrots = nrots + 1;
+    % Save angles for plot
+    axang = rotm2axang(eul2rotm(angles(j,:)));
+    ang(nrots) = axang(4)*180/pi;
+
+    %% Estimate transformation error
+    [eRi, eTi, ~]= estimator(m1, m2, vars.projectionRadius, vars.intrinsics, vars.currBaseline, camrot, T, vars.methods);
+    eR(:, j) = eRi*180/pi; 
+    eT(:, j) = eTi; 
  
+end  
+
 end

@@ -2,7 +2,7 @@ close all;
 clear all;
 
 vars.methods = {'OPPR', 'MBPE', 'GRAT'};
-vars.colors = {'b', 'g', 'r'};
+vars.colors = {'b', 'r', 'g'};
 vars.filename = 'results.txt';
 vars.currBaseline = [0.0 0.0 0.0537]'; %eye
 %vars.currBaseline = [0.015 0.051 0.02275]'; %woodstand 
@@ -23,34 +23,84 @@ vars.ransac.maxErr              = 0.05;   % in meters
 % SIMULATION
 vars.nMatches = 30;
 vars.nFalseMatches = round(vars.nMatches*0.1);
-vars.saccadeSigma = 10;
+vars.saccadeSigma = 4;
 vars.nSaccades = 45;
 vars.currDistToCam.min = 0.05;
 vars.currNoisePixelsSigma = 10;
 vars.currDistToCam.max = 5;
 vars.projectionRadius = vars.currDistToCam.max + 1;  
 
+vars.axis = 'all';
+vars.saveDir = '../results/Matlab/sim/Ex-Eye-10deg/';
+%runAll('SIM_AXISANGLES', vars);
+vars.axis = 'x';
+vars.saveDir = '../results/Matlab/sim/Ex-Eye-10deg/x/';
+%runAll('SIM_AXISANGLES', vars);
+vars.axis = 'y';
+vars.saveDir = '../results/Matlab/sim/Ex-Eye-10deg/y/';
+%runAll('SIM_AXISANGLES', vars);
+vars.axis = 'z';
+vars.saveDir = '../results/Matlab/sim/Ex-Eye-10deg/z/';
+%runAll('SIM_AXISANGLES', vars);
+
+vars.axis = 'all';
+vars.saccadeSigma = 15;
+vars.axis = 'all';
+vars.saveDir = '../results/Matlab/sim/Ex-Eye-45deg/';
+%runAll('SIM_AXISANGLES', vars);
+vars.axis = 'x';
+vars.saveDir = '../results/Matlab/sim/Ex-Eye-45deg/x/';
+%runAll('SIM_AXISANGLES', vars);
+vars.axis = 'y';
+vars.saveDir = '../results/Matlab/sim/Ex-Eye-45deg/y/';
+%runAll('SIM_AXISANGLES', vars);
+vars.axis = 'z';
+vars.saveDir = '../results/Matlab/sim/Ex-Eye-45deg/z/';
+%runAll('SIM_AXISANGLES', vars);
+
+vars.saccadeSigma = 4;
 vars.distToCam.max = 10;
 vars.distToCam.min = 0.05;
 vars.distToCam.inc = 1;
-vars.saveDir = '../results/Matlab/sim/Ex-Eye-Depth/';
-runAll('SIM_DISTANCES', vars);
+vars.axis = 'x';
+vars.saveDir = '../results/Matlab/sim/Ex-Eye-Depth/x/';
+%runAll('SIM_DISTANCES', vars);
+vars.axis = 'y';
+vars.saveDir = '../results/Matlab/sim/Ex-Eye-Depth/y/';
+%runAll('SIM_DISTANCES', vars);
+vars.axis = 'z';
+vars.saveDir = '../results/Matlab/sim/Ex-Eye-Depth/z/';
+%runAll('SIM_DISTANCES', vars);
 
+vars.saccadeSigma = 4;
+vars.baseline.max = 0.5;
+vars.baseline.min = 0.05;
+vars.baseline.inc = 0.1; 
+vars.axis = 'all';
+vars.saveDir = '../results/Matlab/sim/Ex-Eye-Baseline/';
+%runAll('SIM_BASELINES', vars);
+
+vars.axis = 'all';
+vars.saccadeSigma = 4;
+vars.ransac.on = 0;
+vars.saveDir = '../results/Matlab/sim/Ex-Eye-Ransac/';
+%runAll('SIM_AXISANGLES', vars);
+
+vars.axis = 'all';
+vars.saccadeSigma = 4;
+vars.ransac.on = 1;
+vars.ransac.goodMatches = 3;
 vars.noisePixelsSigma.max = 100;
 vars.noisePixelsSigma.min = 0;
 vars.noisePixelsSigma.inc = 10; 
 vars.saveDir = '../results/Matlab/sim/Ex-Eye-Noise/';
 %runAll('SIM_NOISES', vars);
-      
-vars.saveDir = '../results/Matlab/sim/Ex-Eye/';
-%runAll('SIM_AXISANGLES', vars);
-
 
 %==========================================================================
 % REAL DATA 
 vars.currDistToCam.max = 5;
 vars.projectionRadius = vars.currDistToCam.max + 1;        
-vars.inputDir = '../input/camera/Ex1-Lab-woodstand/y/';
-vars.saveDir = '../results/Matlab/real/camera/Ex1-Lab-woodstand/y/';
+vars.inputDir = '../input/camera/Ex3-Lab-Eye/';
+vars.saveDir = '../results/Matlab/real/camera/Ex3-Lab-Eye/';
 %runAll('REAL_AXISANGLES', vars);
 

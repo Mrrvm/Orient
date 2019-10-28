@@ -1,0 +1,8 @@
+
+		 | Mean | Variance 
+OPPR 	 | 0.393095 | 0.465335 |
+MBPE 	 | 0.367129 | 0.475949 |
+GRAT 	 | 0.819853 | 0.749119 |
+
+Best method was MBPE with 0.122376 degrees of mean error.
+

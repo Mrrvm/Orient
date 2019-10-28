@@ -28,10 +28,15 @@ end
 
 for j=1:nMethods
     if sum(nonzeros(j, :))
-        fittedY(j, :) = polyval(coeffs(j, :), fittedX(j, :));
-        %plot(fittedX(j, :), fittedY(j, :), strcat(colors{j},'-'), 'LineWidth', 1);
-        hold on;
         plot(var(nonzeros(j, :)), yvar(j, nonzeros(j, :)), strcat(colors{j},'.'), 'LineWidth', 1);
+        hold on;
+    end
+end
+
+for j=1:nMethods
+    if sum(nonzeros(j, :))
+        fittedY(j, :) = polyval(coeffs(j, :), fittedX(j, :));
+        plot(fittedX(j, :), fittedY(j, :), strcat(colors{j},'-'), 'LineWidth', 1);
         hold on;
     end
 end
@@ -40,6 +45,7 @@ title(pTitle);
 legend(label,'Location','northeast');
 xlabel(xLabel);
 ylabel('Error (degrees)');
+
 saveas(fig, strcat(saveDir, pTitle, '.fig'));
 saveas(fig, strcat(saveDir, pTitle, '.png'));
 
