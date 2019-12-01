@@ -52,6 +52,12 @@ for k = 1:numel(rotations)
             if err == 1
                 continue;
             end
+        
+        else
+            if size(matches, 1) > vars.maxMatches
+                m1 = double(m1a.Location(1:vars.maxMatches, :)');
+                m2 = double(m2a.Location(1:vars.maxMatches, :)');
+            end
         end
         %figure; showMatchedFeatures(img1, img2, m1', m2');  
 
@@ -88,4 +94,5 @@ end
 nrots = j;
 
 end
+
 

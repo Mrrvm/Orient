@@ -13,10 +13,9 @@
   <component name="ChangeListManager">
     <list default="true" id="1b2254cd-5c97-43f5-ae2c-68714e152f63" name="Default Changelist" comment="\">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/image.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/image.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/main.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/rotation.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/rotation.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../C++examples/calibratecamera.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../C++examples/calibratecamera.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../C++examples/sensortest.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../C++examples/sensortest.cpp" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -111,6 +110,9 @@
       <workItem from="1570370881921" duration="16336000" />
       <workItem from="1570457790555" duration="17127000" />
       <workItem from="1570918614658" duration="27245000" />
+      <workItem from="1572266242522" duration="5529000" />
+      <workItem from="1572277217491" duration="313000" />
+      <workItem from="1572277573985" duration="313000" />
     </task>
     <servers />
   </component>

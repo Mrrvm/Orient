@@ -1,7 +1,7 @@
-load('../input/camera/Ex3-Lab-Eye/rotations.mat');
+load('../input/camera/Ex2-Lab-Eye/rotations.mat');
 gt = rotations;
 
-load('../input/IMU_filter/filterdata/Ex3-Lab-Eye/imurotations.mat');
+load('../input/IMU_filter/filterdata/Ex2-Lab-Eye/imurotations.mat');
 imu = imurotations;
 
 n = 10;
@@ -16,7 +16,9 @@ for i=1:size(gt, 2)
         ind1imu = imu(c).ind1;
         ind2imu = imu(c).ind2;
         if(ind1imu == ind1gt && ind2imu == ind2gt)
-            eR(z) = norm(gt(z).rot-imu(z).rot);
+            tt(1) = abs(gt(z).rot(1))-abs(imu(z).rot(1));
+            tt(2) = abs(gt(z).rot(3))-abs(imu(z).rot(3));
+            eR(z) = norm(tt);
             %angles(z) = gt(z).angle;
             axang = rotm2axang(eul2rotm(gt(z).rot));
             angles(z) = axang(4)*180/pi;
@@ -39,13 +41,20 @@ result = sprintf('\nMean: %f degrees \n Standard Deviation: %f degrees\n', meR*1
 
 fig = figure;
 ptitle = 'Error per angle - IMU data';
-saveDir = '../results/Matlab/real/imu/Ex3-Lab-Eye/';
+saveDir = '../results/Matlab/real/imu/Ex2-Lab-Eye/';
 hold on;
 plot(angles, eR*180/pi, 'r.');
-title(strcat(ptitle, result));
+hold on;
+coeffs = polyfit(angles, eR*180/pi, 1);
+fittedX = linspace(min(angles), max(angles), 200);
+fittedY = polyval(coeffs, fittedX);
+plot(fittedX, fittedY, 'r-', 'LineWidth', 1);
+title(ptitle);
+%title(strcat(ptitle, result));
 legend('errorIMU', 'Location','northeast');
 xlabel('Angles (degrees)');
 ylabel('Error (degrees)');
+
 saveas(fig, strcat(saveDir, ptitle, '.fig'));
 saveas(fig, strcat(saveDir, ptitle, '.png'));
 

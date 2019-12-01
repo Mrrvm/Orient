@@ -4,8 +4,8 @@ Image::Image() {};
 
 bool Image::Load(string name, string path, string ext) {
     //Mat rgbimage;
-    rgbimage = imread(path + name + "." + ext);
-    cvtColor(rgbimage, image, COLOR_BGR2GRAY);
+    image = imread(path + name + "." + ext);
+    //cvtColor(rgbimage, image, COLOR_BGR2GRAY);
     if(image.empty())
         return false;
     return true;

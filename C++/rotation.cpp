@@ -423,7 +423,7 @@ bool Rotation::RansacByProcrustes(Mat& m1, Mat& m2, vector<DMatch>& matches, int
         }
         j++;
     }
-    cout << m1 << endl;
+
     m1.release(); m2.release();
     m1 = m1p; m2 = m2p;
     if(!matches.empty()) {

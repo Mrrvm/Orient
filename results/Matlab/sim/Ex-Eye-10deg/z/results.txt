@@ -1,8 +1,11 @@
 
 		 | Mean | Variance 
-OPPR 	 | 0.438940 | 0.564436 |
-MBPE 	 | 0.428427 | 0.560152 |
-GRAT 	 | 0.656713 | 0.453772 |
+OPPR 	 | 0.456792 | 0.555160 |
+MBPE 	 | 0.435217 | 0.540960 |
+GRAT 	 | 0.637027 | 0.700448 |
 
-Best method was MBPE with 0.142809 degrees of mean error.
+Best method was MBPE with 0.435217 degrees of mean error.
+
+
+Ransac detected a 15.333333  percentage of bad matches
 
